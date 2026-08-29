@@ -1,6 +1,6 @@
 package br.com.zg.todolist.model;
 
-public class Enum {
+public enum Status {
     TODO,
     DOING,
     DONE

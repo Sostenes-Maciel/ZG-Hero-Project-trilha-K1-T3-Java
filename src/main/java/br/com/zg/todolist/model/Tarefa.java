@@ -9,7 +9,7 @@ public class Tarefa {
     private LocalDate dataTermino;
     private int prioridade;
     private String categoria;
-    private String status;
+    private Status status;
 
     public Tarefa(String nome, String descricao, LocalDate dataTermino, int prioridade, String categoria, String status) {
         this.nome = nome;
@@ -63,11 +63,11 @@ public class Tarefa {
         this.categoria = categoria;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -75,5 +75,6 @@ public class Tarefa {
     public String toString() {
         return String.format("[%s] Prioridade %d | %s (Categoria: %s) - %s | Prazo: %s",
                 status, prioridade, nome, categoria, descricao, dataTermino);
-}
+    }
 
+}
