@@ -15,12 +15,17 @@ public class GerenciadorTarefas {
     }
 
     public void adicionarTarefa(Tarefa tarefa) {
+
         tarefas.add(tarefa);
+        rebalancearTarefa();
     }
 
     private void rebalancearTarefa() {
 
-        tarefas.sort(Comparator.comparingInt(Tarefa::getPrioridade));
+        tarefas.sort(
+                Comparator.comparingInt(Tarefa::getPrioridade).reversed()
+                        .thenComparing(Tarefa::getDataTermino)
+        );
     }
 
     public boolean atualizarTarefa(int indice, Tarefa tarefaAtualizada) {

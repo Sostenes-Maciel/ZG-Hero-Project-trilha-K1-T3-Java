@@ -11,7 +11,7 @@ public class Tarefa {
     private String categoria;
     private Status status;
 
-    public Tarefa(String nome, String descricao, LocalDate dataTermino, int prioridade, String categoria, String status) {
+    public Tarefa(String nome, String descricao, LocalDate dataTermino, int prioridade, String categoria) {
         this.nome = nome;
         this.descricao = descricao;
         this.dataTermino = dataTermino;
