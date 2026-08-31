@@ -27,13 +27,14 @@ public class MenuTerminal {
         int opcao = 0;
         System.out.println("Bem-Vindo ao TODO List!! ");
 
-        while (opcao != 5) {
+        while (opcao != 6) {
             System.out.println("-----------------------");
             System.out.println(" 1 - Cadastrar Tarefa");
             System.out.println(" 2 - Listar Tarefa");
             System.out.println(" 3 - Atualizar Tarefa");
             System.out.println(" 4 - Remover Tarefas");
-            System.out.println(" 5 - Sair");
+            System.out.println(" 5 - Filtrar tarefas por Status");
+            System.out.println(" 6 - Sair");
             System.out.print("Escolha uma opção: ");
 
             opcao = sc.nextInt();
@@ -43,8 +44,6 @@ public class MenuTerminal {
                 case 1:
                     System.out.println("Iniciando a criação da tarefa...");
                     adiconarNovaTarefa();
-
-
                     break;
                 case 2:
                     System.out.println("\n--Suas tarefas--");
@@ -63,8 +62,12 @@ public class MenuTerminal {
                     removerTarefa();
                     break;
                 case 5:
-                    System.out.println("Saindo. Até logo!");
+                    filtrarTarefa();
                     break;
+                case 6:
+                    System.out.println("Saindo. Até logo!");
+
+
                 default:
                     System.out.println("Opção inválida! Tente novamente.");
             }
@@ -160,7 +163,9 @@ public class MenuTerminal {
                     break;
                 default:
                     novoStatus = Status.TODO;
+                    break;
             }
+
             Tarefa tarefaAtualizada = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
             tarefaAtualizada.setStatus(novoStatus);
 
@@ -196,6 +201,32 @@ public class MenuTerminal {
         } else {
             System.out.println("Erro no número da tarefa. Tente novamente.");
         }
+    }
 
+    private void filtrarTarefa() {
+        System.out.println("-- Filtrando Tarefa --");
+        System.out.println("Qual o Status deseja ver? (1 - TODO, 2 - DOING, 3 - DONE): ");
+        int opcaoStatus = sc.nextInt();
+        sc.nextLine();
+
+        Status statusBuscar;
+        switch (opcaoStatus) {
+            case 2:
+                statusBuscar = Status.DOING;
+                break;
+            case 3:
+                statusBuscar = Status.DONE;
+                break;
+            default:
+                statusBuscar = Status.TODO;
+                break;
+        }
+        List<Tarefa> resultado = gerenciador.listarPorStatus(statusBuscar);
+        if (resultado.isEmpty()) {
+            System.out.println("Nenhuma tarefa encontrada com o status.");
+        } else {
+            System.out.println("-- Resultado da busca --");
+            resultado.forEach(System.out::println);
+        }
     }
 }

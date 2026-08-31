@@ -1,5 +1,6 @@
 package br.com.zg.todolist.service;
 
+import br.com.zg.todolist.model.Status;
 import br.com.zg.todolist.model.Tarefa;
 
 import java.util.ArrayList;
@@ -47,5 +48,16 @@ public class GerenciadorTarefas {
             return true;
         }
         return false;
+    }
+
+    public List<Tarefa> listarPorStatus(Status statusProcurado) {
+        List<Tarefa> tarefasFiltradas = new ArrayList<>();
+
+        for (Tarefa tarefa : tarefas) {
+            if (tarefa.getStatus() == statusProcurado) {
+                tarefasFiltradas.add(tarefa);
+            }
+        }
+        return tarefasFiltradas;
     }
 }
