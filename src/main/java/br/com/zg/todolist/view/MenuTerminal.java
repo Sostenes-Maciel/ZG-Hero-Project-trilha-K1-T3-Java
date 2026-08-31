@@ -5,7 +5,10 @@ import br.com.zg.todolist.service.GerenciadorTarefas;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
+
+import java.util.List;
 
 public class MenuTerminal {
 
@@ -52,9 +55,11 @@ public class MenuTerminal {
                     break;
                 case 3:
                     System.out.println("Atualização em andamento...");
+                    atualizarTarefa();
                     break;
                 case 4:
                     System.out.println("Remoção em andamento...");
+                    removerTarefa();
                     break;
                 case 5:
                     System.out.println("Saindo. Até logo!");
@@ -94,6 +99,85 @@ public class MenuTerminal {
             System.out.println("Erro ao criar tarefa: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Erro no formato de dados. Tente novamente.");
+        }
+
+    }
+
+    private void atualizarTarefa() {
+        System.out.println("-- Atualizando Tarefa --");
+        List<Tarefa> tarefas = gerenciador.ListarTarefa();
+
+        if (tarefas.isEmpty()) {
+            System.out.println("Não há tarefas para atualizar.");
+            return;
+        }
+
+        for (int i = 0; i < tarefas.size(); i++) {
+            System.out.println(i + " - " + tarefas.get(i));
+        }
+
+        System.out.print("Digite o número da tarefa que deseja atualizar: ");
+        int indice = sc.nextInt();
+        sc.nextLine();
+
+        if (indice < 0 || indice >= tarefas.size()) {
+            System.out.println("Número de tarefa não encontrado!");
+            return;
+        }
+
+        System.out.println("-- Digite os novos dados --");
+
+        try {
+            System.out.print("Novo Nome: ");
+            String nome = sc.nextLine();
+
+            System.out.print("Nova Descrição: ");
+            String descricao = sc.nextLine();
+
+            System.out.print("Nova Data de término (dd/MM/yyyy): ");
+            String dataString = sc.nextLine();
+            LocalDate dataTermino = LocalDate.parse(dataString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+            System.out.print("Nova Prioridade (1 a 5): ");
+            int prioridade = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("Nova Categoria: ");
+            String categoria = sc.nextLine();
+
+            Tarefa tarefaAtualizada = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
+
+            boolean sucesso = gerenciador.atualizarTarefa(indice, tarefaAtualizada);
+            if (sucesso) {
+                System.out.println("Tarefa atualizada com sucesso!");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro no formato de dados. Tente novamente.");
+        }
+    }
+
+    public void removerTarefa() {
+        System.out.println("-- Removendo Tarefa --");
+        List<Tarefa> tarefas = gerenciador.ListarTarefa();
+
+        if (tarefas.isEmpty()) {
+            System.out.println("Não há tarefas para remover");
+            return;
+        }
+
+        for (int i = 0; i < tarefas.size(); i++) {
+            System.out.println(i + " - " + tarefas.get(i));
+        }
+
+        System.out.println("Digite o número da tarefa a ser removida: ");
+        int indice = sc.nextInt();
+        sc.nextLine();
+
+        boolean sucesso = gerenciador.removertarefa(indice);
+        if ((sucesso)) {
+            System.out.println("Tarefa removida com sucesso!");
+        } else {
+            System.out.println("Erro no número da tarefa. Tente novamente.");
         }
 
     }
