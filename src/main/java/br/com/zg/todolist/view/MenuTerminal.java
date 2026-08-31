@@ -30,10 +30,10 @@ public class MenuTerminal {
         while (opcao != 6) {
             System.out.println("-----------------------");
             System.out.println(" 1 - Cadastrar Tarefa");
-            System.out.println(" 2 - Listar Tarefa");
-            System.out.println(" 3 - Atualizar Tarefa");
+            System.out.println(" 2 - Listar Tarefas");
+            System.out.println(" 3 - Atualizar Tarefas");
             System.out.println(" 4 - Remover Tarefas");
-            System.out.println(" 5 - Filtrar tarefas por Status");
+            System.out.println(" 5 - Filtrar tarefas");
             System.out.println(" 6 - Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -204,28 +204,53 @@ public class MenuTerminal {
     }
 
     private void filtrarTarefa() {
-        System.out.println("-- Filtrando Tarefa --");
-        System.out.println("Qual o Status deseja ver? (1 - TODO, 2 - DOING, 3 - DONE): ");
-        int opcaoStatus = sc.nextInt();
+        System.out.println("-- Filtrar tarefas --");
+        System.out.println("1. Por Categoria");
+        System.out.println("2. Por Prioridade");
+        System.out.println("3. Por Status");
+        System.out.print("Escolha como deseja listar: ");
+
+        int opcaoFiltro = sc.nextInt();
         sc.nextLine();
 
-        Status statusBuscar;
-        switch (opcaoStatus) {
+        List<Tarefa> resultado = null;
+
+        switch (opcaoFiltro) {
+            case 1:
+                System.out.print("Digite o nome da Categoria: ");
+                String categoria = sc.nextLine();
+                resultado = gerenciador.listarPorCategoria(categoria);
+                break;
+
             case 2:
-                statusBuscar = Status.DOING;
+                System.out.print("Digite o número da Prioridade (1 a 5): ");
+                int prioridade = sc.nextInt();
+                sc.nextLine();
+
+                resultado = gerenciador.listarPorPrioridade(prioridade);
                 break;
+
             case 3:
-                statusBuscar = Status.DONE;
+                System.out.print("Qual status? (1 - TODO, 2 - DOING, 3 - DONE): ");
+                int opStatus = sc.nextInt();
+                sc.nextLine();
+                Status statusBusca;
+                if (opStatus == 2) statusBusca = Status.DOING;
+                else if (opStatus == 3) statusBusca = Status.DONE;
+                else statusBusca = Status.TODO;
+
+                resultado = gerenciador.listarPorStatus(statusBusca);
                 break;
+
             default:
-                statusBuscar = Status.TODO;
-                break;
+                System.out.println("Opção de filtro inválida.");
+                return;
         }
-        List<Tarefa> resultado = gerenciador.listarPorStatus(statusBuscar);
+
         if (resultado.isEmpty()) {
-            System.out.println("Nenhuma tarefa encontrada com o status.");
+            System.out.println("Nenhuma tarefa encontrada para este filtro.");
         } else {
-            System.out.println("-- Resultado da busca --");
+            System.out.println("\n--- RESULTADO DA BUSCA ---");
             resultado.forEach(System.out::println);
         }
     }
