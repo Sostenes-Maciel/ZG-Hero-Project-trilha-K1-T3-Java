@@ -1,5 +1,6 @@
 package br.com.zg.todolist.view;
 
+import br.com.zg.todolist.model.Status;
 import br.com.zg.todolist.model.Tarefa;
 import br.com.zg.todolist.service.GerenciadorTarefas;
 
@@ -145,7 +146,23 @@ public class MenuTerminal {
             System.out.print("Nova Categoria: ");
             String categoria = sc.nextLine();
 
+            System.out.print("Novo Status (1- TODO, 2 - DOING, 3 - DONE): ");
+            int opcaoStatus = sc.nextInt();
+            sc.nextLine();
+
+            Status novoStatus;
+            switch (opcaoStatus) {
+                case 2:
+                    novoStatus = Status.DOING;
+                    break;
+                case 3:
+                    novoStatus = Status.DONE;
+                    break;
+                default:
+                    novoStatus = Status.TODO;
+            }
             Tarefa tarefaAtualizada = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
+            tarefaAtualizada.setStatus(novoStatus);
 
             boolean sucesso = gerenciador.atualizarTarefa(indice, tarefaAtualizada);
             if (sucesso) {

@@ -1,6 +1,7 @@
 package br.com.zg.todolist.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Tarefa {
 
@@ -73,6 +74,8 @@ public class Tarefa {
 
     @Override
     public String toString() {
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         return String.format("[%s] Prioridade %d | %s (Categoria: %s) - %s | Prazo: %s",
                 status, prioridade, nome, categoria, descricao, dataTermino);
     }
