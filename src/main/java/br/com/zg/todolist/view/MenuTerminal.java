@@ -204,6 +204,8 @@ public class MenuTerminal {
     }
 
     private void filtrarTarefa() {
+
+
         System.out.println("-- Filtrar tarefas --");
         System.out.println("1. Por Categoria");
         System.out.println("2. Por Prioridade");

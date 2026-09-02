@@ -64,7 +64,6 @@ public class GerenciadorTarefas {
     public List<Tarefa> listarPorCategoria(String categoriaProcurada) {
         List<Tarefa> tarefasFiltradas = new ArrayList<>();
         for (Tarefa tarefa : tarefas) {
-            // Usamos equalsIgnoreCase para não dar erro se o usuário digitar maiúscula ou minúscula
             if (tarefa.getCategoria().equalsIgnoreCase(categoriaProcurada)) {
                 tarefasFiltradas.add(tarefa);
             }
