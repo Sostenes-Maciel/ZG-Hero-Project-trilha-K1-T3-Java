@@ -3,6 +3,7 @@ package br.com.zg.todolist.service;
 import br.com.zg.todolist.model.Status;
 import br.com.zg.todolist.model.Tarefa;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -90,6 +91,9 @@ public class GerenciadorTarefas {
 
     public void configurarAlarme(Tarefa tarefa, long minutos) {
 
+        LocalDateTime horario = LocalDateTime.now().plusMinutes(minutos);
+        tarefa.setHorarioAlarme(horario);
+
         scheduler.schedule(() -> {
             System.out.println("\n================================");
             System.out.println("         ALARME DE TAREFA");
@@ -103,7 +107,10 @@ public class GerenciadorTarefas {
         System.out.println("Alarme configurado para daqui a "
                 + minutos + " minuto(s).");
     }
+
     public void encerrarAlarmes() {
         scheduler.shutdown();
     }
 }
+
+

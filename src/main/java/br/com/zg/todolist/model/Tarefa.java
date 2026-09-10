@@ -1,6 +1,7 @@
 package br.com.zg.todolist.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Tarefa {
@@ -11,6 +12,7 @@ public class Tarefa {
     private int prioridade;
     private String categoria;
     private Status status;
+    private LocalDateTime horarioAlarme;
 
     public Tarefa(String nome, String descricao, LocalDate dataTermino, int prioridade, String categoria) {
         this.nome = nome;
@@ -72,12 +74,34 @@ public class Tarefa {
         this.status = status;
     }
 
+    public LocalDateTime getHorarioAlarme() {
+        return horarioAlarme;
+    }
+
+    public void setHorarioAlarme(LocalDateTime horarioAlarme) {
+        this.horarioAlarme = horarioAlarme;
+    }
+
     @Override
     public String toString() {
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        return String.format("[%s] Prioridade %d | %s (Categoria: %s) - %s | Prazo: %s",
-                status, prioridade, nome, categoria, descricao, formatador.format(dataTermino));
-    }
+        String resultado = String.format(
+                "[%s] Prioridade %d | %s (Categoria: %s) - %s | Prazo: %s",
+                status,
+                prioridade,
+                nome,
+                categoria,
+                descricao,
+                formatador.format(dataTermino)
+        );
 
+        if (horarioAlarme != null) {
+            DateTimeFormatter formatoAlarme = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+            resultado += " | Alarme: " + horarioAlarme.format(formatoAlarme);
+        }
+
+        return resultado;
+    }
 }

@@ -12,8 +12,8 @@ import java.util.Scanner;
 
 public class MenuTerminal {
 
-    private GerenciadorTarefas gerenciador;
-    private Scanner sc;
+    private final GerenciadorTarefas gerenciador;
+    private final Scanner sc;
 
 
     public MenuTerminal() {
@@ -86,7 +86,7 @@ public class MenuTerminal {
 
         System.out.print("Data de término(dd/mm/aaaa): ");
         String data = sc.nextLine();
-        LocalDate dataTermino = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate dataTermino = converterData(data);
 
         System.out.print("Nível de prioridade(1 a 5): ");
         int prioridade = sc.nextInt();
@@ -237,7 +237,7 @@ public class MenuTerminal {
         int opcaoFiltro = sc.nextInt();
         sc.nextLine();
 
-        List<Tarefa> resultado = null;
+        List<Tarefa> resultado;
 
         switch (opcaoFiltro) {
             case 1:
@@ -276,6 +276,26 @@ public class MenuTerminal {
         } else {
             System.out.println("\n--- RESULTADO DA BUSCA ---");
             resultado.forEach(System.out::println);
+        }
+    }
+
+    private LocalDate converterData(String data) {
+        try {
+            if (!data.contains("/")) {
+                data = data.substring(0, 2) + "/" +
+                        data.substring(2, 4) + "/" +
+                        data.substring(4);
+            }
+
+            return LocalDate.parse(
+                    data,
+                    DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            );
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException(
+                    "Data inválida. Use o formato dd/MM/yyyy."
+            );
         }
     }
 }
