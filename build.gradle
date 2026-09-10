@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'groovy'
 }
 
 group = 'com.zg.acelera'
@@ -10,9 +11,15 @@ repositories {
 }
 
 dependencies {
+    // JUnit que já estava no projeto
     testImplementation platform('org.junit:junit-bom:6.0.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Spock + Groovy
+    testImplementation platform('org.spockframework:spock-bom:2.4-M6-groovy-4.0')
+    testImplementation 'org.spockframework:spock-core'
+    testImplementation 'org.apache.groovy:groovy:4.0.26'
 }
 
 test {

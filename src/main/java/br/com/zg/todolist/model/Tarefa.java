@@ -77,7 +77,7 @@ public class Tarefa {
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         return String.format("[%s] Prioridade %d | %s (Categoria: %s) - %s | Prazo: %s",
-                status, prioridade, nome, categoria, descricao, dataTermino);
+                status, prioridade, nome, categoria, descricao, formatador.format(dataTermino));
     }
 
 }
