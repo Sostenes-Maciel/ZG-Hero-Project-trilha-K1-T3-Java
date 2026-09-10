@@ -51,6 +51,19 @@ Foram implementados testes unitários utilizando **Spock Framework** e **Groovy*
 * **Delete:** Teste para validar a remoção de uma tarefa cadastrada.
 * **Testes Unitários com Spock:** As operações foram testadas de forma independente, verificando o comportamento esperado de cada ação do CRUD.
 
+* ## Atualização: Sistema de Alarmes para Tarefas
+
+O projeto foi atualizado com a implementação de um sistema de alarmes para as tarefas, permitindo configurar um período de aviso durante a criação de cada tarefa.
+
+### Principais Alterações
+
+* **Configuração de Alarme:** Adicionada a opção de configurar um alarme durante o cadastro de uma nova tarefa, permitindo definir o tempo para o aviso.
+* **Alarmes Personalizados:** Cada tarefa pode possuir seu próprio horário de alarme, de acordo com o período definido pelo usuário.
+* **Agendamento de Avisos:** Implementado o uso de `ScheduledExecutorService` no `GerenciadorTarefas` para disparar os avisos automaticamente quando o período configurado chegar.
+* **Exibição do Alarme:** O horário configurado para o alarme passou a ser exibido junto com os dados da tarefa ao listar as tarefas.
+* **Tratamento de Datas:** Melhorado o tratamento das datas de término, permitindo a entrada no formato `dd/MM/yyyy` e também sem as barras.
+
+
 
 
 ## 👨‍💻 Autor
