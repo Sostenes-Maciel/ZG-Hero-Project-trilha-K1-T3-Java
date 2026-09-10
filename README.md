@@ -39,6 +39,19 @@ Para garantir um código escalável e de fácil manutenção, o projeto foi estr
 * **Service/Controller (`GerenciadorDeTarefas`):** O "cérebro" da aplicação. Isola toda a lógica de negócio, manipulação da lista, rebalanceamento por prioridade e filtros.
 * **Model (`Tarefa`, `Status`):** Representam os dados e o estado da aplicação.
 
+* ## Atualização: Testes Unitários do CRUD
+
+Foram implementados testes unitários utilizando **Spock Framework** e **Groovy** para validar as operações de **CRUD (Create, Read, Update e Delete)** do sistema de gerenciamento de tarefas.
+
+### Principais Alterações
+
+* **Create:** Teste para verificar a criação e inserção de novas tarefas na lista.
+* **Read:** Teste para validar a recuperação das tarefas cadastradas.
+* **Update:** Teste para verificar a atualização de uma tarefa existente.
+* **Delete:** Teste para validar a remoção de uma tarefa cadastrada.
+* **Testes Unitários com Spock:** As operações foram testadas de forma independente, verificando o comportamento esperado de cada ação do CRUD.
+
+
 
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
