@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
-import java.util.List;
 
 public class MenuTerminal {
 
@@ -72,6 +71,7 @@ public class MenuTerminal {
                     System.out.println("Opção inválida! Tente novamente.");
             }
         }
+        gerenciador.encerrarAlarmes();
         sc.close();
     }
 
@@ -95,10 +95,32 @@ public class MenuTerminal {
         System.out.print("Categoria: ");
         String categoria = sc.nextLine();
 
+        System.out.print("Deseja configurar um alarme? (1 - Sim / 2 - Não): ");
+        int opcaoAlarme = sc.nextInt();
+        sc.nextLine();
+
+        long minutosAlarme = 0;
+
+        if (opcaoAlarme == 1) {
+            System.out.print("Em quantos minutos deseja ser avisado? ");
+            minutosAlarme = sc.nextLong();
+            sc.nextLine();
+
+            if (minutosAlarme <= 0) {
+                System.out.println("Tempo inválido. O alarme não será configurado.");
+                minutosAlarme = 0;
+            }
+        }
+
         try {
             Tarefa novaTarefa = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
             gerenciador.adicionarTarefa(novaTarefa);
+            if (minutosAlarme > 0) {
+                gerenciador.configurarAlarme(novaTarefa, minutosAlarme);
+            }
+
             System.out.println("Tarefa adicionada com sucesso!");
+
         } catch (IllegalArgumentException e) {
             System.out.println("Erro ao criar tarefa: " + e.getMessage());
         } catch (Exception e) {

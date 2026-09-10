@@ -7,12 +7,19 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class GerenciadorTarefas {
+
     private List<Tarefa> tarefas;
+    private ScheduledExecutorService scheduler;
 
     public GerenciadorTarefas() {
 
         this.tarefas = new ArrayList<>();
+        this.scheduler = Executors.newScheduledThreadPool(1);
     }
 
     public void adicionarTarefa(Tarefa tarefa) {
@@ -79,5 +86,24 @@ public class GerenciadorTarefas {
             }
         }
         return tarefasFiltradas;
+    }
+
+    public void configurarAlarme(Tarefa tarefa, long minutos) {
+
+        scheduler.schedule(() -> {
+            System.out.println("\n================================");
+            System.out.println("         ALARME DE TAREFA");
+            System.out.println("================================");
+            System.out.println("Tarefa: " + tarefa.getNome());
+            System.out.println("Descrição: " + tarefa.getDescricao());
+            System.out.println("Prioridade: " + tarefa.getPrioridade());
+            System.out.println("================================\n");
+        }, minutos, TimeUnit.MINUTES);
+
+        System.out.println("Alarme configurado para daqui a "
+                + minutos + " minuto(s).");
+    }
+    public void encerrarAlarmes() {
+        scheduler.shutdown();
     }
 }
