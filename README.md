@@ -68,3 +68,4 @@ O projeto foi atualizado com a implementação de um sistema de alarmes para as 
 
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
+Teste do commit automático do ACZG
