@@ -1,7 +1,10 @@
 const formTarefa = document.getElementById("formTarefa");
 const listaTarefas = document.getElementById("listaTarefas");
+const botaoFormulario = document.getElementById("botaoFormulario");
+const botaoCancelarEdicao = document.getElementById("botaoCancelarEdicao");
 
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
+let tarefaEmEdicao = null;
 
 function salvarTarefas() {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
@@ -50,10 +53,10 @@ function listarTarefas() {
 
 
 formTarefa.addEventListener("submit", function (event) {
+
     event.preventDefault();
 
-    const novaTarefa = {
-        id: Date.now(),
+    const dadosTarefa = {
         nome: document.getElementById("nome").value,
         descricao: document.getElementById("descricao").value,
         dataTermino: document.getElementById("dataTermino").value,
@@ -63,12 +66,50 @@ formTarefa.addEventListener("submit", function (event) {
         alarme: document.getElementById("alarme").value
     };
 
-    tarefas.push(novaTarefa);
+    if (tarefaEmEdicao !== null) {
+
+        const tarefa = tarefas.find(
+            (tarefa) => tarefa.id === tarefaEmEdicao
+        );
+
+        if (tarefa) {
+            tarefa.nome = dadosTarefa.nome;
+            tarefa.descricao = dadosTarefa.descricao;
+            tarefa.dataTermino = dadosTarefa.dataTermino;
+            tarefa.prioridade = dadosTarefa.prioridade;
+            tarefa.categoria = dadosTarefa.categoria;
+            tarefa.alarme = dadosTarefa.alarme;
+        }
+
+        tarefaEmEdicao = null;
+
+        botaoFormulario.textContent = "Adicionar tarefa";
+        botaoCancelarEdicao.hidden = true;
+
+    } else {
+
+        const novaTarefa = {
+            id: Date.now(),
+            ...dadosTarefa
+        };
+
+        tarefas.push(novaTarefa);
+    }
 
     salvarTarefas();
     listarTarefas();
 
     formTarefa.reset();
+});
+
+botaoCancelarEdicao.addEventListener("click", function () {
+
+    tarefaEmEdicao = null;
+
+    formTarefa.reset();
+
+    botaoFormulario.textContent = "Adicionar tarefa";
+    botaoCancelarEdicao.hidden = true;
 });
 
 
@@ -119,51 +160,29 @@ function editarTarefa(id) {
         return;
     }
 
-    const nome = prompt("Nome:", tarefa.nome);
+    tarefaEmEdicao = id;
 
-    if (nome === null) {
-        return;
-    }
+    document.getElementById("nome").value = tarefa.nome;
+    document.getElementById("descricao").value = tarefa.descricao;
+    document.getElementById("dataTermino").value = tarefa.dataTermino;
+    document.getElementById("prioridade").value = tarefa.prioridade;
+    document.getElementById("categoria").value = tarefa.categoria;
+    document.getElementById("alarme").value = tarefa.alarme || "";
 
-    const descricao = prompt("Descrição:", tarefa.descricao);
+    botaoFormulario.textContent = "Salvar alterações";
+    botaoCancelarEdicao.hidden = false;
 
-    if (descricao === null) {
-        return;
-    }
+    document.getElementById("cadastrar").classList.add("ativa");
+    document.getElementById("tarefas").classList.remove("ativa");
 
-    const dataTermino = prompt(
-        "Data de término (AAAA-MM-DD):",
-        tarefa.dataTermino
-    );
+    document.querySelectorAll(".menu-item").forEach((item) => {
+        item.classList.remove("ativo");
+    });
 
-    if (dataTermino === null) {
-        return;
-    }
+    document.querySelector('[data-secao="cadastrar"]').classList.add("ativo");
 
-    const prioridade = prompt(
-        "Prioridade (1 a 5):",
-        tarefa.prioridade
-    );
-
-    if (prioridade === null) {
-        return;
-    }
-
-    const categoria = prompt(
-        "Categoria:",
-        tarefa.categoria
-    );
-
-    if (categoria === null) {
-        return;
-    }
-
-    tarefa.nome = nome;
-    tarefa.descricao = descricao;
-    tarefa.dataTermino = dataTermino;
-    tarefa.prioridade = Number(prioridade);
-    tarefa.categoria = categoria;
-
-    salvarTarefas();
-    listarTarefas();
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
