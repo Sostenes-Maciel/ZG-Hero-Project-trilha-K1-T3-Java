@@ -57,6 +57,38 @@ function listarTarefas() {
     });
 }
 
+function configurarAlarme(tarefa, horario) {
+
+    if (!horario) {
+        return;
+    }
+
+    const agora = new Date();
+    const [hora, minuto] = horario.split(":").map(Number);
+
+    const horarioAlarme = new Date();
+
+    horarioAlarme.setHours(hora);
+    horarioAlarme.setMinutes(minuto);
+    horarioAlarme.setSeconds(0);
+    horarioAlarme.setMilliseconds(0);
+
+    if (horarioAlarme <= agora) {
+        horarioAlarme.setDate(horarioAlarme.getDate() + 1);
+    }
+
+    const tempoAteAlarme =
+        horarioAlarme.getTime() - agora.getTime();
+
+    setTimeout(() => {
+        alert(
+            `ALARME DE TAREFA\n\n` +
+            `Tarefa: ${tarefa.nome}\n` +
+            `Descrição: ${tarefa.descricao}`
+        );
+    }, tempoAteAlarme);
+}
+
 
 formTarefa.addEventListener("submit", function (event) {
 
