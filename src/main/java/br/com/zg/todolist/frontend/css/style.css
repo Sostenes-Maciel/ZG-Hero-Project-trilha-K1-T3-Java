@@ -5,39 +5,60 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    color: #222;
+    background: #f4f7f5;
+    color: #254D32;
 }
 
+/* TOPO */
+
 .topo {
-    background: #222;
+    background: #254D32;
     color: white;
     padding: 20px 30px;
+    text-align: center;
 }
 
 .topo h1 {
     margin: 0;
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .topo p {
-    margin: 5px 0 0;
+    margin: 6px 0 0;
+    color: #B2FFA8;
+    font-weight: bold;
 }
+
+/* ESTRUTURA PRINCIPAL */
 
 .layout {
-    display: flex;
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
     min-height: calc(100vh - 105px);
+    margin: 30px auto;
+    padding: 0 20px;
 }
 
+/* MENU LATERAL */
+
 .menu {
-    width: 240px;
+    position: absolute;
+    left: 20px;
+    top: 0;
+    width: 190px;
     background: white;
-    border-right: 1px solid #ddd;
-    padding: 25px 15px;
+    border: 1px solid #56876D;
+    border-radius: 10px;
+    padding: 20px;
 }
 
 .menu h2 {
     margin-top: 0;
-    padding-left: 10px;
+    margin-bottom: 20px;
+    color: #254D32;
+    font-weight: bold;
 }
 
 .menu nav {
@@ -48,32 +69,41 @@ body {
 
 .menu-item {
     width: 100%;
-    padding: 12px 15px;
+    padding: 12px;
     text-align: left;
     border: none;
     background: transparent;
+    color: #254D32;
     border-radius: 6px;
     cursor: pointer;
     font-size: 15px;
+    font-weight: bold;
 }
 
 .menu-item:hover {
-    background: #f0f0f0;
+    background: #B2FFA8;
 }
 
 .menu-item.ativo {
-    background: #222;
+    background: #56876D;
     color: white;
 }
 
+/* ÁREA DE CONTEÚDO */
+
 .conteudo {
-    flex: 1;
-    padding: 30px;
-    max-width: 900px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-left: 220px;
 }
+
+/* SEÇÕES */
 
 .secao {
     display: none;
+    width: 100%;
+    max-width: 520px;
 }
 
 .secao.ativa {
@@ -82,12 +112,19 @@ body {
 
 .secao h2 {
     margin-top: 0;
+    margin-bottom: 20px;
+    color: #254D32;
+    font-weight: bold;
 }
 
+/* FORMULÁRIO */
+
 form {
+    width: 100%;
     background: white;
     padding: 25px;
-    border-radius: 8px;
+    border: 1px solid #56876D;
+    border-radius: 10px;
 }
 
 .campo {
@@ -97,7 +134,8 @@ form {
 }
 
 .campo label {
-    margin-bottom: 6px;
+    margin-bottom: 7px;
+    color: #254D32;
     font-weight: bold;
 }
 
@@ -107,8 +145,17 @@ form {
     width: 100%;
     padding: 10px;
     font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #56876D;
+    border-radius: 6px;
+    color: #254D32;
+    background: white;
+}
+
+.campo input:focus,
+.campo textarea:focus,
+.campo select:focus {
+    outline: none;
+    border: 2px solid #56876D;
 }
 
 .campo textarea {
@@ -118,36 +165,242 @@ form {
 
 .campo small {
     margin-top: 5px;
-    color: #777;
+    color: #56876D;
 }
+
+/* DATA E HORA */
+
+.campo input[type="date"],
+.campo input[type="time"] {
+    width: 145px;
+    padding: 8px 6px;
+}
+
+/* BOTÃO PRINCIPAL */
 
 .btn-principal {
     width: 100%;
     padding: 12px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: bold;
+    background: #56876D;
+    color: white;
 }
 
 .btn-principal:hover {
-    opacity: 0.9;
+    background: #254D32;
 }
 
-.tarefa {
+/* BOTÃO CANCELAR */
+
+#botaoCancelarEdicao {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #56876D;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 8px;
     background: white;
-    border: 1px solid #ddd;
-    padding: 18px;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    color: #254D32;
 }
 
-.tarefa h3 {
-    margin-top: 0;
+#botaoCancelarEdicao:hover {
+    background: #B2FFA8;
 }
+
+/* LISTAGEM */
 
 #listaTarefas {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
+}
+
+/* CARDS DAS TAREFAS */
+
+.tarefa {
+    width: 100%;
+    background: white;
+    border: 1px solid #56876D;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(37, 77, 50, 0.08);
+}
+
+.tarefa h3 {
+    margin: 0 0 15px;
+    color: #254D32;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.tarefa p {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.tarefa strong {
+    color: #254D32;
+    font-weight: bold;
+}
+
+/* STATUS DA TAREFA */
+
+.tarefa p strong + * {
+    font-weight: bold;
+}
+
+/* AÇÕES DAS TAREFAS */
+
+.acoes-tarefa {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 15px;
+    border-top: 1px solid #B2FFA8;
+}
+
+.acoes-tarefa button {
+    flex: 1;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    background: #56876D;
+    color: white;
+}
+
+.acoes-tarefa button:hover {
+    background: #254D32;
+}
+
+/* BOTÃO REMOVER */
+
+.acoes-tarefa button:last-child {
+    background: #FB3640;
+}
+
+.acoes-tarefa button:last-child:hover {
+    background: #BB342F;
+}
+
+/* FILTROS */
+
+#filtros {
+    width: 100%;
+}
+
+#resultadoFiltros {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 25px;
+}
+
+/* CARDS DOS RESULTADOS DOS FILTROS */
+
+#resultadoFiltros .tarefa {
+    background: white;
+    border: 1px solid #56876D;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(37, 77, 50, 0.08);
+}
+
+#resultadoFiltros .tarefa h3 {
+    margin: 0 0 15px;
+    color: #254D32;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#resultadoFiltros .tarefa p {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+/* BOTÕES DOS FILTROS */
+
+#botaoFiltrar,
+#botaoLimparFiltros {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#botaoFiltrar {
+    background: #56876D;
+    color: white;
+}
+
+#botaoFiltrar:hover {
+    background: #254D32;
+}
+
+#botaoLimparFiltros {
+    margin-top: 8px;
+    background: white;
+    color: #254D32;
+    border: 1px solid #56876D;
+}
+
+#botaoLimparFiltros:hover {
+    background: #B2FFA8;
+}
+
+/* RODAPÉ */
+
+.rodape {
+    width: 100%;
+    margin-top: 35px;
+    padding: 18px 20px;
+    background: #254D32;
+    color: white;
+    text-align: center;
+}
+
+.rodape p {
+    margin: 4px 0;
+    font-size: 12px;
+}
+
+.rodape p:first-child,
+.rodape p:nth-child(2) {
+    font-weight: bold;
+    color: #B2FFA8;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 800px) {
+
+    .layout {
+        padding: 0 15px;
+    }
+
+    .menu {
+        position: static;
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    .conteudo {
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .secao {
+        max-width: 520px;
+    }
 }
