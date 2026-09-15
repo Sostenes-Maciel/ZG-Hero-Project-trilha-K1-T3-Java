@@ -95,7 +95,6 @@ body {
     width: 100%;
     display: flex;
     justify-content: center;
-    padding-left: 220px;
 }
 
 /* SEÇÕES */
@@ -103,7 +102,7 @@ body {
 .secao {
     display: none;
     width: 100%;
-    max-width: 520px;
+    max-width: 560px;
 }
 
 .secao.ativa {
@@ -218,7 +217,7 @@ form {
 #listaTarefas {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 15px;
 }
 
 /* CARDS DAS TAREFAS */
@@ -228,7 +227,7 @@ form {
     background: white;
     border: 1px solid #56876D;
     border-radius: 10px;
-    padding: 20px;
+    padding: 18px;
     box-shadow: 0 2px 6px rgba(37, 77, 50, 0.08);
 }
 
@@ -237,6 +236,8 @@ form {
     color: #254D32;
     font-size: 20px;
     font-weight: bold;
+    padding-left: 10px;
+    border-left: 5px solid #56876D;
 }
 
 .tarefa p {
@@ -249,10 +250,18 @@ form {
     font-weight: bold;
 }
 
-/* STATUS DA TAREFA */
+/* CORES DO STATUS */
 
-.tarefa p strong + * {
-    font-weight: bold;
+.tarefa.status-TODO h3 {
+    border-left-color: #F2C94C;
+}
+
+.tarefa.status-DOING h3 {
+    border-left-color: #4A90E2;
+}
+
+.tarefa.status-DONE h3 {
+    border-left-color: #4CAF50;
 }
 
 /* AÇÕES DAS TAREFAS */
@@ -295,44 +304,66 @@ form {
 
 #filtros {
     width: 100%;
+    max-width: 560px;
 }
 
-#resultadoFiltros {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin-top: 25px;
+#filtros > h2 {
+    margin-bottom: 25px;
 }
 
-/* CARDS DOS RESULTADOS DOS FILTROS */
-
-#resultadoFiltros .tarefa {
+.filtro {
     background: white;
     border: 1px solid #56876D;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 6px rgba(37, 77, 50, 0.08);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
 }
 
-#resultadoFiltros .tarefa h3 {
-    margin: 0 0 15px;
+.filtro label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
     color: #254D32;
-    font-size: 20px;
     font-weight: bold;
+    cursor: pointer;
 }
 
-#resultadoFiltros .tarefa p {
-    margin: 8px 0;
-    line-height: 1.5;
+.filtro input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: #56876D;
+    cursor: pointer;
 }
 
-/* BOTÕES DOS FILTROS */
+.filtro input[type="text"],
+.filtro select {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid #56876D;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #254D32;
+    background: white;
+}
+
+.filtro input[type="text"]:focus,
+.filtro select:focus {
+    outline: none;
+    border: 2px solid #56876D;
+}
+
+.filtro input:disabled,
+.filtro select:disabled {
+    background: #eef2ef;
+    color: #8a9a8e;
+    cursor: not-allowed;
+}
 
 #botaoFiltrar,
 #botaoLimparFiltros {
     width: 100%;
     padding: 12px;
-    border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 15px;
@@ -340,6 +371,7 @@ form {
 }
 
 #botaoFiltrar {
+    border: none;
     background: #56876D;
     color: white;
 }
@@ -350,13 +382,20 @@ form {
 
 #botaoLimparFiltros {
     margin-top: 8px;
+    border: 1px solid #56876D;
     background: white;
     color: #254D32;
-    border: 1px solid #56876D;
 }
 
 #botaoLimparFiltros:hover {
     background: #B2FFA8;
+}
+
+#resultadoFiltros {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 25px;
 }
 
 /* RODAPÉ */
@@ -397,10 +436,13 @@ form {
 
     .conteudo {
         width: 100%;
-        padding-left: 0;
     }
 
     .secao {
         max-width: 520px;
+    }
+
+    .tarefa {
+        width: 100%;
     }
 }

@@ -8,6 +8,9 @@ const filtroStatus = document.getElementById("filtroStatus");
 const botaoFiltrar = document.getElementById("botaoFiltrar");
 const botaoLimparFiltros = document.getElementById("botaoLimparFiltros");
 const resultadoFiltros = document.getElementById("resultadoFiltros");
+const ativarCategoria = document.getElementById("ativarCategoria");
+const ativarPrioridade = document.getElementById("ativarPrioridade");
+const ativarStatus = document.getElementById("ativarStatus");
 
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 let tarefaEmEdicao = null;
@@ -27,7 +30,7 @@ function listarTarefas() {
     tarefas.forEach((tarefa) => {
 
         const card = document.createElement("div");
-        card.classList.add("tarefa");
+        card.classList.add("tarefa", `status-${tarefa.status}`);
 
         card.innerHTML = `
             <h3>${tarefa.nome}</h3>
@@ -227,6 +230,18 @@ function editarTarefa(id) {
     });
 }
 
+ativarCategoria.addEventListener("change", function () {
+    filtroCategoria.disabled = !this.checked;
+});
+
+ativarPrioridade.addEventListener("change", function () {
+    filtroPrioridade.disabled = !this.checked;
+});
+
+ativarStatus.addEventListener("change", function () {
+    filtroStatus.disabled = !this.checked;
+});
+
 function filtrarTarefas() {
 
     const categoria = filtroCategoria.value.trim().toLowerCase();
@@ -236,15 +251,15 @@ function filtrarTarefas() {
     const resultado = tarefas.filter((tarefa) => {
 
         const correspondeCategoria =
-            !categoria ||
+            !ativarCategoria.checked ||
             tarefa.categoria.toLowerCase() === categoria;
 
         const correspondePrioridade =
-            !prioridade ||
+            !ativarPrioridade.checked ||
             tarefa.prioridade === Number(prioridade);
 
         const correspondeStatus =
-            !status ||
+            !ativarStatus.checked ||
             tarefa.status === status;
 
         return (

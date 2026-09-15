@@ -18,6 +18,7 @@
     </div>
 </header>
 
+
 <div class="layout">
 
     <aside class="menu">
@@ -124,15 +125,28 @@
 
             <h2>Filtrar tarefas</h2>
 
-            <div class="campo">
-                <label for="filtroCategoria">Categoria</label>
-                <input type="text" id="filtroCategoria" placeholder="Digite uma categoria">
+            <div class="filtro">
+                <label>
+                    <input type="checkbox" id="ativarCategoria">
+                    Categoria
+                </label>
+
+                <input
+                        type="text"
+                        id="filtroCategoria"
+                        placeholder="Digite uma categoria"
+                        disabled
+                >
             </div>
 
-            <div class="campo">
-                <label for="filtroPrioridade">Prioridade</label>
-                <select id="filtroPrioridade">
-                    <option value="">Todas</option>
+            <div class="filtro">
+                <label>
+                    <input type="checkbox" id="ativarPrioridade">
+                    Prioridade
+                </label>
+
+                <select id="filtroPrioridade" disabled>
+                    <option value="">Selecione</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -141,10 +155,14 @@
                 </select>
             </div>
 
-            <div class="campo">
-                <label for="filtroStatus">Status</label>
-                <select id="filtroStatus">
-                    <option value="">Todos</option>
+            <div class="filtro">
+                <label>
+                    <input type="checkbox" id="ativarStatus">
+                    Status
+                </label>
+
+                <select id="filtroStatus" disabled>
+                    <option value="">Selecione</option>
                     <option value="TODO">TODO</option>
                     <option value="DOING">DOING</option>
                     <option value="DONE">DONE</option>
@@ -162,14 +180,13 @@
             <div id="resultadoFiltros"></div>
 
         </section>
-
     </main>
 
 </div>
 
 <footer class="rodape">
     <p>Criado por Sóstenes Maciel para a trilha de Javascript</p>
-    <p>&copy; 2026 Acelera ZG. Todos os direitos reservados.</p>
+    <p>&copy; 2026 - Acelera ZG. Todos os direitos reservados.</p>
 </footer>
 
 <script src="js/script.js"></script>
