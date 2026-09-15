@@ -1,0 +1,153 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #222;
+}
+
+.topo {
+    background: #222;
+    color: white;
+    padding: 20px 30px;
+}
+
+.topo h1 {
+    margin: 0;
+}
+
+.topo p {
+    margin: 5px 0 0;
+}
+
+.layout {
+    display: flex;
+    min-height: calc(100vh - 105px);
+}
+
+.menu {
+    width: 240px;
+    background: white;
+    border-right: 1px solid #ddd;
+    padding: 25px 15px;
+}
+
+.menu h2 {
+    margin-top: 0;
+    padding-left: 10px;
+}
+
+.menu nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.menu-item {
+    width: 100%;
+    padding: 12px 15px;
+    text-align: left;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.menu-item:hover {
+    background: #f0f0f0;
+}
+
+.menu-item.ativo {
+    background: #222;
+    color: white;
+}
+
+.conteudo {
+    flex: 1;
+    padding: 30px;
+    max-width: 900px;
+}
+
+.secao {
+    display: none;
+}
+
+.secao.ativa {
+    display: block;
+}
+
+.secao h2 {
+    margin-top: 0;
+}
+
+form {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.campo label {
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.campo input,
+.campo textarea,
+.campo select {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.campo textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.campo small {
+    margin-top: 5px;
+    color: #777;
+}
+
+.btn-principal {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-principal:hover {
+    opacity: 0.9;
+}
+
+.tarefa {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 18px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.tarefa h3 {
+    margin-top: 0;
+}
+
+#listaTarefas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
