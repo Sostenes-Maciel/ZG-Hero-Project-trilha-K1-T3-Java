@@ -1,7 +1,7 @@
 package br.com.zg.todolistspec
 
-import br.com.zg.todolist.model.Tarefa
-import br.com.zg.todolist.service.GerenciadorTarefas
+import br.com.zg.todolist.backend.model.Tarefa
+import br.com.zg.todolist.backend.service.GerenciadorTarefas
 import spock.lang.Specification
 
 import java.time.LocalDate

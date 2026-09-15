@@ -1,4 +1,4 @@
-package br.com.zg.todolist.model;
+package br.com.zg.todolist.backend.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

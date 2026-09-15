@@ -1,6 +1,6 @@
 package br.com.zg.todolist;
 
-import br.com.zg.todolist.view.MenuTerminal;
+import br.com.zg.todolist.backend.view.MenuTerminal;
 
 public class Main {
 

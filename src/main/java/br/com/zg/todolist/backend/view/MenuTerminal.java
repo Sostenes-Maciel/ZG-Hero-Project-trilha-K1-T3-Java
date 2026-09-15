@@ -1,8 +1,8 @@
-package br.com.zg.todolist.view;
+package br.com.zg.todolist.backend.view;
 
-import br.com.zg.todolist.model.Status;
-import br.com.zg.todolist.model.Tarefa;
-import br.com.zg.todolist.service.GerenciadorTarefas;
+import br.com.zg.todolist.backend.model.Status;
+import br.com.zg.todolist.backend.model.Tarefa;
+import br.com.zg.todolist.backend.service.GerenciadorTarefas;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

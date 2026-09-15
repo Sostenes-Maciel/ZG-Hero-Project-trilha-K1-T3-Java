@@ -1,7 +1,7 @@
-package br.com.zg.todolist.service;
+package br.com.zg.todolist.backend.service;
 
-import br.com.zg.todolist.model.Status;
-import br.com.zg.todolist.model.Tarefa;
+import br.com.zg.todolist.backend.model.Status;
+import br.com.zg.todolist.backend.model.Tarefa;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
