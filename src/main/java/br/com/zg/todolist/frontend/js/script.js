@@ -2,6 +2,12 @@ const formTarefa = document.getElementById("formTarefa");
 const listaTarefas = document.getElementById("listaTarefas");
 const botaoFormulario = document.getElementById("botaoFormulario");
 const botaoCancelarEdicao = document.getElementById("botaoCancelarEdicao");
+const filtroCategoria = document.getElementById("filtroCategoria");
+const filtroPrioridade = document.getElementById("filtroPrioridade");
+const filtroStatus = document.getElementById("filtroStatus");
+const botaoFiltrar = document.getElementById("botaoFiltrar");
+const botaoLimparFiltros = document.getElementById("botaoLimparFiltros");
+const resultadoFiltros = document.getElementById("resultadoFiltros");
 
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 let tarefaEmEdicao = null;
@@ -23,7 +29,7 @@ function listarTarefas() {
         const card = document.createElement("div");
         card.classList.add("tarefa");
 
-                card.innerHTML = `
+        card.innerHTML = `
             <h3>${tarefa.nome}</h3>
             <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
             <p><strong>Data de término:</strong> ${tarefa.dataTermino}</p>
@@ -31,10 +37,10 @@ function listarTarefas() {
             <p><strong>Categoria:</strong> ${tarefa.categoria}</p>
             <p><strong>Status:</strong> ${tarefa.status}</p>
             ${
-                tarefa.alarme
-                    ? `<p><strong>Alarme:</strong> ${tarefa.alarme} minuto(s)</p>`
-                    : `<p><strong>Alarme:</strong> Não configurado</p>`
-            }
+            tarefa.alarme
+                ? `<p><strong>Alarme:</strong> ${tarefa.alarme} minuto(s)</p>`
+                : `<p><strong>Alarme:</strong> Não configurado</p>`
+        }
             
             <div class="acoes-tarefa">
             <button onclick="editarTarefa(${tarefa.id})">
@@ -186,3 +192,79 @@ function editarTarefa(id) {
         behavior: "smooth"
     });
 }
+
+function filtrarTarefas() {
+
+    const categoria = filtroCategoria.value.trim().toLowerCase();
+    const prioridade = filtroPrioridade.value;
+    const status = filtroStatus.value;
+
+    const resultado = tarefas.filter((tarefa) => {
+
+        const correspondeCategoria =
+            !categoria ||
+            tarefa.categoria.toLowerCase() === categoria;
+
+        const correspondePrioridade =
+            !prioridade ||
+            tarefa.prioridade === Number(prioridade);
+
+        const correspondeStatus =
+            !status ||
+            tarefa.status === status;
+
+        return (
+            correspondeCategoria &&
+            correspondePrioridade &&
+            correspondeStatus
+        );
+    });
+
+    mostrarResultadoFiltro(resultado);
+}
+
+function mostrarResultadoFiltro(resultado) {
+
+    resultadoFiltros.innerHTML = "";
+
+    if (resultado.length === 0) {
+        resultadoFiltros.innerHTML =
+            "<p>Nenhuma tarefa encontrada.</p>";
+        return;
+    }
+
+    resultado.forEach((tarefa) => {
+
+        const card = document.createElement("div");
+        card.classList.add("tarefa");
+
+        card.innerHTML = `
+            <h3>${tarefa.nome}</h3>
+            <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
+            <p><strong>Data de término:</strong> ${tarefa.dataTermino}</p>
+            <p><strong>Prioridade:</strong> ${tarefa.prioridade}</p>
+            <p><strong>Categoria:</strong> ${tarefa.categoria}</p>
+            <p><strong>Status:</strong> ${tarefa.status}</p>
+            ${
+            tarefa.alarme
+                ? `<p><strong>Alarme:</strong> ${tarefa.alarme} minuto(s)</p>`
+                : `<p><strong>Alarme:</strong> Não configurado</p>`
+        }
+        `;
+
+        resultadoFiltros.appendChild(card);
+    });
+}
+
+botaoFiltrar.addEventListener("click", function () {
+    filtrarTarefas();
+});
+
+botaoLimparFiltros.addEventListener("click", function () {
+
+    filtroCategoria.value = "";
+    filtroPrioridade.value = "";
+    filtroStatus.value = "";
+
+    resultadoFiltros.innerHTML = "";
+});
