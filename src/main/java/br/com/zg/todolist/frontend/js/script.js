@@ -68,7 +68,7 @@ formTarefa.addEventListener("submit", function (event) {
         dataTermino: document.getElementById("dataTermino").value,
         prioridade: Number(document.getElementById("prioridade").value),
         categoria: document.getElementById("categoria").value,
-        status: "TODO",
+        status: document.getElementById("status").value,
         alarme: document.getElementById("alarme").value
     };
 
@@ -84,6 +84,7 @@ formTarefa.addEventListener("submit", function (event) {
             tarefa.dataTermino = dadosTarefa.dataTermino;
             tarefa.prioridade = dadosTarefa.prioridade;
             tarefa.categoria = dadosTarefa.categoria;
+            tarefa.status = dadosTarefa.status;
             tarefa.alarme = dadosTarefa.alarme;
         }
 
@@ -173,6 +174,7 @@ function editarTarefa(id) {
     document.getElementById("dataTermino").value = tarefa.dataTermino;
     document.getElementById("prioridade").value = tarefa.prioridade;
     document.getElementById("categoria").value = tarefa.categoria;
+    document.getElementById("status").value = tarefa.status;
     document.getElementById("alarme").value = tarefa.alarme || "";
 
     botaoFormulario.textContent = "Salvar alterações";
