@@ -278,7 +278,14 @@ form {
     font-weight: bold;
 }
 
-/* CORES DO STATUS */
+/* INFORMAÇÕES IMPORTANTES */
+
+.tarefa p strong {
+    display: inline-block;
+    margin-right: 3px;
+}
+
+/* STATUS */
 
 .tarefa.status-TODO h3 {
     border-left-color: #F2C94C;
@@ -290,6 +297,12 @@ form {
 
 .tarefa.status-DONE h3 {
     border-left-color: #4CAF50;
+}
+
+/* PRIORIDADE */
+
+.tarefa p:nth-child(5) {
+    font-weight: bold;
 }
 
 /* AÇÕES DAS TAREFAS */
@@ -434,6 +447,8 @@ form {
     cursor: not-allowed;
 }
 
+/* BOTÕES DOS FILTROS */
+
 #botaoFiltrar,
 #botaoLimparFiltros {
     width: 100%;
@@ -465,11 +480,31 @@ form {
     background: #B2FFA8;
 }
 
+/* RESULTADOS DOS FILTROS */
+
 #resultadoFiltros {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 25px;
+    margin-top: 20px;
+}
+
+.quantidade-resultados {
+    margin: 0;
+    padding: 8px 0;
+    color: #56876D;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* CARDS DOS RESULTADOS */
+
+#resultadoFiltros .tarefa {
+    background: white;
+    border: 1px solid #56876D;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 2px 6px rgba(37, 77, 50, 0.08);
 }
 
 /* RODAPÉ */
@@ -518,5 +553,9 @@ form {
 
     .mensagem {
         width: calc(100% - 30px);
+    }
+
+    .tarefa {
+        width: 100%;
     }
 }

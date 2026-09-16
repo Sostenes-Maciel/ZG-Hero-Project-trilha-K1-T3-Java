@@ -37,8 +37,8 @@ function listarTarefas() {
         card.innerHTML = `
             <h3>${tarefa.nome}</h3>
             <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
-            <p><strong>Data de término:</strong> ${tarefa.dataTermino}</p>
-            <p><strong>Prioridade:</strong> ${tarefa.prioridade}</p>
+            <p><strong>Data de término:</strong> ${formatarData(tarefa.dataTermino)}</p>
+            <p><strong>Prioridade:</strong> ${tarefa.prioridade}/5</p>
             <p><strong>Categoria:</strong> ${tarefa.categoria}</p>
             <p><strong>Status:</strong> ${tarefa.status}</p>
             ${
@@ -326,9 +326,13 @@ function mostrarResultadoFiltro(resultado) {
 
     resultadoFiltros.innerHTML = "";
 
+    const quantidade = document.createElement("p");
+    quantidade.textContent = `${resultado.length} tarefa(s) encontrada(s).`;
+    quantidade.classList.add("quantidade-resultados");
+
+    resultadoFiltros.appendChild(quantidade);
+
     if (resultado.length === 0) {
-        resultadoFiltros.innerHTML =
-            "<p>Nenhuma tarefa encontrada.</p>";
         return;
     }
 
@@ -340,8 +344,8 @@ function mostrarResultadoFiltro(resultado) {
         card.innerHTML = `
             <h3>${tarefa.nome}</h3>
             <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
-            <p><strong>Data de término:</strong> ${tarefa.dataTermino}</p>
-            <p><strong>Prioridade:</strong> ${tarefa.prioridade}</p>
+            <p><strong>Data de término:</strong> ${formatarData(tarefa.dataTermino)}</p>
+            <p><strong>Prioridade:</strong> ${tarefa.prioridade}/5</p>
             <p><strong>Categoria:</strong> ${tarefa.categoria}</p>
             <p><strong>Status:</strong> ${tarefa.status}</p>
             ${
@@ -377,4 +381,14 @@ function mostrarMensagem(texto, tipo) {
         mensagem.textContent = "";
         mensagem.className = "mensagem";
     }, 3000);
+}
+
+function formatarData(data) {
+    if (!data) {
+        return "";
+    }
+
+    const [ano, mes, dia] = data.split("-");
+
+    return `${dia}/${mes}/${ano}`;
 }
