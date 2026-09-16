@@ -46,12 +46,7 @@ body {
     display: none;
 }
 
-.mensagem.sucesso {
-    background: #B2FFA8;
-    color: #254D32;
-    border: 1px solid #56876D;
-}
-
+.mensagem.sucesso,
 .mensagem.removido {
     background: #B2FFA8;
     color: #254D32;
@@ -259,13 +254,46 @@ form {
     box-shadow: 0 2px 6px rgba(37, 77, 50, 0.08);
 }
 
-.tarefa h3 {
-    margin: 0 0 15px;
+/* TÍTULO + SELEÇÃO */
+
+.titulo-tarefa {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.titulo-tarefa h3 {
+    margin: 0;
     color: #254D32;
     font-size: 20px;
     font-weight: bold;
     padding-left: 10px;
     border-left: 5px solid #56876D;
+}
+
+/* CHECKBOX DAS TAREFAS */
+
+.checkbox-tarefa {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    accent-color: #56876D;
+    cursor: pointer;
+}
+
+/* CORES DO STATUS */
+
+.tarefa.status-TODO .titulo-tarefa h3 {
+    border-left-color: #F2C94C;
+}
+
+.tarefa.status-DOING .titulo-tarefa h3 {
+    border-left-color: #4A90E2;
+}
+
+.tarefa.status-DONE .titulo-tarefa h3 {
+    border-left-color: #4CAF50;
 }
 
 .tarefa p {
@@ -275,33 +303,6 @@ form {
 
 .tarefa strong {
     color: #254D32;
-    font-weight: bold;
-}
-
-/* INFORMAÇÕES IMPORTANTES */
-
-.tarefa p strong {
-    display: inline-block;
-    margin-right: 3px;
-}
-
-/* STATUS */
-
-.tarefa.status-TODO h3 {
-    border-left-color: #F2C94C;
-}
-
-.tarefa.status-DOING h3 {
-    border-left-color: #4A90E2;
-}
-
-.tarefa.status-DONE h3 {
-    border-left-color: #4CAF50;
-}
-
-/* PRIORIDADE */
-
-.tarefa p:nth-child(5) {
     font-weight: bold;
 }
 
@@ -497,16 +498,6 @@ form {
     font-weight: bold;
 }
 
-/* CARDS DOS RESULTADOS */
-
-#resultadoFiltros .tarefa {
-    background: white;
-    border: 1px solid #56876D;
-    border-radius: 10px;
-    padding: 18px;
-    box-shadow: 0 2px 6px rgba(37, 77, 50, 0.08);
-}
-
 /* RODAPÉ */
 
 .rodape {
@@ -558,4 +549,60 @@ form {
     .tarefa {
         width: 100%;
     }
+}
+
+.acoes-multiplas {
+    background: white;
+    border: 1px solid #56876D;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.acoes-multiplas label {
+    color: #254D32;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.acoes-multiplas input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    margin-right: 6px;
+    accent-color: #56876D;
+    vertical-align: middle;
+}
+
+.acoes-multiplas select {
+    padding: 9px 10px;
+    border: 1px solid #56876D;
+    border-radius: 6px;
+    color: #254D32;
+    background: white;
+    font-size: 14px;
+}
+
+.acoes-multiplas select:focus {
+    outline: none;
+    border: 2px solid #56876D;
+}
+
+#botaoStatusMultiplo {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #56876D;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#botaoStatusMultiplo:hover {
+    background: #254D32;
 }

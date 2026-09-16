@@ -12,6 +12,9 @@ const ativarCategoria = document.getElementById("ativarCategoria");
 const ativarPrioridade = document.getElementById("ativarPrioridade");
 const ativarStatus = document.getElementById("ativarStatus");
 const mensagem = document.getElementById("mensagem");
+const selecionarTodas = document.getElementById("selecionarTodas");
+const statusMultiplo = document.getElementById("statusMultiplo");
+const botaoStatusMultiplo = document.getElementById("botaoStatusMultiplo");
 
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 let tarefaEmEdicao = null;
@@ -35,6 +38,15 @@ function listarTarefas() {
         card.dataset.tarefaId = tarefa.id;
 
         card.innerHTML = `
+            <div class="selecao-tarefa">
+                <input
+                    type="checkbox"
+                    class="checkbox-tarefa"
+                    value="${tarefa.id}"
+                    aria-label="Selecionar tarefa ${tarefa.nome}"
+                >
+            </div>
+
             <h3>${tarefa.nome}</h3>
             <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
             <p><strong>Data de término:</strong> ${formatarData(tarefa.dataTermino)}</p>
@@ -339,9 +351,20 @@ function mostrarResultadoFiltro(resultado) {
     resultado.forEach((tarefa) => {
 
         const card = document.createElement("div");
-        card.classList.add("tarefa");
+
+        card.classList.add("tarefa", `status-${tarefa.status}`);
+        card.dataset.tarefaId = tarefa.id;
 
         card.innerHTML = `
+            <div class="selecao-tarefa">
+                <input
+                    type="checkbox"
+                    class="checkbox-tarefa"
+                    value="${tarefa.id}"
+                    aria-label="Selecionar tarefa ${tarefa.nome}"
+                >
+            </div>
+
             <h3>${tarefa.nome}</h3>
             <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
             <p><strong>Data de término:</strong> ${formatarData(tarefa.dataTermino)}</p>
@@ -392,3 +415,63 @@ function formatarData(data) {
 
     return `${dia}/${mes}/${ano}`;
 }
+
+botaoStatusMultiplo.addEventListener("click", function () {
+
+    const novoStatus = statusMultiplo.value;
+
+    if (!novoStatus) {
+        mostrarMensagem(
+            "Selecione um status.",
+            "sucesso"
+        );
+        return;
+    }
+
+    const selecionadas = document.querySelectorAll(
+        ".checkbox-tarefa:checked"
+    );
+
+    if (selecionadas.length === 0) {
+        mostrarMensagem(
+            "Selecione pelo menos uma tarefa.",
+            "sucesso"
+        );
+        return;
+    }
+
+    selecionadas.forEach((checkbox) => {
+
+        const id = Number(checkbox.value);
+
+        const tarefa = tarefas.find(
+            (tarefa) => tarefa.id === id
+        );
+
+        if (tarefa) {
+            tarefa.status = novoStatus;
+        }
+    });
+
+    salvarTarefas();
+    listarTarefas();
+
+    selecionarTodas.checked = false;
+    statusMultiplo.value = "";
+
+    mostrarMensagem(
+        "Status das tarefas atualizado com sucesso!",
+        "sucesso"
+    );
+});
+
+selecionarTodas.addEventListener("change", function () {
+
+    const checkboxes = document.querySelectorAll(
+        ".checkbox-tarefa"
+    );
+
+    checkboxes.forEach((checkbox) => {
+        checkbox.checked = this.checked;
+    });
+});

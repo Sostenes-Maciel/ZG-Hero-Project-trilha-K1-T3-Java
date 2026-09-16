@@ -119,6 +119,27 @@
             <h2>Minhas Tarefas</h2>
 
             <div id="listaTarefas"></div>
+            <div class="acoes-multiplas">
+
+                <label>
+                    <input type="checkbox" id="selecionarTodas">
+                    Selecionar todas
+                </label>
+
+                <label for="statusMultiplo">Novo status:</label>
+
+                <select id="statusMultiplo">
+                    <option value="">Selecione</option>
+                    <option value="TODO">TODO</option>
+                    <option value="DOING">DOING</option>
+                    <option value="DONE">DONE</option>
+                </select>
+
+                <button type="button" id="botaoStatusMultiplo">
+                    Alterar selecionadas
+                </button>
+
+            </div>
 
         </section>
 
@@ -128,11 +149,12 @@
             <h2>Filtrar tarefas</h2>
 
             <div class="filtro">
-                <label>
+                <label for="ativarCategoria">
                     <input type="checkbox" id="ativarCategoria">
                     Categoria
                 </label>
 
+                <label for="filtroCategoria">Categoria</label>
                 <input
                         type="text"
                         id="filtroCategoria"
@@ -142,11 +164,12 @@
             </div>
 
             <div class="filtro">
-                <label>
+                <label for="ativarPrioridade">
                     <input type="checkbox" id="ativarPrioridade">
                     Prioridade
                 </label>
 
+                <label for="filtroPrioridade">Prioridade</label>
                 <select id="filtroPrioridade" disabled>
                     <option value="">Selecione</option>
                     <option value="1">1</option>
@@ -158,11 +181,12 @@
             </div>
 
             <div class="filtro">
-                <label>
+                <label for="ativarStatus">
                     <input type="checkbox" id="ativarStatus">
                     Status
                 </label>
 
+                <label for="filtroStatus">Status</label>
                 <select id="filtroStatus" disabled>
                     <option value="">Selecione</option>
                     <option value="TODO">TODO</option>
