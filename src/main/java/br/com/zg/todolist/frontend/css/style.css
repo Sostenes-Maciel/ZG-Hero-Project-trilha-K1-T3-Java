@@ -858,3 +858,33 @@ body.alto-contraste .rodape p:first-child,
 body.alto-contraste .rodape p:nth-child(2) {
     color: #FFFFFF;
 }
+/* BOTÃO DE ALTO CONTRASTE */
+
+.botao-contraste {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    text-align: left;
+    border: none;
+    background: transparent;
+    color: #254D32;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.botao-contraste:hover {
+    background: #B2FFA8;
+}
+
+body.alto-contraste .botao-contraste {
+    background: transparent;
+    color: #FFFFFF;
+    border: none;
+}
+
+body.alto-contraste .botao-contraste:hover {
+    background: #FFFFFF;
+    color: #000000;
+}
