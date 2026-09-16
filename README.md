@@ -64,9 +64,111 @@ O projeto foi atualizado com a implementação de um sistema de alarmes para as 
 * **Tratamento de Datas:** Melhorado o tratamento das datas de término, permitindo a entrada no formato `dd/MM/yyyy` e também sem as barras.
 
 
+## Atualização: Frontend desenvolvido para a trilha de JavaScript.
+
+A interface foi criada para permitir o gerenciamento das tarefas de forma simples e organizada. Como a comunicação com o backend ainda não foi implementada, os dados são armazenados localmente no navegador.
+
+## Tecnologias utilizadas
+
+* **HTML5** — estrutura da aplicação
+* **CSS3** — estilização e responsividade
+* **JavaScript** — lógica e interação da aplicação
+* **LocalStorage** — persistência dos dados no navegador
+
+## Funcionalidades
+
+* Cadastro de tarefas
+* Listagem de tarefas
+* Edição de tarefas
+* Remoção de tarefas
+* Persistência das tarefas com LocalStorage
+* Definição de status:
+
+  * `TODO`
+  * `DOING`
+  * `DONE`
+* Alteração de status para múltiplas tarefas
+* Filtros por:
+
+  * Categoria
+  * Prioridade
+  * Status
+* Combinação de filtros
+* Configuração de horário para alarme
+* Mensagens de confirmação para as ações
+* Formatação da data para o padrão brasileiro
+* Modo de alto contraste com preferência salva no LocalStorage
+
+## Estrutura
+
+```text
+Frontend/
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   ├── app.js
+│   ├── tarefas.js
+│   ├── filtros.js
+│   └── ui.js
+└── README.md
+```
+
+## Organização do JavaScript
+
+O JavaScript foi dividido em módulos para facilitar a manutenção:
+
+### `app.js`
+
+Responsável por inicializar e integrar os módulos da aplicação.
+
+### `tarefas.js`
+
+Responsável pelas funcionalidades relacionadas às tarefas:
+
+* Cadastro
+* Listagem
+* Edição
+* Remoção
+* LocalStorage
+* Alarmes
+* Alteração de status em múltiplas tarefas
+
+### `filtros.js`
+
+Responsável pelos filtros de:
+
+* Categoria
+* Prioridade
+* Status
+
+Também realiza a combinação dos filtros e informa a quantidade de tarefas encontradas.
+
+### `ui.js`
+
+Responsável pelos elementos gerais da interface:
+
+* Navegação entre as seções
+* Mensagens de sucesso
+* Modo de alto contraste
+
+## Atualização: 
+
+1. Persistência de tarefas no LocalStorage
+
+As tarefas cadastradas são armazenadas no LocalStorage do navegador, permitindo que os dados permaneçam salvos mesmo após recarregar ou fechar a página.
+
+2. Alteração de status de múltiplas tarefas
+
+É possível selecionar várias tarefas ao mesmo tempo e definir um novo status para todas as tarefas selecionadas. Os status disponíveis são:
+
+TODO
+DOING
+DONE
+
+Após a alteração, o novo status é atualizado e salvo no LocalStorage.
 
 
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
-Teste do commit automático do ACZG
-Teste do commit automático do ACZG
+
