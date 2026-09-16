@@ -152,9 +152,9 @@ Responsável pelos elementos gerais da interface:
 * Mensagens de sucesso
 * Modo de alto contraste
 
-* ## Atualização: 
+## Atualização: 
 
-* 1. Persistência de tarefas no LocalStorage
+1. Persistência de tarefas no LocalStorage
 
 As tarefas cadastradas são armazenadas no LocalStorage do navegador, permitindo que os dados permaneçam salvos mesmo após recarregar ou fechar a página.
 
