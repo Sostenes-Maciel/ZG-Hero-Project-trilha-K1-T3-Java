@@ -30,6 +30,34 @@ body {
     font-weight: bold;
 }
 
+/* MENSAGENS */
+
+.mensagem {
+    width: 100%;
+    max-width: 520px;
+    margin: 20px auto 0;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.mensagem:empty {
+    display: none;
+}
+
+.mensagem.sucesso {
+    background: #B2FFA8;
+    color: #254D32;
+    border: 1px solid #56876D;
+}
+
+.mensagem.removido {
+    background: #B2FFA8;
+    color: #254D32;
+    border: 1px solid #56876D;
+}
+
 /* ESTRUTURA PRINCIPAL */
 
 .layout {
@@ -193,7 +221,7 @@ form {
     background: #254D32;
 }
 
-/* BOTÃO CANCELAR */
+/* BOTÃO CANCELAR EDIÇÃO */
 
 #botaoCancelarEdicao {
     width: 100%;
@@ -290,14 +318,60 @@ form {
     background: #254D32;
 }
 
-/* BOTÃO REMOVER */
-
 .acoes-tarefa button:last-child {
     background: #FB3640;
 }
 
 .acoes-tarefa button:last-child:hover {
     background: #BB342F;
+}
+
+/* CONFIRMAÇÃO DE REMOÇÃO */
+
+.confirmacao-remocao {
+    margin-top: 16px;
+    padding-top: 15px;
+    border-top: 1px solid #B2FFA8;
+}
+
+.confirmacao-remocao p {
+    margin: 0 0 12px;
+    font-weight: bold;
+    color: #254D32;
+}
+
+.botoes-confirmacao {
+    display: flex;
+    gap: 10px;
+}
+
+.botoes-confirmacao button {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.btn-confirmar-remocao {
+    border: none;
+    background: #FB3640;
+    color: white;
+}
+
+.btn-confirmar-remocao:hover {
+    background: #BB342F;
+}
+
+.btn-cancelar-remocao {
+    border: 1px solid #56876D;
+    background: white;
+    color: #254D32;
+}
+
+.btn-cancelar-remocao:hover {
+    background: #B2FFA8;
 }
 
 /* FILTROS */
@@ -442,7 +516,7 @@ form {
         max-width: 520px;
     }
 
-    .tarefa {
-        width: 100%;
+    .mensagem {
+        width: calc(100% - 30px);
     }
 }

@@ -11,6 +11,7 @@ const resultadoFiltros = document.getElementById("resultadoFiltros");
 const ativarCategoria = document.getElementById("ativarCategoria");
 const ativarPrioridade = document.getElementById("ativarPrioridade");
 const ativarStatus = document.getElementById("ativarStatus");
+const mensagem = document.getElementById("mensagem");
 
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 let tarefaEmEdicao = null;
@@ -31,6 +32,7 @@ function listarTarefas() {
 
         const card = document.createElement("div");
         card.classList.add("tarefa", `status-${tarefa.status}`);
+        card.dataset.tarefaId = tarefa.id;
 
         card.innerHTML = `
             <h3>${tarefa.nome}</h3>
@@ -128,6 +130,8 @@ formTarefa.addEventListener("submit", function (event) {
         botaoFormulario.textContent = "Adicionar tarefa";
         botaoCancelarEdicao.hidden = true;
 
+        mostrarMensagem("Tarefa atualizada com sucesso!", "sucesso");
+
     } else {
 
         const novaTarefa = {
@@ -136,12 +140,16 @@ formTarefa.addEventListener("submit", function (event) {
         };
 
         tarefas.push(novaTarefa);
+
+        mostrarMensagem("Tarefa adicionada com sucesso!", "sucesso");
     }
 
     salvarTarefas();
     listarTarefas();
 
     formTarefa.reset();
+
+    mostrarMensagem("Tarefa adicionada com sucesso!", "sucesso");
 });
 
 botaoCancelarEdicao.addEventListener("click", function () {
@@ -182,16 +190,55 @@ listarTarefas();
 
 function removerTarefa(id) {
 
-    const confirmar = confirm("Deseja realmente remover esta tarefa?");
+    const card = document.querySelector(
+        `[data-tarefa-id="${id}"]`
+    );
 
-    if (!confirmar) {
+    if (!card) {
         return;
     }
 
-    tarefas = tarefas.filter((tarefa) => tarefa.id !== id);
+    const confirmacao = document.createElement("div");
+    confirmacao.classList.add("confirmacao-remocao");
 
-    salvarTarefas();
-    listarTarefas();
+    confirmacao.innerHTML = `
+        <p>Deseja realmente remover esta tarefa?</p>
+
+        <div class="botoes-confirmacao">
+            <button type="button" class="btn-confirmar-remocao">
+                Remover
+            </button>
+
+            <button type="button" class="btn-cancelar-remocao">
+                Cancelar
+            </button>
+        </div>
+    `;
+
+    card.appendChild(confirmacao);
+
+    confirmacao
+        .querySelector(".btn-confirmar-remocao")
+        .addEventListener("click", function () {
+
+            tarefas = tarefas.filter(
+                (tarefa) => tarefa.id !== id
+            );
+
+            salvarTarefas();
+            listarTarefas();
+
+            mostrarMensagem(
+                "Tarefa removida com sucesso!",
+                "removido"
+            );
+        });
+
+    confirmacao
+        .querySelector(".btn-cancelar-remocao")
+        .addEventListener("click", function () {
+            confirmacao.remove();
+        });
 }
 
 function editarTarefa(id) {
@@ -229,6 +276,9 @@ function editarTarefa(id) {
         behavior: "smooth"
     });
 }
+
+
+
 
 ativarCategoria.addEventListener("change", function () {
     filtroCategoria.disabled = !this.checked;
@@ -317,3 +367,14 @@ botaoLimparFiltros.addEventListener("click", function () {
 
     resultadoFiltros.innerHTML = "";
 });
+
+function mostrarMensagem(texto, tipo) {
+
+    mensagem.textContent = texto;
+    mensagem.className = `mensagem ${tipo}`;
+
+    setTimeout(() => {
+        mensagem.textContent = "";
+        mensagem.className = "mensagem";
+    }, 3000);
+}
