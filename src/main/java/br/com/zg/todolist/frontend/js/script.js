@@ -15,6 +15,7 @@ const mensagem = document.getElementById("mensagem");
 const selecionarTodas = document.getElementById("selecionarTodas");
 const statusMultiplo = document.getElementById("statusMultiplo");
 const botaoStatusMultiplo = document.getElementById("botaoStatusMultiplo");
+const botaoContraste = document.getElementById("botaoContraste");
 
 let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 let tarefaEmEdicao = null;
@@ -45,9 +46,11 @@ function listarTarefas() {
                     value="${tarefa.id}"
                     aria-label="Selecionar tarefa ${tarefa.nome}"
                 >
+                
+                <h3>${tarefa.nome}</h3>
             </div>
 
-            <h3>${tarefa.nome}</h3>
+            
             <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
             <p><strong>Data de término:</strong> ${formatarData(tarefa.dataTermino)}</p>
             <p><strong>Prioridade:</strong> ${tarefa.prioridade}/5</p>
@@ -161,7 +164,6 @@ formTarefa.addEventListener("submit", function (event) {
 
     formTarefa.reset();
 
-    mostrarMensagem("Tarefa adicionada com sucesso!", "sucesso");
 });
 
 botaoCancelarEdicao.addEventListener("click", function () {
@@ -288,9 +290,6 @@ function editarTarefa(id) {
         behavior: "smooth"
     });
 }
-
-
-
 
 ativarCategoria.addEventListener("change", function () {
     filtroCategoria.disabled = !this.checked;
@@ -475,3 +474,24 @@ selecionarTodas.addEventListener("change", function () {
         checkbox.checked = this.checked;
     });
 });
+
+botaoContraste.addEventListener("click", function () {
+    document.body.classList.toggle("alto-contraste");
+
+    const contrasteAtivo =
+        document.body.classList.contains("alto-contraste");
+
+    localStorage.setItem("altoContraste", contrasteAtivo);
+
+    botaoContraste.textContent =
+        contrasteAtivo
+            ? "Desativar alto contraste"
+            : "Alto contraste";
+});
+
+const contrasteSalvo = localStorage.getItem("altoContraste") === "true";
+
+if (contrasteSalvo) {
+    document.body.classList.add("alto-contraste");
+    botaoContraste.textContent = "Desativar alto contraste";
+}

@@ -198,7 +198,7 @@ form {
     padding: 8px 6px;
 }
 
-/* BOTÃO PRINCIPAL */
+/* BOTÕES PRINCIPAIS */
 
 .btn-principal {
     width: 100%;
@@ -215,8 +215,6 @@ form {
 .btn-principal:hover {
     background: #254D32;
 }
-
-/* BOTÃO CANCELAR EDIÇÃO */
 
 #botaoCancelarEdicao {
     width: 100%;
@@ -235,15 +233,13 @@ form {
     background: #B2FFA8;
 }
 
-/* LISTAGEM */
+/* CARDS DAS TAREFAS */
 
 #listaTarefas {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
-
-/* CARDS DAS TAREFAS */
 
 .tarefa {
     width: 100%;
@@ -254,8 +250,6 @@ form {
     box-shadow: 0 2px 6px rgba(37, 77, 50, 0.08);
 }
 
-/* TÍTULO + SELEÇÃO */
-
 .titulo-tarefa {
     display: flex;
     align-items: center;
@@ -264,12 +258,23 @@ form {
 }
 
 .titulo-tarefa h3 {
+    flex: 1;
     margin: 0;
+    padding-left: 10px;
+    border-left: 5px solid #56876D;
     color: #254D32;
     font-size: 20px;
     font-weight: bold;
-    padding-left: 10px;
-    border-left: 5px solid #56876D;
+}
+
+.tarefa p {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.tarefa strong {
+    color: #254D32;
+    font-weight: bold;
 }
 
 /* CHECKBOX DAS TAREFAS */
@@ -294,16 +299,6 @@ form {
 
 .tarefa.status-DONE .titulo-tarefa h3 {
     border-left-color: #4CAF50;
-}
-
-.tarefa p {
-    margin: 8px 0;
-    line-height: 1.5;
-}
-
-.tarefa strong {
-    color: #254D32;
-    font-weight: bold;
 }
 
 /* AÇÕES DAS TAREFAS */
@@ -498,6 +493,63 @@ form {
     font-weight: bold;
 }
 
+/* AÇÕES MÚLTIPLAS */
+
+.acoes-multiplas {
+    background: white;
+    border: 1px solid #56876D;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.acoes-multiplas label {
+    color: #254D32;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.acoes-multiplas input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    margin-right: 6px;
+    accent-color: #56876D;
+    vertical-align: middle;
+}
+
+.acoes-multiplas select {
+    padding: 9px 10px;
+    border: 1px solid #56876D;
+    border-radius: 6px;
+    color: #254D32;
+    background: white;
+    font-size: 14px;
+}
+
+.acoes-multiplas select:focus {
+    outline: none;
+    border: 2px solid #56876D;
+}
+
+#botaoStatusMultiplo {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #56876D;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#botaoStatusMultiplo:hover {
+    background: #254D32;
+}
+
 /* RODAPÉ */
 
 .rodape {
@@ -550,59 +602,259 @@ form {
         width: 100%;
     }
 }
+/* MODO ALTO CONTRASTE */
 
-.acoes-multiplas {
-    background: white;
-    border: 1px solid #56876D;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+body.alto-contraste {
+    background: #000000;
+    color: #FFFFFF;
 }
 
-.acoes-multiplas label {
-    color: #254D32;
-    font-weight: bold;
-    cursor: pointer;
+body.alto-contraste .topo {
+    background: #000000;
+    color: #FFFFFF;
+    border-bottom: 2px solid #FFFFFF;
 }
 
-.acoes-multiplas input[type="checkbox"] {
-    width: 17px;
-    height: 17px;
-    margin-right: 6px;
-    accent-color: #56876D;
-    vertical-align: middle;
+body.alto-contraste .topo p {
+    color: #FFFFFF;
 }
 
-.acoes-multiplas select {
-    padding: 9px 10px;
-    border: 1px solid #56876D;
-    border-radius: 6px;
-    color: #254D32;
-    background: white;
-    font-size: 14px;
+/* MENU */
+
+body.alto-contraste .menu {
+    background: #000000;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
 }
 
-.acoes-multiplas select:focus {
-    outline: none;
-    border: 2px solid #56876D;
+body.alto-contraste .menu h2 {
+    color: #FFFFFF;
 }
 
-#botaoStatusMultiplo {
-    padding: 10px 14px;
-    border: none;
-    border-radius: 6px;
-    background: #56876D;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
+body.alto-contraste .menu-item {
+    background: #000000;
+    color: #FFFFFF;
+    border: 1px solid transparent;
 }
 
-#botaoStatusMultiplo:hover {
-    background: #254D32;
+body.alto-contraste .menu-item:hover {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+body.alto-contraste .menu-item.ativo {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+/* TÍTULOS */
+
+body.alto-contraste .secao h2 {
+    color: #FFFFFF;
+}
+
+/* FORMULÁRIO */
+
+body.alto-contraste form {
+    background: #000000;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
+}
+
+body.alto-contraste .campo label {
+    color: #FFFFFF;
+}
+
+body.alto-contraste .campo small {
+    color: #FFFFFF;
+}
+
+body.alto-contraste .campo input,
+body.alto-contraste .campo textarea,
+body.alto-contraste .campo select {
+    background: #000000;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
+}
+
+body.alto-contraste .campo input::placeholder,
+body.alto-contraste .campo textarea::placeholder {
+    color: #FFFFFF;
+}
+
+body.alto-contraste .campo input:focus,
+body.alto-contraste .campo textarea:focus,
+body.alto-contraste .campo select:focus {
+    outline: 3px solid #FFFFFF;
+    outline-offset: 2px;
+}
+
+/* BOTÕES */
+
+body.alto-contraste .btn-principal,
+body.alto-contraste #botaoFiltrar,
+body.alto-contraste #botaoStatusMultiplo {
+    background: #FFFFFF;
+    color: #000000;
+    border: 2px solid #FFFFFF;
+}
+
+body.alto-contraste .btn-principal:hover,
+body.alto-contraste #botaoFiltrar:hover,
+body.alto-contraste #botaoStatusMultiplo:hover {
+    background: #000000;
+    color: #FFFFFF;
+}
+
+body.alto-contraste #botaoCancelarEdicao,
+body.alto-contraste #botaoLimparFiltros,
+body.alto-contraste .btn-cancelar-remocao {
+    background: #000000;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
+}
+
+body.alto-contraste #botaoCancelarEdicao:hover,
+body.alto-contraste #botaoLimparFiltros:hover,
+body.alto-contraste .btn-cancelar-remocao:hover {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+/* TAREFAS */
+
+body.alto-contraste .tarefa {
+    background: #000000;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
+    box-shadow: none;
+}
+
+body.alto-contraste .tarefa h3,
+body.alto-contraste .tarefa p,
+body.alto-contraste .tarefa strong {
+    color: #FFFFFF;
+}
+
+/* MARCAÇÃO DE STATUS */
+
+body.alto-contraste .tarefa.status-TODO .titulo-tarefa h3,
+body.alto-contraste .tarefa.status-DOING .titulo-tarefa h3,
+body.alto-contraste .tarefa.status-DONE .titulo-tarefa h3 {
+    border-left-color: #FFFFFF;
+}
+
+/* CHECKBOXES */
+
+body.alto-contraste .checkbox-tarefa,
+body.alto-contraste .filtro input[type="checkbox"],
+body.alto-contraste .acoes-multiplas input[type="checkbox"] {
+    accent-color: #FFFFFF;
+}
+
+/* AÇÕES */
+
+body.alto-contraste .acoes-tarefa {
+    border-top-color: #FFFFFF;
+}
+
+body.alto-contraste .acoes-tarefa button {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+body.alto-contraste .acoes-tarefa button:hover {
+    background: #000000;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+}
+
+/* REMOVER CONTINUA DIFERENTE */
+
+body.alto-contraste .acoes-tarefa button:last-child,
+body.alto-contraste .btn-confirmar-remocao {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+body.alto-contraste .acoes-tarefa button:last-child:hover,
+body.alto-contraste .btn-confirmar-remocao:hover {
+    background: #000000;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+}
+
+/* CONFIRMAÇÃO */
+
+body.alto-contraste .confirmacao-remocao {
+    border-top-color: #FFFFFF;
+}
+
+body.alto-contraste .confirmacao-remocao p {
+    color: #FFFFFF;
+}
+
+/* FILTROS */
+
+body.alto-contraste .filtro,
+body.alto-contraste .acoes-multiplas {
+    background: #000000;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
+}
+
+body.alto-contraste .filtro label,
+body.alto-contraste .acoes-multiplas label {
+    color: #FFFFFF;
+}
+
+body.alto-contraste .filtro input[type="text"],
+body.alto-contraste .filtro select,
+body.alto-contraste .acoes-multiplas select {
+    background: #000000;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
+}
+
+body.alto-contraste .filtro input[type="text"]:focus,
+body.alto-contraste .filtro select:focus,
+body.alto-contraste .acoes-multiplas select:focus {
+    outline: 3px solid #FFFFFF;
+    outline-offset: 2px;
+}
+
+body.alto-contraste .filtro input:disabled,
+body.alto-contraste .filtro select:disabled {
+    background: #000000;
+    color: #FFFFFF;
+    opacity: 0.55;
+}
+
+/* RESULTADOS */
+
+body.alto-contraste .quantidade-resultados {
+    color: #FFFFFF;
+}
+
+/* MENSAGENS */
+
+body.alto-contraste .mensagem.sucesso,
+body.alto-contraste .mensagem.removido {
+    background: #FFFFFF;
+    color: #000000;
+    border: 2px solid #FFFFFF;
+}
+
+/* RODAPÉ */
+
+body.alto-contraste .rodape {
+    background: #000000;
+    color: #FFFFFF;
+    border-top: 2px solid #FFFFFF;
+}
+
+body.alto-contraste .rodape p,
+body.alto-contraste .rodape p:first-child,
+body.alto-contraste .rodape p:nth-child(2) {
+    color: #FFFFFF;
 }
