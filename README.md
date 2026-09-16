@@ -152,6 +152,22 @@ Responsável pelos elementos gerais da interface:
 * Mensagens de sucesso
 * Modo de alto contraste
 
+* ## Atualização: 
+
+* 1. Persistência de tarefas no LocalStorage
+
+As tarefas cadastradas são armazenadas no LocalStorage do navegador, permitindo que os dados permaneçam salvos mesmo após recarregar ou fechar a página.
+
+2. Alteração de status de múltiplas tarefas
+
+É possível selecionar várias tarefas ao mesmo tempo e definir um novo status para todas as tarefas selecionadas. Os status disponíveis são:
+
+TODO
+DOING
+DONE
+
+Após a alteração, o novo status é atualizado e salvo no LocalStorage.
+
 
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
