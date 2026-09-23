@@ -15,10 +15,30 @@ const statusMultiplo =
 const botaoStatusMultiplo =
     document.getElementById("botaoStatusMultiplo");
 
-let tarefas =
-    JSON.parse(localStorage.getItem("tarefas")) || [];
+function carregarTarefas() {
+    const dados = localStorage.getItem("tarefas");
+
+    return dados
+        ? JSON.parse(dados)
+        : [];
+}
+
+let tarefas = carregarTarefas();
 
 let tarefaEmEdicao = null;
+
+window.addEventListener("storage", (evento) => {
+
+    if (evento.key !== "tarefas") {
+        return;
+    }
+
+    tarefas = evento.newValue
+        ? JSON.parse(evento.newValue)
+        : [];
+
+    listarTarefas();
+});
 
 
 export function salvarTarefas() {
@@ -199,6 +219,8 @@ export function iniciarCadastro() {
         (event) => {
 
             event.preventDefault();
+
+            tarefas = carregarTarefas();
 
             const dadosTarefa = {
 
@@ -443,6 +465,8 @@ export function iniciarRemocao(id) {
             "click",
             () => {
 
+                tarefas = carregarTarefas();
+
                 tarefas = tarefas.filter(
                     (tarefa) =>
                         tarefa.id !== id
@@ -519,6 +543,8 @@ export function iniciarStatusMultiplo() {
     botaoStatusMultiplo.addEventListener(
         "click",
         () => {
+
+            tarefas = carregarTarefas();
 
             const novoStatus =
                 statusMultiplo.value;
