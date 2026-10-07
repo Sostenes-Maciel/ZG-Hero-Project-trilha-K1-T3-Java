@@ -1,5 +1,11 @@
 import {mostrarMensagem} from "./ui.js";
 
+import {
+    prioridadeValida,
+    dataFormatoValido,
+    dataNaoAnteriorHoje
+} from "../regex/validacao.js";
+
 const listaTarefas = document.getElementById("listaTarefas");
 const formTarefa = document.getElementById("formTarefa");
 const botaoFormulario = document.getElementById("botaoFormulario");
@@ -219,6 +225,42 @@ export function iniciarCadastro() {
         (event) => {
 
             event.preventDefault();
+
+            const prioridade =
+                document.getElementById("prioridade").value;
+
+            const dataTermino =
+                document.getElementById("dataTermino").value;
+
+
+            if (!prioridadeValida(prioridade)) {
+                mostrarMensagem(
+                    "A prioridade deve estar entre 1 e 5.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            if (!dataFormatoValido(dataTermino)) {
+                mostrarMensagem(
+                    "A data de término possui um formato inválido.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            if (!dataNaoAnteriorHoje(dataTermino)) {
+                mostrarMensagem(
+                    "A data de término não pode ser anterior à data atual.",
+                    "erro"
+                );
+
+                return;
+            }
 
             tarefas = carregarTarefas();
 

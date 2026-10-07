@@ -168,6 +168,18 @@ DONE
 
 Após a alteração, o novo status é atualizado e salvo no LocalStorage.
 
+## Desafio de Regex
+
+Foi implementada uma etapa de validação dos dados do frontend da TODO List utilizando Expressões Regulares (Regex).
+
+As validações desenvolvidas foram:
+
+* Validação da prioridade da tarefa, aceitando valores de 1 a 5.
+* Validação do formato da data de término.
+* Verificação para impedir o cadastro de uma data de término anterior à data atual.
+
+As funções de validação foram separadas no arquivo `regex/validacao.js`, mantendo as regras de validação organizadas e separadas da lógica principal da aplicação.
+
 
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
