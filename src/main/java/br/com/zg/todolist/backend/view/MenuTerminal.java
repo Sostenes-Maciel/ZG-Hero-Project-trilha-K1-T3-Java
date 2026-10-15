@@ -6,25 +6,23 @@ import br.com.zg.todolist.backend.service.GerenciadorTarefas;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-
 
 public class MenuTerminal {
 
     private final GerenciadorTarefas gerenciador;
     private final Scanner sc;
 
-
     public MenuTerminal() {
         this.gerenciador = new GerenciadorTarefas();
         this.sc = new Scanner(System.in);
     }
 
-
     public void iniciar() {
         int opcao = 0;
-        System.out.println("Bem-Vindo ao TODO List!! ");
+        System.out.println("Bem-Vindo ao TODO List!!");
 
         while (opcao != 6) {
             System.out.println("-----------------------");
@@ -36,85 +34,90 @@ public class MenuTerminal {
             System.out.println(" 6 - Sair");
             System.out.print("Escolha uma opção: ");
 
-            opcao = sc.nextInt();
-            sc.nextLine();
+            try {
+                opcao = sc.nextInt();
+                sc.nextLine();
 
-            switch (opcao) {
-                case 1:
-                    System.out.println("Iniciando a criação da tarefa...");
-                    adiconarNovaTarefa();
-                    break;
-                case 2:
-                    System.out.println("\n--Suas tarefas--");
-                    if (gerenciador.ListarTarefa().isEmpty()) {
-                        System.out.println("Nenhuma tarefa foi encontrada!");
-                    } else {
-                        gerenciador.ListarTarefa().forEach(System.out::println);
-                    }
-                    break;
-                case 3:
-                    System.out.println("Atualização em andamento...");
-                    atualizarTarefa();
-                    break;
-                case 4:
-                    System.out.println("Remoção em andamento...");
-                    removerTarefa();
-                    break;
-                case 5:
-                    filtrarTarefa();
-                    break;
-                case 6:
-                    System.out.println("Saindo. Até logo!");
-
-
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
+                switch (opcao) {
+                    case 1:
+                        System.out.println("Iniciando a criação da tarefa...");
+                        adicionarNovaTarefa();
+                        break;
+                    case 2:
+                        System.out.println("\n-- Suas tarefas --");
+                        List<Tarefa> tarefas = gerenciador.listarTarefas();
+                        if (tarefas.isEmpty()) {
+                            System.out.println("Nenhuma tarefa foi encontrada!");
+                        } else {
+                            tarefas.forEach(System.out::println);
+                        }
+                        break;
+                    case 3:
+                        System.out.println("Atualização em andamento...");
+                        atualizarTarefa();
+                        break;
+                    case 4:
+                        System.out.println("Remoção em andamento...");
+                        removerTarefa();
+                        break;
+                    case 5:
+                        filtrarTarefa();
+                        break;
+                    case 6:
+                        System.out.println("Saindo. Até logo!");
+                        break;
+                    default:
+                        System.out.println("Opção inválida! Tente novamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida! Por favor, digite um número.");
+                sc.nextLine();
             }
         }
         gerenciador.encerrarAlarmes();
         sc.close();
     }
 
-    private void adiconarNovaTarefa() {
+    private void adicionarNovaTarefa() {
         System.out.println("-- Nova Tarefa --");
 
-        System.out.print("Nome: ");
-        String nome = sc.nextLine();
+        try {
+            System.out.print("Nome: ");
+            String nome = sc.nextLine();
 
-        System.out.print("Descrição: ");
-        String descricao = sc.nextLine();
+            System.out.print("Descrição: ");
+            String descricao = sc.nextLine();
 
-        System.out.print("Data de término(dd/mm/aaaa): ");
-        String data = sc.nextLine();
-        LocalDate dataTermino = converterData(data);
+            System.out.print("Data de término (dd/MM/yyyy): ");
+            String data = sc.nextLine();
+            LocalDate dataTermino = converterData(data);
 
-        System.out.print("Nível de prioridade(1 a 5): ");
-        int prioridade = sc.nextInt();
-        sc.nextLine();
-
-        System.out.print("Categoria: ");
-        String categoria = sc.nextLine();
-
-        System.out.print("Deseja configurar um alarme? (1 - Sim / 2 - Não): ");
-        int opcaoAlarme = sc.nextInt();
-        sc.nextLine();
-
-        long minutosAlarme = 0;
-
-        if (opcaoAlarme == 1) {
-            System.out.print("Em quantos minutos deseja ser avisado? ");
-            minutosAlarme = sc.nextLong();
+            System.out.print("Nível de prioridade (1 a 5): ");
+            int prioridade = sc.nextInt();
             sc.nextLine();
 
-            if (minutosAlarme <= 0) {
-                System.out.println("Tempo inválido. O alarme não será configurado.");
-                minutosAlarme = 0;
-            }
-        }
+            System.out.print("Categoria: ");
+            String categoria = sc.nextLine();
 
-        try {
+            System.out.print("Deseja configurar um alarme? (1 - Sim / 2 - Não): ");
+            int opcaoAlarme = sc.nextInt();
+            sc.nextLine();
+
+            long minutosAlarme = 0;
+            if (opcaoAlarme == 1) {
+                System.out.print("Em quantos minutos deseja ser avisado? ");
+                minutosAlarme = sc.nextLong();
+                sc.nextLine();
+
+                if (minutosAlarme <= 0) {
+                    System.out.println("Tempo inválido. O alarme não será configurado.");
+                    minutosAlarme = 0;
+                }
+            }
+
             Tarefa novaTarefa = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
             gerenciador.adicionarTarefa(novaTarefa);
+
             if (minutosAlarme > 0) {
                 gerenciador.configurarAlarme(novaTarefa, minutosAlarme);
             }
@@ -126,34 +129,26 @@ public class MenuTerminal {
         } catch (Exception e) {
             System.out.println("Erro no formato de dados. Tente novamente.");
         }
-
     }
 
     private void atualizarTarefa() {
         System.out.println("-- Atualizando Tarefa --");
-        List<Tarefa> tarefas = gerenciador.ListarTarefa();
+        List<Tarefa> tarefas = gerenciador.listarTarefas();
 
         if (tarefas.isEmpty()) {
             System.out.println("Não há tarefas para atualizar.");
             return;
         }
 
-        for (int i = 0; i < tarefas.size(); i++) {
-            System.out.println(i + " - " + tarefas.get(i));
-        }
-
-        System.out.print("Digite o número da tarefa que deseja atualizar: ");
-        int indice = sc.nextInt();
-        sc.nextLine();
-
-        if (indice < 0 || indice >= tarefas.size()) {
-            System.out.println("Número de tarefa não encontrado!");
-            return;
-        }
-
-        System.out.println("-- Digite os novos dados --");
+        imprimirTarefasComIndice(tarefas);
 
         try {
+            System.out.print("Digite o número da tarefa que deseja atualizar: ");
+            int indice = sc.nextInt();
+            sc.nextLine();
+
+            System.out.println("-- Digite os novos dados --");
+
             System.out.print("Novo Nome: ");
             String nome = sc.nextLine();
 
@@ -162,7 +157,7 @@ public class MenuTerminal {
 
             System.out.print("Nova Data de término (dd/MM/yyyy): ");
             String dataString = sc.nextLine();
-            LocalDate dataTermino = LocalDate.parse(dataString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            LocalDate dataTermino = converterData(dataString);
 
             System.out.print("Nova Prioridade (1 a 5): ");
             int prioridade = sc.nextInt();
@@ -171,112 +166,110 @@ public class MenuTerminal {
             System.out.print("Nova Categoria: ");
             String categoria = sc.nextLine();
 
-            System.out.print("Novo Status (1- TODO, 2 - DOING, 3 - DONE): ");
+            System.out.print("Novo Status (1 - TODO, 2 - DOING, 3 - DONE): ");
             int opcaoStatus = sc.nextInt();
             sc.nextLine();
 
-            Status novoStatus;
-            switch (opcaoStatus) {
-                case 2:
-                    novoStatus = Status.DOING;
-                    break;
-                case 3:
-                    novoStatus = Status.DONE;
-                    break;
-                default:
-                    novoStatus = Status.TODO;
-                    break;
-            }
-
             Tarefa tarefaAtualizada = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
-            tarefaAtualizada.setStatus(novoStatus);
+            tarefaAtualizada.setStatus(obterStatusPorOpcao(opcaoStatus));
 
-            boolean sucesso = gerenciador.atualizarTarefa(indice, tarefaAtualizada);
-            if (sucesso) {
-                System.out.println("Tarefa atualizada com sucesso!");
-            }
+            gerenciador.atualizarTarefa(indice, tarefaAtualizada);
+            System.out.println("Tarefa atualizada com sucesso!");
+
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Erro: Número de tarefa não encontrado!");
         } catch (Exception e) {
-            System.out.println("Erro no formato de dados. Tente novamente.");
+            System.out.println("Erro no formato de dados. Operação cancelada.");
         }
     }
 
-    public void removerTarefa() {
+    private void removerTarefa() {
         System.out.println("-- Removendo Tarefa --");
-        List<Tarefa> tarefas = gerenciador.ListarTarefa();
+        List<Tarefa> tarefas = gerenciador.listarTarefas();
 
         if (tarefas.isEmpty()) {
-            System.out.println("Não há tarefas para remover");
+            System.out.println("Não há tarefas para remover.");
             return;
         }
 
-        for (int i = 0; i < tarefas.size(); i++) {
-            System.out.println(i + " - " + tarefas.get(i));
-        }
+        imprimirTarefasComIndice(tarefas);
 
-        System.out.println("Digite o número da tarefa a ser removida: ");
-        int indice = sc.nextInt();
-        sc.nextLine();
+        try {
+            System.out.print("Digite o número da tarefa a ser removida: ");
+            int indice = sc.nextInt();
+            sc.nextLine();
 
-        boolean sucesso = gerenciador.removertarefa(indice);
-        if ((sucesso)) {
+            // Fail Fast: tentamos remover, se falhar cai no catch
+            gerenciador.removerTarefa(indice);
             System.out.println("Tarefa removida com sucesso!");
-        } else {
-            System.out.println("Erro no número da tarefa. Tente novamente.");
+
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Erro: Número da tarefa inválido. Tente novamente.");
+        } catch (Exception e) {
+            System.out.println("Entrada inválida.");
+            sc.nextLine(); // Limpa buffer
         }
     }
 
     private void filtrarTarefa() {
-
-
         System.out.println("-- Filtrar tarefas --");
         System.out.println("1. Por Categoria");
         System.out.println("2. Por Prioridade");
         System.out.println("3. Por Status");
         System.out.print("Escolha como deseja listar: ");
 
-        int opcaoFiltro = sc.nextInt();
-        sc.nextLine();
+        try {
+            int opcaoFiltro = sc.nextInt();
+            sc.nextLine();
 
-        List<Tarefa> resultado;
+            List<Tarefa> resultado;
 
-        switch (opcaoFiltro) {
-            case 1:
-                System.out.print("Digite o nome da Categoria: ");
-                String categoria = sc.nextLine();
-                resultado = gerenciador.listarPorCategoria(categoria);
-                break;
+            switch (opcaoFiltro) {
+                case 1:
+                    System.out.print("Digite o nome da Categoria: ");
+                    String categoria = sc.nextLine();
+                    resultado = gerenciador.listarPorCategoria(categoria);
+                    break;
+                case 2:
+                    System.out.print("Digite o número da Prioridade (1 a 5): ");
+                    int prioridade = sc.nextInt();
+                    sc.nextLine();
+                    resultado = gerenciador.listarPorPrioridade(prioridade);
+                    break;
+                case 3:
+                    System.out.print("Qual status? (1 - TODO, 2 - DOING, 3 - DONE): ");
+                    int opStatus = sc.nextInt();
+                    sc.nextLine();
+                    resultado = gerenciador.listarPorStatus(obterStatusPorOpcao(opStatus));
+                    break;
+                default:
+                    System.out.println("Opção de filtro inválida.");
+                    return;
+            }
 
-            case 2:
-                System.out.print("Digite o número da Prioridade (1 a 5): ");
-                int prioridade = sc.nextInt();
-                sc.nextLine();
-
-                resultado = gerenciador.listarPorPrioridade(prioridade);
-                break;
-
-            case 3:
-                System.out.print("Qual status? (1 - TODO, 2 - DOING, 3 - DONE): ");
-                int opStatus = sc.nextInt();
-                sc.nextLine();
-                Status statusBusca;
-                if (opStatus == 2) statusBusca = Status.DOING;
-                else if (opStatus == 3) statusBusca = Status.DONE;
-                else statusBusca = Status.TODO;
-
-                resultado = gerenciador.listarPorStatus(statusBusca);
-                break;
-
-            default:
-                System.out.println("Opção de filtro inválida.");
-                return;
+            if (resultado.isEmpty()) {
+                System.out.println("Nenhuma tarefa encontrada para este filtro.");
+            } else {
+                System.out.println("\n--- RESULTADO DA BUSCA ---");
+                resultado.forEach(System.out::println);
+            }
+        } catch (Exception e) {
+            System.out.println("Entrada inválida. Operação cancelada.");
+            sc.nextLine();
         }
+    }
 
-        if (resultado.isEmpty()) {
-            System.out.println("Nenhuma tarefa encontrada para este filtro.");
-        } else {
-            System.out.println("\n--- RESULTADO DA BUSCA ---");
-            resultado.forEach(System.out::println);
+
+    private void imprimirTarefasComIndice(List<Tarefa> tarefas) {
+        for (int i = 0; i < tarefas.size(); i++) {
+            System.out.println(i + " - " + tarefas.get(i));
         }
+    }
+
+    private Status obterStatusPorOpcao(int opcao) {
+        if (opcao == 2) return Status.DOING;
+        if (opcao == 3) return Status.DONE;
+        return Status.TODO;
     }
 
     private LocalDate converterData(String data) {
@@ -286,16 +279,9 @@ public class MenuTerminal {
                         data.substring(2, 4) + "/" +
                         data.substring(4);
             }
-
-            return LocalDate.parse(
-                    data,
-                    DateTimeFormatter.ofPattern("dd/MM/yyyy")
-            );
-
+            return LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         } catch (Exception e) {
-            throw new IllegalArgumentException(
-                    "Data inválida. Use o formato dd/MM/yyyy."
-            );
+            throw new IllegalArgumentException("Data inválida. Use o formato dd/MM/yyyy.");
         }
     }
 }

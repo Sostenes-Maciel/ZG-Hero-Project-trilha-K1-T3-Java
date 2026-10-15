@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicativo TODO List para organização de tarefas diárias">
 
     <title>TODO List</title>
 
@@ -18,44 +19,38 @@
     </div>
 </header>
 
-<div id="mensagem" class="mensagem"></div>
-
+<div id="mensagem" class="mensagem" aria-live="polite"></div>
 
 <div class="layout">
 
+    <!-- MENU LATERAL -->
     <aside class="menu">
-
         <h2>Menu</h2>
-
         <nav>
-            <button class="menu-item ativo" data-secao="cadastrar">
+            <button type="button" class="menu-item ativo" data-secao="cadastrar">
                 Cadastrar tarefa
             </button>
-
-            <button class="menu-item" data-secao="tarefas">
+            <button type="button" class="menu-item" data-secao="tarefas">
                 Minhas tarefas
             </button>
-
-            <button class="menu-item" data-secao="filtros">
+            <button type="button" class="menu-item" data-secao="filtros">
                 Filtros
             </button>
         </nav>
 
-        <button class="botao-contraste" id="botaoContraste" type="button">
+        <button type="button" class="botao-contraste" id="botaoContraste" aria-pressed="false">
             Alto contraste
         </button>
-
     </aside>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="conteudo">
 
-        <!-- CADASTRO -->
+        <!-- SEÇÃO: CADASTRO -->
         <section id="cadastrar" class="secao ativa">
-
             <h2>Nova Tarefa</h2>
 
             <form id="formTarefa">
-
                 <div class="campo">
                     <label for="nome">Nome</label>
                     <input type="text" id="nome" required>
@@ -85,13 +80,12 @@
 
                 <div class="campo">
                     <label for="status">Status</label>
-                    <select id="status">
+                    <select id="status" required>
                         <option value="TODO">TODO</option>
                         <option value="DOING">DOING</option>
                         <option value="DONE">DONE</option>
                     </select>
                 </div>
-
 
                 <div class="campo">
                     <label for="categoria">Categoria</label>
@@ -104,34 +98,30 @@
                     <small>Deixe vazio caso não queira configurar.</small>
                 </div>
 
-                <button type="submit" class="btn-principal" id="botaoFormulario">
-                    Adicionar tarefa
-                </button>
-
-                <button type="button" id="botaoCancelarEdicao" hidden>
-                    Cancelar edição
-                </button>
-
+                <div class="acoes-formulario">
+                    <button type="submit" class="btn-principal" id="botaoFormulario">
+                        Adicionar tarefa
+                    </button>
+                    <button type="button" id="botaoCancelarEdicao" hidden>
+                        Cancelar edição
+                    </button>
+                </div>
             </form>
-
         </section>
 
-
-        <!-- LISTAGEM -->
+        <!-- SEÇÃO: LISTAGEM -->
         <section id="tarefas" class="secao">
-
             <h2>Minhas Tarefas</h2>
 
             <div id="listaTarefas"></div>
-            <div class="acoes-multiplas">
 
-                <label>
+            <div class="acoes-multiplas">
+                <label class="checkbox-inline">
                     <input type="checkbox" id="selecionarTodas">
                     Selecionar todas
                 </label>
 
                 <label for="statusMultiplo">Novo status:</label>
-
                 <select id="statusMultiplo">
                     <option value="">Selecione</option>
                     <option value="TODO">TODO</option>
@@ -142,37 +132,27 @@
                 <button type="button" id="botaoStatusMultiplo">
                     Alterar selecionadas
                 </button>
-
             </div>
-
         </section>
 
-
+        <!-- SEÇÃO: FILTROS -->
         <section id="filtros" class="secao">
-
             <h2>Filtrar tarefas</h2>
 
             <div class="filtro">
-                <label for="ativarCategoria">
+                <label class="checkbox-inline" for="ativarCategoria">
                     <input type="checkbox" id="ativarCategoria">
-                    Categoria
+                    Ativar
                 </label>
-
                 <label for="filtroCategoria">Categoria</label>
-                <input
-                        type="text"
-                        id="filtroCategoria"
-                        placeholder="Digite uma categoria"
-                        disabled
-                >
+                <input type="text" id="filtroCategoria" placeholder="Digite uma categoria" disabled>
             </div>
 
             <div class="filtro">
-                <label for="ativarPrioridade">
+                <label class="checkbox-inline" for="ativarPrioridade">
                     <input type="checkbox" id="ativarPrioridade">
-                    Prioridade
+                    Ativar
                 </label>
-
                 <label for="filtroPrioridade">Prioridade</label>
                 <select id="filtroPrioridade" disabled>
                     <option value="">Selecione</option>
@@ -185,11 +165,10 @@
             </div>
 
             <div class="filtro">
-                <label for="ativarStatus">
+                <label class="checkbox-inline" for="ativarStatus">
                     <input type="checkbox" id="ativarStatus">
-                    Status
+                    Ativar
                 </label>
-
                 <label for="filtroStatus">Status</label>
                 <select id="filtroStatus" disabled>
                     <option value="">Selecione</option>
@@ -199,19 +178,19 @@
                 </select>
             </div>
 
-            <button type="button" id="botaoFiltrar">
-                Aplicar filtros
-            </button>
+            <div class="acoes-filtros">
+                <button type="button" id="botaoFiltrar" class="btn-principal">
+                    Aplicar filtros
+                </button>
+                <button type="button" id="botaoLimparFiltros">
+                    Limpar filtros
+                </button>
+            </div>
 
-            <button type="button" id="botaoLimparFiltros">
-                Limpar filtros
-            </button>
-
-            <div id="resultadoFiltros"></div>
-
+            <div id="resultadoFiltros" aria-live="polite"></div>
         </section>
-    </main>
 
+    </main>
 </div>
 
 <footer class="rodape">

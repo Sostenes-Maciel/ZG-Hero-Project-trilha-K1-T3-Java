@@ -2,6 +2,8 @@ const mensagem = document.getElementById("mensagem");
 const botaoContraste = document.getElementById("botaoContraste");
 
 export function mostrarMensagem(texto, tipo) {
+    if (!mensagem) return;
+
     mensagem.textContent = texto;
     mensagem.className = `mensagem ${tipo}`;
 
@@ -16,58 +18,54 @@ export function configurarMenu() {
     const secoes = document.querySelectorAll(".secao");
 
     botoesMenu.forEach((botao) => {
-
-        if (!botao.dataset.secao) {
-            return;
-        }
+        if (!botao.dataset.secao) return;
 
         botao.addEventListener("click", () => {
-
-            botoesMenu.forEach((item) => {
-                item.classList.remove("ativo");
-            });
-
-            secoes.forEach((secao) => {
-                secao.classList.remove("ativa");
-            });
-
-            botao.classList.add("ativo");
-
-            const secao = document.getElementById(
-                botao.dataset.secao
-            );
-
-            secao.classList.add("ativa");
+            alternarSecaoAtiva(botoesMenu, secoes, botao);
         });
     });
 }
 
+function alternarSecaoAtiva(botoesMenu, secoes, botaoClicado) {
+    botoesMenu.forEach((item) => item.classList.remove("ativo"));
+    secoes.forEach((secao) => secao.classList.remove("ativa"));
+
+    botaoClicado.classList.add("ativo");
+
+    const secaoAlvo = document.getElementById(botaoClicado.dataset.secao);
+    if (secaoAlvo) {
+        secaoAlvo.classList.add("ativa");
+    }
+}
+
 export function configurarAltoContraste() {
+    if (!botaoContraste) return;
 
-    botaoContraste.addEventListener("click", () => {
+    // Aplica o estado salvo no LocalStorage ao carregar a página
+    aplicarAltoContrasteSalvo();
 
-        document.body.classList.toggle("alto-contraste");
+    botaoContraste.addEventListener("click", alternarAltoContraste);
+}
 
-        const contrasteAtivo =
-            document.body.classList.contains("alto-contraste");
+function alternarAltoContraste() {
+    const corpoPagina = document.body;
+    corpoPagina.classList.toggle("alto-contraste");
 
-        localStorage.setItem(
-            "altoContraste",
-            String(contrasteAtivo)
-        );
+    const contrasteAtivo = corpoPagina.classList.contains("alto-contraste");
 
-        botaoContraste.textContent =
-            contrasteAtivo
-                ? "Desativar alto contraste"
-                : "Alto contraste";
-    });
+    localStorage.setItem("altoContraste", String(contrasteAtivo));
+    atualizarTextoBotaoContraste(contrasteAtivo);
+}
 
-    const contrasteSalvo =
-        localStorage.getItem("altoContraste") === "true";
+function aplicarAltoContrasteSalvo() {
+    const contrasteSalvo = localStorage.getItem("altoContraste") === "true";
 
     if (contrasteSalvo) {
         document.body.classList.add("alto-contraste");
-        botaoContraste.textContent =
-            "Desativar alto contraste";
+        atualizarTextoBotaoContraste(true);
     }
+}
+
+function atualizarTextoBotaoContraste(estaAtivo) {
+    botaoContraste.textContent = estaAtivo ? "Desativar alto contraste" : "Alto contraste";
 }

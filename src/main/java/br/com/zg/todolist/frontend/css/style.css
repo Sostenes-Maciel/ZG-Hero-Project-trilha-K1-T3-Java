@@ -1,21 +1,135 @@
-* {
+/* --- RESET & BOX SIZING --- */
+*, *::before, *::after {
     box-sizing: border-box;
 }
 
+/* --- VARIÁVEIS DE TEMA (Clean Code: DRY) --- */
+:root {
+    /* Cores Globais */
+    --bg-body: #f4f7f5;
+    --bg-elemento: #ffffff;
+    --bg-topo: #254D32;
+
+    /* Tipografia */
+    --texto-principal: #254D32;
+    --texto-secundario: #56876D;
+    --texto-claro: #ffffff;
+    --texto-destaque: #B2FFA8;
+
+    /* Bordas e Sombras */
+    --borda-cor: #56876D;
+    --borda-tamanho: 1px;
+    --sombra-padrao: 0 2px 6px rgba(37, 77, 50, 0.08);
+
+    /* Cores de Status */
+    --status-todo: #F2C94C;
+    --status-doing: #4A90E2;
+    --status-done: #4CAF50;
+
+    /* Botões Principais (Preenchidos) */
+    --btn-bg: #56876D;
+    --btn-texto: #ffffff;
+    --btn-bg-hover: #254D32;
+    --btn-borda: transparent;
+
+    /* Botões Secundários (Contornos/Transparente) */
+    --btn-sec-bg: transparent;
+    --btn-sec-texto: #254D32;
+    --btn-sec-bg-hover: #B2FFA8;
+    --btn-sec-texto-hover: #254D32;
+    --btn-sec-ativo-bg: #56876D;
+    --btn-sec-ativo-texto: #ffffff;
+
+    /* Botões de Perigo */
+    --btn-perigo-bg: #FB3640;
+    --btn-perigo-hover: #BB342F;
+}
+
+/* --- TEMA ALTO CONTRASTE --- */
+/* A mágica do Clean Code: apenas alteramos as variáveis, o layout herda automaticamente! */
+body.alto-contraste {
+    --bg-body: #000000;
+    --bg-elemento: #000000;
+    --bg-topo: #000000;
+
+    --texto-principal: #ffffff;
+    --texto-secundario: #ffffff;
+    --texto-claro: #ffffff;
+    --texto-destaque: #ffffff;
+
+    --borda-cor: #ffffff;
+    --borda-tamanho: 2px;
+    --sombra-padrao: none;
+
+    --status-todo: #ffffff;
+    --status-doing: #ffffff;
+    --status-done: #ffffff;
+
+    --btn-bg: #ffffff;
+    --btn-texto: #000000;
+    --btn-bg-hover: #000000;
+    --btn-borda: #ffffff;
+
+    --btn-sec-bg: #000000;
+    --btn-sec-texto: #ffffff;
+    --btn-sec-bg-hover: #ffffff;
+    --btn-sec-texto-hover: #000000;
+    --btn-sec-ativo-bg: #ffffff;
+    --btn-sec-ativo-texto: #000000;
+
+    --btn-perigo-bg: #ffffff;
+    --btn-perigo-hover: #000000;
+}
+
+/* --- ESTRUTURA GLOBAL --- */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f4f7f5;
-    color: #254D32;
+    background: var(--bg-body);
+    color: var(--texto-principal);
 }
 
-/* TOPO */
+.layout {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    min-height: calc(100vh - 105px);
+    margin: 30px auto;
+    padding: 0 20px;
+}
 
+.conteudo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.secao {
+    display: none;
+    width: 100%;
+    max-width: 560px;
+}
+
+.secao.ativa {
+    display: block;
+}
+
+.secao h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--texto-principal);
+    font-weight: bold;
+}
+
+/* --- COMPONENTES --- */
+
+/* Topo e Rodapé */
 .topo {
-    background: #254D32;
-    color: white;
+    background: var(--bg-topo);
+    color: var(--texto-claro);
     padding: 20px 30px;
     text-align: center;
+    border-bottom: var(--borda-tamanho) solid var(--borda-cor);
 }
 
 .topo h1 {
@@ -26,12 +140,31 @@ body {
 
 .topo p {
     margin: 6px 0 0;
-    color: #B2FFA8;
+    color: var(--texto-destaque);
     font-weight: bold;
 }
 
-/* MENSAGENS */
+.rodape {
+    margin-top: 35px;
+    padding: 18px 20px;
+    background: var(--bg-topo);
+    color: var(--texto-claro);
+    text-align: center;
+    border-top: var(--borda-tamanho) solid var(--borda-cor);
+}
 
+.rodape p {
+    margin: 4px 0;
+    font-size: 12px;
+}
+
+.rodape p:first-child,
+.rodape p:nth-child(2) {
+    font-weight: bold;
+    color: var(--texto-destaque);
+}
+
+/* Mensagens */
 .mensagem {
     width: 100%;
     max-width: 520px;
@@ -48,31 +181,19 @@ body {
 
 .mensagem.sucesso,
 .mensagem.removido {
-    background: #B2FFA8;
-    color: #254D32;
-    border: 1px solid #56876D;
+    background: var(--btn-sec-bg-hover);
+    color: var(--btn-sec-texto-hover);
+    border: var(--borda-tamanho) solid var(--borda-cor);
 }
 
-/* ESTRUTURA PRINCIPAL */
-
-.layout {
-    position: relative;
-    width: 100%;
-    max-width: 1100px;
-    min-height: calc(100vh - 105px);
-    margin: 30px auto;
-    padding: 0 20px;
-}
-
-/* MENU LATERAL */
-
+/* Menu Lateral */
 .menu {
     position: absolute;
     left: 20px;
     top: 0;
     width: 190px;
-    background: white;
-    border: 1px solid #56876D;
+    background: var(--bg-elemento);
+    border: var(--borda-tamanho) solid var(--borda-cor);
     border-radius: 10px;
     padding: 20px;
 }
@@ -80,7 +201,7 @@ body {
 .menu h2 {
     margin-top: 0;
     margin-bottom: 20px;
-    color: #254D32;
+    color: var(--texto-principal);
     font-weight: bold;
 }
 
@@ -90,63 +211,95 @@ body {
     gap: 8px;
 }
 
-.menu-item {
+/* Agrupamento de Botões (DRY) */
+.menu-item,
+.botao-contraste,
+#botaoLimparFiltros,
+.btn-cancelar-remocao {
     width: 100%;
     padding: 12px;
-    text-align: left;
-    border: none;
-    background: transparent;
-    color: #254D32;
+    border: var(--borda-tamanho) solid transparent;
+    background: var(--btn-sec-bg);
+    color: var(--btn-sec-texto);
     border-radius: 6px;
     cursor: pointer;
     font-size: 15px;
     font-weight: bold;
+    text-align: left;
 }
 
-.menu-item:hover {
-    background: #B2FFA8;
+#botaoLimparFiltros,
+.btn-cancelar-remocao {
+    border-color: var(--borda-cor);
+    text-align: center;
+    background: var(--bg-elemento);
+}
+
+.menu-item:hover,
+.botao-contraste:hover,
+#botaoLimparFiltros:hover,
+.btn-cancelar-remocao:hover {
+    background: var(--btn-sec-bg-hover);
+    color: var(--btn-sec-texto-hover);
 }
 
 .menu-item.ativo {
-    background: #56876D;
-    color: white;
+    background: var(--btn-sec-ativo-bg);
+    color: var(--btn-sec-ativo-texto);
 }
 
-/* ÁREA DE CONTEÚDO */
-
-.conteudo {
+.btn-principal,
+#botaoFiltrar,
+#botaoStatusMultiplo,
+.acoes-tarefa button {
     width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-/* SEÇÕES */
-
-.secao {
-    display: none;
-    width: 100%;
-    max-width: 560px;
-}
-
-.secao.ativa {
-    display: block;
-}
-
-.secao h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: #254D32;
+    padding: 12px;
+    border: var(--borda-tamanho) solid var(--btn-borda);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
     font-weight: bold;
+    background: var(--btn-bg);
+    color: var(--btn-texto);
 }
 
-/* FORMULÁRIO */
+.btn-principal:hover,
+#botaoFiltrar:hover,
+#botaoStatusMultiplo:hover,
+.acoes-tarefa button:hover {
+    background: var(--btn-bg-hover);
+    color: var(--texto-claro);
+}
 
-form {
+.acoes-tarefa button:last-child,
+.btn-confirmar-remocao {
+    background: var(--btn-perigo-bg);
+    color: var(--btn-texto);
+    border: var(--borda-tamanho) solid var(--btn-borda);
+}
+
+.acoes-tarefa button:last-child:hover,
+.btn-confirmar-remocao:hover {
+    background: var(--btn-perigo-hover);
+    color: var(--texto-claro);
+}
+
+/* Formulários, Inputs e Filtros */
+form,
+.tarefa,
+.filtro,
+.acoes-multiplas {
     width: 100%;
-    background: white;
-    padding: 25px;
-    border: 1px solid #56876D;
+    background: var(--bg-elemento);
+    border: var(--borda-tamanho) solid var(--borda-cor);
     border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 12px;
+}
+
+.tarefa {
+    padding: 18px;
+    box-shadow: var(--sombra-padrao);
 }
 
 .campo {
@@ -155,42 +308,69 @@ form {
     margin-bottom: 18px;
 }
 
-.campo label {
+.campo label,
+.filtro label,
+.acoes-multiplas label {
     margin-bottom: 7px;
-    color: #254D32;
+    color: var(--texto-principal);
     font-weight: bold;
+    cursor: pointer;
 }
 
 .campo input,
 .campo textarea,
-.campo select {
+.campo select,
+.filtro input[type="text"],
+.filtro select,
+.acoes-multiplas select {
     width: 100%;
     padding: 10px;
     font-size: 15px;
-    border: 1px solid #56876D;
+    border: var(--borda-tamanho) solid var(--borda-cor);
     border-radius: 6px;
-    color: #254D32;
-    background: white;
+    color: var(--texto-principal);
+    background: var(--bg-elemento);
 }
 
 .campo input:focus,
 .campo textarea:focus,
-.campo select:focus {
+.campo select:focus,
+.filtro input:focus,
+.filtro select:focus,
+.acoes-multiplas select:focus {
     outline: none;
-    border: 2px solid #56876D;
+    border: 2px solid var(--borda-cor);
 }
 
+body.alto-contraste *:focus {
+    outline: 3px solid var(--borda-cor);
+    outline-offset: 2px;
+}
+
+body.alto-contraste ::placeholder {
+    color: var(--texto-claro);
+}
+
+.filtro input:disabled,
+.filtro select:disabled {
+    background: var(--bg-body);
+    color: var(--texto-secundario);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Elementos Específicos */
 .campo textarea {
     min-height: 100px;
     resize: vertical;
 }
 
-.campo small {
+.campo small,
+.quantidade-resultados {
     margin-top: 5px;
-    color: #56876D;
+    color: var(--texto-secundario);
+    font-weight: bold;
 }
-
-/* DATA E HORA */
 
 .campo input[type="date"],
 .campo input[type="time"] {
@@ -198,58 +378,18 @@ form {
     padding: 8px 6px;
 }
 
-/* BOTÕES PRINCIPAIS */
-
-.btn-principal {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
+/* Checkboxes */
+.checkbox-tarefa,
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    accent-color: var(--borda-cor);
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    background: #56876D;
-    color: white;
+    vertical-align: middle;
 }
 
-.btn-principal:hover {
-    background: #254D32;
-}
-
-#botaoCancelarEdicao {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #56876D;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 8px;
-    background: white;
-    color: #254D32;
-}
-
-#botaoCancelarEdicao:hover {
-    background: #B2FFA8;
-}
-
-/* CARDS DAS TAREFAS */
-
-#listaTarefas {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.tarefa {
-    width: 100%;
-    background: white;
-    border: 1px solid #56876D;
-    border-radius: 10px;
-    padding: 18px;
-    box-shadow: 0 2px 6px rgba(37, 77, 50, 0.08);
-}
-
+/* Tipografia e Layout de Tarefas */
 .titulo-tarefa {
     display: flex;
     align-items: center;
@@ -261,630 +401,47 @@ form {
     flex: 1;
     margin: 0;
     padding-left: 10px;
-    border-left: 5px solid #56876D;
-    color: #254D32;
+    border-left: 5px solid var(--borda-cor);
+    color: var(--texto-principal);
     font-size: 20px;
     font-weight: bold;
 }
 
-.tarefa p {
-    margin: 8px 0;
-    line-height: 1.5;
-}
+.tarefa p { margin: 8px 0; line-height: 1.5; color: var(--texto-principal); }
+.tarefa strong { color: var(--texto-principal); font-weight: bold; }
 
-.tarefa strong {
-    color: #254D32;
-    font-weight: bold;
-}
+/* Status Cores */
+.tarefa.status-TODO .titulo-tarefa h3 { border-left-color: var(--status-todo); }
+.tarefa.status-DOING .titulo-tarefa h3 { border-left-color: var(--status-doing); }
+.tarefa.status-DONE .titulo-tarefa h3 { border-left-color: var(--status-done); }
 
-/* CHECKBOX DAS TAREFAS */
-
-.checkbox-tarefa {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    accent-color: #56876D;
-    cursor: pointer;
-}
-
-/* CORES DO STATUS */
-
-.tarefa.status-TODO .titulo-tarefa h3 {
-    border-left-color: #F2C94C;
-}
-
-.tarefa.status-DOING .titulo-tarefa h3 {
-    border-left-color: #4A90E2;
-}
-
-.tarefa.status-DONE .titulo-tarefa h3 {
-    border-left-color: #4CAF50;
-}
-
-/* AÇÕES DAS TAREFAS */
-
-.acoes-tarefa {
+/* Confirmações e Ações Card */
+.acoes-tarefa, .confirmacao-remocao {
     display: flex;
     gap: 10px;
     margin-top: 18px;
     padding-top: 15px;
-    border-top: 1px solid #B2FFA8;
+    border-top: var(--borda-tamanho) solid var(--borda-cor);
 }
 
-.acoes-tarefa button {
-    flex: 1;
-    padding: 10px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    background: #56876D;
-    color: white;
-}
+.confirmacao-remocao { flex-direction: column; }
+.confirmacao-remocao p { margin: 0 0 12px; font-weight: bold; color: var(--texto-principal); }
+.botoes-confirmacao { display: flex; gap: 10px; }
+.botoes-confirmacao button { flex: 1; padding: 10px 14px; }
 
-.acoes-tarefa button:hover {
-    background: #254D32;
-}
+/* Ações Múltiplas e Filtros Layout */
+.acoes-multiplas { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;}
+.filtro { padding: 14px 16px; margin-bottom: 12px; }
+.filtro label { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+#resultadoFiltros { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+#listaTarefas { display: flex; flex-direction: column; gap: 15px; }
 
-.acoes-tarefa button:last-child {
-    background: #FB3640;
-}
-
-.acoes-tarefa button:last-child:hover {
-    background: #BB342F;
-}
-
-/* CONFIRMAÇÃO DE REMOÇÃO */
-
-.confirmacao-remocao {
-    margin-top: 16px;
-    padding-top: 15px;
-    border-top: 1px solid #B2FFA8;
-}
-
-.confirmacao-remocao p {
-    margin: 0 0 12px;
-    font-weight: bold;
-    color: #254D32;
-}
-
-.botoes-confirmacao {
-    display: flex;
-    gap: 10px;
-}
-
-.botoes-confirmacao button {
-    flex: 1;
-    padding: 10px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.btn-confirmar-remocao {
-    border: none;
-    background: #FB3640;
-    color: white;
-}
-
-.btn-confirmar-remocao:hover {
-    background: #BB342F;
-}
-
-.btn-cancelar-remocao {
-    border: 1px solid #56876D;
-    background: white;
-    color: #254D32;
-}
-
-.btn-cancelar-remocao:hover {
-    background: #B2FFA8;
-}
-
-/* FILTROS */
-
-#filtros {
-    width: 100%;
-    max-width: 560px;
-}
-
-#filtros > h2 {
-    margin-bottom: 25px;
-}
-
-.filtro {
-    background: white;
-    border: 1px solid #56876D;
-    border-radius: 8px;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-}
-
-.filtro label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    color: #254D32;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.filtro input[type="checkbox"] {
-    width: 17px;
-    height: 17px;
-    accent-color: #56876D;
-    cursor: pointer;
-}
-
-.filtro input[type="text"],
-.filtro select {
-    width: 100%;
-    padding: 9px 10px;
-    border: 1px solid #56876D;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #254D32;
-    background: white;
-}
-
-.filtro input[type="text"]:focus,
-.filtro select:focus {
-    outline: none;
-    border: 2px solid #56876D;
-}
-
-.filtro input:disabled,
-.filtro select:disabled {
-    background: #eef2ef;
-    color: #8a9a8e;
-    cursor: not-allowed;
-}
-
-/* BOTÕES DOS FILTROS */
-
-#botaoFiltrar,
-#botaoLimparFiltros {
-    width: 100%;
-    padding: 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: bold;
-}
-
-#botaoFiltrar {
-    border: none;
-    background: #56876D;
-    color: white;
-}
-
-#botaoFiltrar:hover {
-    background: #254D32;
-}
-
-#botaoLimparFiltros {
-    margin-top: 8px;
-    border: 1px solid #56876D;
-    background: white;
-    color: #254D32;
-}
-
-#botaoLimparFiltros:hover {
-    background: #B2FFA8;
-}
-
-/* RESULTADOS DOS FILTROS */
-
-#resultadoFiltros {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.quantidade-resultados {
-    margin: 0;
-    padding: 8px 0;
-    color: #56876D;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-/* AÇÕES MÚLTIPLAS */
-
-.acoes-multiplas {
-    background: white;
-    border: 1px solid #56876D;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.acoes-multiplas label {
-    color: #254D32;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.acoes-multiplas input[type="checkbox"] {
-    width: 17px;
-    height: 17px;
-    margin-right: 6px;
-    accent-color: #56876D;
-    vertical-align: middle;
-}
-
-.acoes-multiplas select {
-    padding: 9px 10px;
-    border: 1px solid #56876D;
-    border-radius: 6px;
-    color: #254D32;
-    background: white;
-    font-size: 14px;
-}
-
-.acoes-multiplas select:focus {
-    outline: none;
-    border: 2px solid #56876D;
-}
-
-#botaoStatusMultiplo {
-    padding: 10px 14px;
-    border: none;
-    border-radius: 6px;
-    background: #56876D;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-#botaoStatusMultiplo:hover {
-    background: #254D32;
-}
-
-/* RODAPÉ */
-
-.rodape {
-    width: 100%;
-    margin-top: 35px;
-    padding: 18px 20px;
-    background: #254D32;
-    color: white;
-    text-align: center;
-}
-
-.rodape p {
-    margin: 4px 0;
-    font-size: 12px;
-}
-
-.rodape p:first-child,
-.rodape p:nth-child(2) {
-    font-weight: bold;
-    color: #B2FFA8;
-}
-
-/* RESPONSIVIDADE */
-
+/* --- RESPONSIVIDADE --- */
 @media (max-width: 800px) {
-
-    .layout {
-        padding: 0 15px;
-    }
-
-    .menu {
-        position: static;
-        width: 100%;
-        margin-bottom: 25px;
-    }
-
-    .conteudo {
-        width: 100%;
-    }
-
-    .secao {
-        max-width: 520px;
-    }
-
-    .mensagem {
-        width: calc(100% - 30px);
-    }
-
-    .tarefa {
-        width: 100%;
-    }
-}
-/* MODO ALTO CONTRASTE */
-
-body.alto-contraste {
-    background: #000000;
-    color: #FFFFFF;
-}
-
-body.alto-contraste .topo {
-    background: #000000;
-    color: #FFFFFF;
-    border-bottom: 2px solid #FFFFFF;
-}
-
-body.alto-contraste .topo p {
-    color: #FFFFFF;
-}
-
-/* MENU */
-
-body.alto-contraste .menu {
-    background: #000000;
-    color: #FFFFFF;
-    border: 2px solid #FFFFFF;
-}
-
-body.alto-contraste .menu h2 {
-    color: #FFFFFF;
-}
-
-body.alto-contraste .menu-item {
-    background: #000000;
-    color: #FFFFFF;
-    border: 1px solid transparent;
-}
-
-body.alto-contraste .menu-item:hover {
-    background: #FFFFFF;
-    color: #000000;
-}
-
-body.alto-contraste .menu-item.ativo {
-    background: #FFFFFF;
-    color: #000000;
-}
-
-/* TÍTULOS */
-
-body.alto-contraste .secao h2 {
-    color: #FFFFFF;
-}
-
-/* FORMULÁRIO */
-
-body.alto-contraste form {
-    background: #000000;
-    color: #FFFFFF;
-    border: 2px solid #FFFFFF;
-}
-
-body.alto-contraste .campo label {
-    color: #FFFFFF;
-}
-
-body.alto-contraste .campo small {
-    color: #FFFFFF;
-}
-
-body.alto-contraste .campo input,
-body.alto-contraste .campo textarea,
-body.alto-contraste .campo select {
-    background: #000000;
-    color: #FFFFFF;
-    border: 2px solid #FFFFFF;
-}
-
-body.alto-contraste .campo input::placeholder,
-body.alto-contraste .campo textarea::placeholder {
-    color: #FFFFFF;
-}
-
-body.alto-contraste .campo input:focus,
-body.alto-contraste .campo textarea:focus,
-body.alto-contraste .campo select:focus {
-    outline: 3px solid #FFFFFF;
-    outline-offset: 2px;
-}
-
-/* BOTÕES */
-
-body.alto-contraste .btn-principal,
-body.alto-contraste #botaoFiltrar,
-body.alto-contraste #botaoStatusMultiplo {
-    background: #FFFFFF;
-    color: #000000;
-    border: 2px solid #FFFFFF;
-}
-
-body.alto-contraste .btn-principal:hover,
-body.alto-contraste #botaoFiltrar:hover,
-body.alto-contraste #botaoStatusMultiplo:hover {
-    background: #000000;
-    color: #FFFFFF;
-}
-
-body.alto-contraste #botaoCancelarEdicao,
-body.alto-contraste #botaoLimparFiltros,
-body.alto-contraste .btn-cancelar-remocao {
-    background: #000000;
-    color: #FFFFFF;
-    border: 2px solid #FFFFFF;
-}
-
-body.alto-contraste #botaoCancelarEdicao:hover,
-body.alto-contraste #botaoLimparFiltros:hover,
-body.alto-contraste .btn-cancelar-remocao:hover {
-    background: #FFFFFF;
-    color: #000000;
-}
-
-/* TAREFAS */
-
-body.alto-contraste .tarefa {
-    background: #000000;
-    color: #FFFFFF;
-    border: 2px solid #FFFFFF;
-    box-shadow: none;
-}
-
-body.alto-contraste .tarefa h3,
-body.alto-contraste .tarefa p,
-body.alto-contraste .tarefa strong {
-    color: #FFFFFF;
-}
-
-/* MARCAÇÃO DE STATUS */
-
-body.alto-contraste .tarefa.status-TODO .titulo-tarefa h3,
-body.alto-contraste .tarefa.status-DOING .titulo-tarefa h3,
-body.alto-contraste .tarefa.status-DONE .titulo-tarefa h3 {
-    border-left-color: #FFFFFF;
-}
-
-/* CHECKBOXES */
-
-body.alto-contraste .checkbox-tarefa,
-body.alto-contraste .filtro input[type="checkbox"],
-body.alto-contraste .acoes-multiplas input[type="checkbox"] {
-    accent-color: #FFFFFF;
-}
-
-/* AÇÕES */
-
-body.alto-contraste .acoes-tarefa {
-    border-top-color: #FFFFFF;
-}
-
-body.alto-contraste .acoes-tarefa button {
-    background: #FFFFFF;
-    color: #000000;
-}
-
-body.alto-contraste .acoes-tarefa button:hover {
-    background: #000000;
-    color: #FFFFFF;
-    border: 1px solid #FFFFFF;
-}
-
-/* REMOVER CONTINUA DIFERENTE */
-
-body.alto-contraste .acoes-tarefa button:last-child,
-body.alto-contraste .btn-confirmar-remocao {
-    background: #FFFFFF;
-    color: #000000;
-}
-
-body.alto-contraste .acoes-tarefa button:last-child:hover,
-body.alto-contraste .btn-confirmar-remocao:hover {
-    background: #000000;
-    color: #FFFFFF;
-    border: 1px solid #FFFFFF;
-}
-
-/* CONFIRMAÇÃO */
-
-body.alto-contraste .confirmacao-remocao {
-    border-top-color: #FFFFFF;
-}
-
-body.alto-contraste .confirmacao-remocao p {
-    color: #FFFFFF;
-}
-
-/* FILTROS */
-
-body.alto-contraste .filtro,
-body.alto-contraste .acoes-multiplas {
-    background: #000000;
-    color: #FFFFFF;
-    border: 2px solid #FFFFFF;
-}
-
-body.alto-contraste .filtro label,
-body.alto-contraste .acoes-multiplas label {
-    color: #FFFFFF;
-}
-
-body.alto-contraste .filtro input[type="text"],
-body.alto-contraste .filtro select,
-body.alto-contraste .acoes-multiplas select {
-    background: #000000;
-    color: #FFFFFF;
-    border: 2px solid #FFFFFF;
-}
-
-body.alto-contraste .filtro input[type="text"]:focus,
-body.alto-contraste .filtro select:focus,
-body.alto-contraste .acoes-multiplas select:focus {
-    outline: 3px solid #FFFFFF;
-    outline-offset: 2px;
-}
-
-body.alto-contraste .filtro input:disabled,
-body.alto-contraste .filtro select:disabled {
-    background: #000000;
-    color: #FFFFFF;
-    opacity: 0.55;
-}
-
-/* RESULTADOS */
-
-body.alto-contraste .quantidade-resultados {
-    color: #FFFFFF;
-}
-
-/* MENSAGENS */
-
-body.alto-contraste .mensagem.sucesso,
-body.alto-contraste .mensagem.removido {
-    background: #FFFFFF;
-    color: #000000;
-    border: 2px solid #FFFFFF;
-}
-
-/* RODAPÉ */
-
-body.alto-contraste .rodape {
-    background: #000000;
-    color: #FFFFFF;
-    border-top: 2px solid #FFFFFF;
-}
-
-body.alto-contraste .rodape p,
-body.alto-contraste .rodape p:first-child,
-body.alto-contraste .rodape p:nth-child(2) {
-    color: #FFFFFF;
-}
-/* BOTÃO DE ALTO CONTRASTE */
-
-.botao-contraste {
-    width: 100%;
-    margin-top: 12px;
-    padding: 12px;
-    text-align: left;
-    border: none;
-    background: transparent;
-    color: #254D32;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.botao-contraste:hover {
-    background: #B2FFA8;
-}
-
-body.alto-contraste .botao-contraste {
-    background: transparent;
-    color: #FFFFFF;
-    border: none;
-}
-
-body.alto-contraste .botao-contraste:hover {
-    background: #FFFFFF;
-    color: #000000;
+    .layout { padding: 0 15px; }
+    .menu { position: static; width: 100%; margin-bottom: 25px; }
+    .conteudo { width: 100%; }
+    .secao { max-width: 520px; }
+    .mensagem { width: calc(100% - 30px); }
+    .tarefa { width: 100%; }
 }

@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 
 public class Tarefa {
 
+    private static final DateTimeFormatter FORMATADOR_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATADOR_ALARME = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
     private String nome;
     private String descricao;
     private LocalDate dataTermino;
@@ -18,16 +21,9 @@ public class Tarefa {
         this.nome = nome;
         this.descricao = descricao;
         this.dataTermino = dataTermino;
-        this.prioridade = prioridade;
         this.categoria = categoria;
         this.status = Status.TODO;
-    }
-
-    public void setPrioridade(int prioridade) {
-        if (prioridade < 1 || prioridade > 5) {
-            throw new IllegalArgumentException("Erro: O número da prioridade deve ser entre 1 e 5");
-        }
-        this.prioridade = prioridade;
+        setPrioridade(prioridade);
     }
 
     public String getNome() {
@@ -58,6 +54,11 @@ public class Tarefa {
         return prioridade;
     }
 
+    public void setPrioridade(int prioridade) {
+        validarPrioridade(prioridade);
+        this.prioridade = prioridade;
+    }
+
     public String getCategoria() {
         return categoria;
     }
@@ -84,8 +85,6 @@ public class Tarefa {
 
     @Override
     public String toString() {
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
         String resultado = String.format(
                 "[%s] Prioridade %d | %s (Categoria: %s) - %s | Prazo: %s",
                 status,
@@ -93,15 +92,19 @@ public class Tarefa {
                 nome,
                 categoria,
                 descricao,
-                formatador.format(dataTermino)
+                dataTermino.format(FORMATADOR_DATA)
         );
 
         if (horarioAlarme != null) {
-            DateTimeFormatter formatoAlarme = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
-            resultado += " | Alarme: " + horarioAlarme.format(formatoAlarme);
+            resultado += " | Alarme: " + horarioAlarme.format(FORMATADOR_ALARME);
         }
 
         return resultado;
+    }
+
+    private void validarPrioridade(int prioridade) {
+        if (prioridade < 1 || prioridade > 5) {
+            throw new IllegalArgumentException("Erro: O número da prioridade deve ser entre 1 e 5");
+        }
     }
 }
