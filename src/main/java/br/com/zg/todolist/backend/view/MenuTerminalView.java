@@ -75,7 +75,7 @@ public class MenuTerminalView {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Entrada inválida! Por favor, digite um número.");
-                sc.nextLine();
+                sc.nextLine(); // limpa o buffer
             }
         }
         alarmeService.encerrarAlarmes();
@@ -104,35 +104,32 @@ public class MenuTerminalView {
             String nomeCategoria = sc.nextLine();
             Categoria categoria = new Categoria(nomeCategoria);
 
-            System.out.print("Deseja configurar um alarme? (1 - Sim / 2 - Não): ");
+            Tarefa novaTarefa = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
+
+            // Adiciona a tarefa no gerenciador ANTES de setar o alarme
+            gerenciador.adicionarTarefa(novaTarefa);
+            System.out.println("Tarefa adicionada com sucesso!");
+
+            System.out.print("\nDeseja configurar um alarme para esta tarefa? (1 - Sim / 2 - Não): ");
             int opcaoAlarme = sc.nextInt();
             sc.nextLine();
 
-            long minutosAlarme = 0;
             if (opcaoAlarme == 1) {
                 System.out.print("Em quantos minutos deseja ser avisado? ");
-                minutosAlarme = sc.nextLong();
+                long minutosAlarme = sc.nextLong();
                 sc.nextLine();
 
-                if (minutosAlarme <= 0) {
-                    System.out.println("Tempo inválido. O alarme não será configurado.");
-                    minutosAlarme = 0;
+                if (minutosAlarme > 0) {
+                    alarmeService.configurarAlarme(novaTarefa, minutosAlarme);
+                } else {
+                    System.out.println("Tempo inválido. O alarme ignorado.");
                 }
             }
-
-            Tarefa novaTarefa = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
-            gerenciador.adicionarTarefa(novaTarefa);
-
-            if (minutosAlarme > 0) {
-                alarmeService.configurarAlarme(novaTarefa, minutosAlarme);
-            }
-
-            System.out.println("Tarefa adicionada com sucesso!");
-
         } catch (IllegalArgumentException e) {
             System.out.println("Erro ao criar tarefa: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Erro no formato de dados. Tente novamente.");
+            sc.nextLine();
         }
     }
 
@@ -182,14 +179,31 @@ public class MenuTerminalView {
             gerenciador.atualizarTarefa(indice, tarefaAtualizada);
             System.out.println("Tarefa atualizada com sucesso!");
 
+            System.out.print("\nDeseja configurar um alarme para esta tarefa atualizada? (1 - Sim / 2 - Não): ");
+            int opcaoAlarme = sc.nextInt();
+            sc.nextLine();
+
+            if (opcaoAlarme == 1) {
+                System.out.print("Em quantos minutos deseja ser avisado? ");
+                long minutosAlarme = sc.nextLong();
+                sc.nextLine();
+
+                if (minutosAlarme > 0) {
+                    alarmeService.configurarAlarme(tarefaAtualizada, minutosAlarme);
+                } else {
+                    System.out.println("Tempo inválido. O alarme ignorado.");
+                }
+            }
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Erro: Número de tarefa não encontrado!");
         } catch (Exception e) {
             System.out.println("Erro no formato de dados. Operação cancelada.");
+            sc.nextLine();
         }
     }
 
     private void removerTarefa() {
+        // ... (Código mantido idêntico) ...
         System.out.println("-- Removendo Tarefa --");
         List<Tarefa> tarefas = gerenciador.listarTarefas();
 
@@ -217,6 +231,7 @@ public class MenuTerminalView {
     }
 
     private void filtrarTarefa() {
+        // ... (Código mantido idêntico) ...
         System.out.println("-- Filtrar tarefas --");
         System.out.println("1. Por Categoria");
         System.out.println("2. Por Prioridade");
