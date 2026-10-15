@@ -135,6 +135,30 @@ class GerenciadorTarefasTest {
             gerenciador.atualizarTarefa(0, null)
         }
     }
+    @Test
+    void deveProvarOPrincipioOCPCombinandoMultiplosFiltros() {
+        def catEstudos = new Categoria("Estudos")
+        def catLazer = new Categoria("Lazer")
+
+        def t1 = new Tarefa("T1", "Alta", LocalDate.now(), 5, catEstudos)
+        def t2 = new Tarefa("T2", "Alta feita", LocalDate.now(), 5, catEstudos)
+        t2.setStatus(Status.DONE) // T2 está concluída
+
+        def t3 = new Tarefa("T3", "Baixa", LocalDate.now(), 1, catLazer)
+
+        gerenciador.adicionarTarefa(t1)
+        gerenciador.adicionarTarefa(t2)
+        gerenciador.adicionarTarefa(t3)
+
+        // MÁGICA DO OCP: Criamos um filtro complexo (Prioridade 5 + Status TODO) dinamicamente!
+        def resultado = gerenciador.filtrarTarefas { t ->
+            t.getPrioridade() == 5 && t.getStatus() == Status.TODO
+        }
+
+        // Deve encontrar apenas a T1, ignorando a T2 (que é DONE) e a T3 (Prioridade 1)
+        assertEquals(1, resultado.size())
+        assertEquals("T1", resultado[0].getNome())
+    }
 }
 
 class AlarmeServiceMock implements IAlarmeService {
