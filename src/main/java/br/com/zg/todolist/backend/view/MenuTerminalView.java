@@ -1,8 +1,10 @@
 package br.com.zg.todolist.backend.view;
 
+import br.com.zg.todolist.backend.model.Categoria;
 import br.com.zg.todolist.backend.model.Status;
 import br.com.zg.todolist.backend.model.Tarefa;
-import br.com.zg.todolist.backend.service.GerenciadorTarefas;
+import br.com.zg.todolist.backend.service.IAlarmeService;
+import br.com.zg.todolist.backend.service.IGerenciadorTarefas;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,13 +12,15 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-public class MenuTerminal {
+public class MenuTerminalView {
 
-    private final GerenciadorTarefas gerenciador;
+    private final IGerenciadorTarefas gerenciador;
+    private final IAlarmeService alarmeService;
     private final Scanner sc;
 
-    public MenuTerminal() {
-        this.gerenciador = new GerenciadorTarefas();
+    public MenuTerminalView(IGerenciadorTarefas gerenciador, IAlarmeService alarmeService) {
+        this.gerenciador = gerenciador;
+        this.alarmeService = alarmeService;
         this.sc = new Scanner(System.in);
     }
 
@@ -74,7 +78,7 @@ public class MenuTerminal {
                 sc.nextLine();
             }
         }
-        gerenciador.encerrarAlarmes();
+        alarmeService.encerrarAlarmes();
         sc.close();
     }
 
@@ -97,7 +101,8 @@ public class MenuTerminal {
             sc.nextLine();
 
             System.out.print("Categoria: ");
-            String categoria = sc.nextLine();
+            String nomeCategoria = sc.nextLine();
+            Categoria categoria = new Categoria(nomeCategoria);
 
             System.out.print("Deseja configurar um alarme? (1 - Sim / 2 - Não): ");
             int opcaoAlarme = sc.nextInt();
@@ -119,7 +124,7 @@ public class MenuTerminal {
             gerenciador.adicionarTarefa(novaTarefa);
 
             if (minutosAlarme > 0) {
-                gerenciador.configurarAlarme(novaTarefa, minutosAlarme);
+                alarmeService.configurarAlarme(novaTarefa, minutosAlarme);
             }
 
             System.out.println("Tarefa adicionada com sucesso!");
@@ -164,7 +169,8 @@ public class MenuTerminal {
             sc.nextLine();
 
             System.out.print("Nova Categoria: ");
-            String categoria = sc.nextLine();
+            String nomeCategoria = sc.nextLine();
+            Categoria categoria = new Categoria(nomeCategoria);
 
             System.out.print("Novo Status (1 - TODO, 2 - DOING, 3 - DONE): ");
             int opcaoStatus = sc.nextInt();
@@ -199,7 +205,6 @@ public class MenuTerminal {
             int indice = sc.nextInt();
             sc.nextLine();
 
-            // Fail Fast: tentamos remover, se falhar cai no catch
             gerenciador.removerTarefa(indice);
             System.out.println("Tarefa removida com sucesso!");
 
@@ -207,7 +212,7 @@ public class MenuTerminal {
             System.out.println("Erro: Número da tarefa inválido. Tente novamente.");
         } catch (Exception e) {
             System.out.println("Entrada inválida.");
-            sc.nextLine(); // Limpa buffer
+            sc.nextLine();
         }
     }
 
@@ -228,19 +233,20 @@ public class MenuTerminal {
                 case 1:
                     System.out.print("Digite o nome da Categoria: ");
                     String categoria = sc.nextLine();
-                    resultado = gerenciador.listarPorCategoria(categoria);
+                    resultado = gerenciador.filtrarTarefas(t -> t.getCategoria().getNome().equalsIgnoreCase(categoria));
                     break;
                 case 2:
                     System.out.print("Digite o número da Prioridade (1 a 5): ");
                     int prioridade = sc.nextInt();
                     sc.nextLine();
-                    resultado = gerenciador.listarPorPrioridade(prioridade);
+                    resultado = gerenciador.filtrarTarefas(t -> t.getPrioridade() == prioridade);
                     break;
                 case 3:
                     System.out.print("Qual status? (1 - TODO, 2 - DOING, 3 - DONE): ");
                     int opStatus = sc.nextInt();
                     sc.nextLine();
-                    resultado = gerenciador.listarPorStatus(obterStatusPorOpcao(opStatus));
+                    Status statusBusca = obterStatusPorOpcao(opStatus);
+                    resultado = gerenciador.filtrarTarefas(t -> t.getStatus() == statusBusca);
                     break;
                 default:
                     System.out.println("Opção de filtro inválida.");
@@ -258,7 +264,6 @@ public class MenuTerminal {
             sc.nextLine();
         }
     }
-
 
     private void imprimirTarefasComIndice(List<Tarefa> tarefas) {
         for (int i = 0; i < tarefas.size(); i++) {

@@ -13,11 +13,11 @@ public class Tarefa {
     private String descricao;
     private LocalDate dataTermino;
     private int prioridade;
-    private String categoria;
+    private Categoria categoria;
     private Status status;
     private LocalDateTime horarioAlarme;
 
-    public Tarefa(String nome, String descricao, LocalDate dataTermino, int prioridade, String categoria) {
+    public Tarefa(String nome, String descricao, LocalDate dataTermino, int prioridade, Categoria categoria) {
         this.nome = nome;
         this.descricao = descricao;
         this.dataTermino = dataTermino;
@@ -59,11 +59,11 @@ public class Tarefa {
         this.prioridade = prioridade;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 
@@ -90,7 +90,7 @@ public class Tarefa {
                 status,
                 prioridade,
                 nome,
-                categoria,
+                categoria.getNome(),
                 descricao,
                 dataTermino.format(FORMATADOR_DATA)
         );

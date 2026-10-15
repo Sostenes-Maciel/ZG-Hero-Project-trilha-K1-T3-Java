@@ -35,7 +35,7 @@ Projeto desenvolvido como parte do desafio técnico do Acelera ZG. Consiste em u
 
 Para garantir um código escalável e de fácil manutenção, o projeto foi estruturado seguindo o princípio de Separação de Preocupações (inspirado no padrão MVC):
 
-* **View (`MenuTerminal`):** Responsável exclusivamente pela interação com o usuário, leitura de dados via teclado (`Scanner`) e exibição de mensagens no console. Não contém regras de negócio.
+* **View (`MenuTerminalView`):** Responsável exclusivamente pela interação com o usuário, leitura de dados via teclado (`Scanner`) e exibição de mensagens no console. Não contém regras de negócio.
 * **Service/Controller (`GerenciadorDeTarefas`):** O "cérebro" da aplicação. Isola toda a lógica de negócio, manipulação da lista, rebalanceamento por prioridade e filtros.
 * **Model (`Tarefa`, `Status`):** Representam os dados e o estado da aplicação.
 
@@ -59,7 +59,7 @@ O projeto foi atualizado com a implementação de um sistema de alarmes para as 
 
 * **Configuração de Alarme:** Adicionada a opção de configurar um alarme durante o cadastro de uma nova tarefa, permitindo definir o tempo para o aviso.
 * **Alarmes Personalizados:** Cada tarefa pode possuir seu próprio horário de alarme, de acordo com o período definido pelo usuário.
-* **Agendamento de Avisos:** Implementado o uso de `ScheduledExecutorService` no `GerenciadorTarefas` para disparar os avisos automaticamente quando o período configurado chegar.
+* **Agendamento de Avisos:** Implementado o uso de `ScheduledExecutorService` no `GerenciadorTarefasService` para disparar os avisos automaticamente quando o período configurado chegar.
 * **Exibição do Alarme:** O horário configurado para o alarme passou a ser exibido junto com os dados da tarefa ao listar as tarefas.
 * **Tratamento de Datas:** Melhorado o tratamento das datas de término, permitindo a entrada no formato `dd/MM/yyyy` e também sem as barras.
 
