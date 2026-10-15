@@ -199,6 +199,18 @@ O projeto passou por uma extensa refatoração focada na qualidade, legibilidade
     * **Acessibilidade:** Inclusão de atributos semânticos como `aria-live="polite"` para suporte a leitores de tela e correção das tipagens de botões (`type="button"`).
     * **CSS Limpo e DRY:** Uso intensivo de Variáveis CSS (`:root`) para a paleta de cores. O arquivo de estilo foi reduzido drasticamente, permitindo que a troca para o modo "Alto Contraste" ocorra apenas reatribuindo variáveis, sem repetição de blocos inteiros.
 
+## Atualização: Refatoração com SOLID
+
+* Single Responsibility Principle (SRP): Extração da lógica de tempo e threads para a nova classe AlarmeService. O GerenciadorTarefas passou a cuidar exclusivamente das regras de negócio e do CRUD de tarefas, deixando de acumular a função de orquestrar notificações.
+
+* Open/Closed Principle (OCP): Remoção dos múltiplos métodos de busca engessados (como listarPorStatus ou listarPorCategoria). Foi implementado o método filtrarTarefas(Predicate<Tarefa>), permitindo que a aplicação crie novos critérios de busca dinamicamente sem nunca precisar alterar ou abrir o código da classe gerenciadora.
+
+* Interface Segregation Principle (ISP): Criação de contratos focados e específicos (IGerenciadorTarefas e IAlarmeService), garantindo que as classes consumidoras assinem e utilizem apenas os comportamentos que realmente necessitam.
+
+* Dependency Inversion Principle (DIP): Remoção das instâncias diretas (new) de dentro das classes de serviço e visualização. O MenuTerminal e o GerenciadorTarefas agora dependem de abstrações (Interfaces) injetadas via construtor pela classe central Main.
+
+* Desacoplamento de Entidades: A classe Tarefa parou de gerenciar categorias como simples Strings. Ela foi refatorada para receber um objeto autônomo Categoria diretamente em seu construtor, fortalecendo a coesão do modelo de domínio e permitindo evolução independente das categorias.
+
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
 
