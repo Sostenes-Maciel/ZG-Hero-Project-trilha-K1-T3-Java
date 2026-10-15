@@ -180,6 +180,24 @@ As validações desenvolvidas foram:
 
 As funções de validação foram separadas no arquivo `regex/validacao.js`, mantendo as regras de validação organizadas e separadas da lógica principal da aplicação.
 
+## Atualização: Refatoração com Clean Code
+
+O projeto passou por uma extensa refatoração focada na qualidade, legibilidade e manutenibilidade do código, aplicando os princípios do **Clean Code** (DRY, Fail Fast, Nomes Autoexplicativos, Funções Pequenas e Regra do Escoteiro) em todo o ecossistema:
+
+* **Backend (Java):**
+    * Implementação da regra do *Fail Fast* com lançamento de exceções claras no serviço.
+    * Substituição de laços de repetição tradicionais por **Java Streams API**, tornando as buscas mais declarativas.
+    * Extração de validações e regras de negócio para métodos privados menores, respeitando a Responsabilidade Única.
+    * Otimização da classe `Tarefa` com a extração de formatadores de data para constantes (melhoria de performance e memória).
+
+* **Frontend (JavaScript):**
+    * Divisão de "funções deus" (como a de cadastro geral) em funções menores e de escopo único.
+    * Centralização da manipulação do DOM e eventos, eliminando repetição de código na aplicação de filtros e renderização de cards.
+    * Tratamento seguro para garantir que eventos não quebrem a aplicação caso os elementos ainda não estejam carregados.
+
+* **Interface e UI (HTML/CSS):**
+    * **Acessibilidade:** Inclusão de atributos semânticos como `aria-live="polite"` para suporte a leitores de tela e correção das tipagens de botões (`type="button"`).
+    * **CSS Limpo e DRY:** Uso intensivo de Variáveis CSS (`:root`) para a paleta de cores. O arquivo de estilo foi reduzido drasticamente, permitindo que a troca para o modo "Alto Contraste" ocorra apenas reatribuindo variáveis, sem repetição de blocos inteiros.
 
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
