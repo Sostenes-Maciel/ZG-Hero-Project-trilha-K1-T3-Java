@@ -46,14 +46,19 @@
 }
 
 /* --- TEMA ALTO CONTRASTE --- */
-/* A mágica do Clean Code: apenas alteramos as variáveis, o layout herda automaticamente! */
 body.alto-contraste {
-    --bg-body: #000000;
-    --bg-elemento: #000000;
-    --bg-topo: #000000;
+    /* Fundo principal cinza escuro (padrão Material Design) */
+    --bg-body: #121212;
 
+    /* Elementos (cards, formulários, menu) levemente mais claros para dar profundidade */
+    --bg-elemento: #1E1E1E;
+
+    /* Topo e rodapé acompanham o fundo */
+    --bg-topo: #121212;
+
+    /* Textos continuam brancos para manter o contraste alto */
     --texto-principal: #ffffff;
-    --texto-secundario: #ffffff;
+    --texto-secundario: #e0e0e0; /* Um cinza bem clarinho para suavizar textos de apoio */
     --texto-claro: #ffffff;
     --texto-destaque: #ffffff;
 
@@ -65,20 +70,23 @@ body.alto-contraste {
     --status-doing: #ffffff;
     --status-done: #ffffff;
 
+    /* Botões Principais */
     --btn-bg: #ffffff;
-    --btn-texto: #000000;
-    --btn-bg-hover: #000000;
+    --btn-texto: #121212; /* Texto do botão assumindo a cor de fundo escuro */
+    --btn-bg-hover: #1E1E1E;
     --btn-borda: #ffffff;
 
-    --btn-sec-bg: #000000;
+    /* Botões Secundários */
+    --btn-sec-bg: #1E1E1E; /* Botões acompanham a cor dos cards */
     --btn-sec-texto: #ffffff;
     --btn-sec-bg-hover: #ffffff;
-    --btn-sec-texto-hover: #000000;
+    --btn-sec-texto-hover: #121212;
     --btn-sec-ativo-bg: #ffffff;
-    --btn-sec-ativo-texto: #000000;
+    --btn-sec-ativo-texto: #121212;
 
+    /* Botões de Perigo */
     --btn-perigo-bg: #ffffff;
-    --btn-perigo-hover: #000000;
+    --btn-perigo-hover: #1E1E1E;
 }
 
 /* --- ESTRUTURA GLOBAL --- */
@@ -215,7 +223,8 @@ body {
 .menu-item,
 .botao-contraste,
 #botaoLimparFiltros,
-.btn-cancelar-remocao {
+.btn-cancelar-remocao,
+#botaoCancelarEdicao {
     width: 100%;
     padding: 12px;
     border: var(--borda-tamanho) solid transparent;
@@ -229,16 +238,23 @@ body {
 }
 
 #botaoLimparFiltros,
-.btn-cancelar-remocao {
+.btn-cancelar-remocao,
+#botaoCancelarEdicao {
     border-color: var(--borda-cor);
     text-align: center;
     background: var(--bg-elemento);
 }
 
+/* O botão de cancelar edição precisa de uma margem no topo para não colar no botão de salvar */
+#botaoCancelarEdicao {
+    margin-top: 8px;
+}
+
 .menu-item:hover,
 .botao-contraste:hover,
 #botaoLimparFiltros:hover,
-.btn-cancelar-remocao:hover {
+.btn-cancelar-remocao:hover,
+#botaoCancelarEdicao:hover {
     background: var(--btn-sec-bg-hover);
     color: var(--btn-sec-texto-hover);
 }
