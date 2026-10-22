@@ -4,11 +4,12 @@ import br.com.zg.todolist.backend.model.Tarefa
 import br.com.zg.todolist.backend.service.IAlarmeService
 import br.com.zg.todolist.backend.service.IGerenciadorTarefas
 import br.com.zg.todolist.backend.view.MenuTerminalView
+import br.com.zg.todolist.backend.observer.AlarmeObserver
+import br.com.zg.todolist.backend.strategy.EstrategiaOrdenacao
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-import java.time.LocalDate
 import java.util.function.Predicate
 
 import static org.junit.jupiter.api.Assertions.*
@@ -88,6 +89,9 @@ class GerenciadorTarefasMock implements IGerenciadorTarefas {
     List<Tarefa> filtrarTarefas(Predicate<Tarefa> criterio) {
         return []
     }
+
+    void setEstrategiaOrdenacao(EstrategiaOrdenacao estrategia) {
+    }
 }
 
 class AlarmeServiceParaMenuMock implements IAlarmeService {
@@ -100,6 +104,12 @@ class AlarmeServiceParaMenuMock implements IAlarmeService {
     @Override
     void encerrarAlarmes() {
         this.encerrado = true
+    }
+
+    void adicionarObservador(AlarmeObserver observador) {
+    }
+
+    void removerObservador(AlarmeObserver observador) {
     }
 
     boolean isEncerrado() {

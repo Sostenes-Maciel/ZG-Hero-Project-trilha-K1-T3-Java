@@ -1,9 +1,10 @@
 package br.com.zg.todolist.backend.service;
 
 import br.com.zg.todolist.backend.model.Tarefa;
+import br.com.zg.todolist.backend.strategy.EstrategiaOrdenacao;
+import br.com.zg.todolist.backend.strategy.OrdenacaoPorPrioridadeEData;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -11,12 +12,18 @@ import java.util.stream.Collectors;
 public class GerenciadorTarefasService implements IGerenciadorTarefas {
 
     private final List<Tarefa> tarefas;
-
     private final IAlarmeService alarmeService;
+    private EstrategiaOrdenacao estrategiaOrdenacao;
 
     public GerenciadorTarefasService(IAlarmeService alarmeService) {
         this.tarefas = new ArrayList<>();
         this.alarmeService = alarmeService;
+        this.estrategiaOrdenacao = new OrdenacaoPorPrioridadeEData();
+    }
+
+    public void setEstrategiaOrdenacao(EstrategiaOrdenacao estrategiaOrdenacao) {
+        this.estrategiaOrdenacao = estrategiaOrdenacao;
+        ordenarTarefas();
     }
 
     @Override
@@ -46,7 +53,6 @@ public class GerenciadorTarefasService implements IGerenciadorTarefas {
         return new ArrayList<>(tarefas);
     }
 
-
     @Override
     public List<Tarefa> filtrarTarefas(Predicate<Tarefa> criterio) {
         return tarefas.stream()
@@ -66,10 +72,7 @@ public class GerenciadorTarefasService implements IGerenciadorTarefas {
     }
 
     private void ordenarTarefas() {
-        tarefas.sort(
-                Comparator.comparingInt(Tarefa::getPrioridade).reversed()
-                        .thenComparing(Tarefa::getDataTermino)
-        );
+        estrategiaOrdenacao.ordenar(this.tarefas);
     }
 
     private void validarIndice(int indice) {

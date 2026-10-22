@@ -3,6 +3,8 @@ package br.com.zg.todolist.backend.view;
 import br.com.zg.todolist.backend.model.Categoria;
 import br.com.zg.todolist.backend.model.Status;
 import br.com.zg.todolist.backend.model.Tarefa;
+import br.com.zg.todolist.backend.factory.CategoriaFactory;
+import br.com.zg.todolist.backend.factory.TarefaFactory;
 import br.com.zg.todolist.backend.service.IAlarmeService;
 import br.com.zg.todolist.backend.service.IGerenciadorTarefas;
 
@@ -75,7 +77,7 @@ public class MenuTerminalView {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Entrada inválida! Por favor, digite um número.");
-                sc.nextLine(); // limpa o buffer
+                sc.nextLine();
             }
         }
         alarmeService.encerrarAlarmes();
@@ -102,11 +104,10 @@ public class MenuTerminalView {
 
             System.out.print("Categoria: ");
             String nomeCategoria = sc.nextLine();
-            Categoria categoria = new Categoria(nomeCategoria);
 
-            Tarefa novaTarefa = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
+            Categoria categoria = CategoriaFactory.getCategoria(nomeCategoria);
+            Tarefa novaTarefa = TarefaFactory.criarTarefaSimples(nome, descricao, dataTermino, prioridade, categoria);
 
-            // Adiciona a tarefa no gerenciador ANTES de setar o alarme
             gerenciador.adicionarTarefa(novaTarefa);
             System.out.println("Tarefa adicionada com sucesso!");
 
@@ -167,13 +168,14 @@ public class MenuTerminalView {
 
             System.out.print("Nova Categoria: ");
             String nomeCategoria = sc.nextLine();
-            Categoria categoria = new Categoria(nomeCategoria);
+
+            Categoria categoria = CategoriaFactory.getCategoria(nomeCategoria);
 
             System.out.print("Novo Status (1 - TODO, 2 - DOING, 3 - DONE): ");
             int opcaoStatus = sc.nextInt();
             sc.nextLine();
 
-            Tarefa tarefaAtualizada = new Tarefa(nome, descricao, dataTermino, prioridade, categoria);
+            Tarefa tarefaAtualizada = TarefaFactory.criarTarefaSimples(nome, descricao, dataTermino, prioridade, categoria);
             tarefaAtualizada.setStatus(obterStatusPorOpcao(opcaoStatus));
 
             gerenciador.atualizarTarefa(indice, tarefaAtualizada);
@@ -203,7 +205,6 @@ public class MenuTerminalView {
     }
 
     private void removerTarefa() {
-        // ... (Código mantido idêntico) ...
         System.out.println("-- Removendo Tarefa --");
         List<Tarefa> tarefas = gerenciador.listarTarefas();
 
@@ -231,7 +232,6 @@ public class MenuTerminalView {
     }
 
     private void filtrarTarefa() {
-        // ... (Código mantido idêntico) ...
         System.out.println("-- Filtrar tarefas --");
         System.out.println("1. Por Categoria");
         System.out.println("2. Por Prioridade");

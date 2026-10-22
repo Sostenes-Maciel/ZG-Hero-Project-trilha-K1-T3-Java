@@ -1,8 +1,8 @@
 package br.com.zg.todolistspec
 
-import br.com.zg.todolist.backend.model.Categoria
 import br.com.zg.todolist.backend.model.Status
-import br.com.zg.todolist.backend.model.Tarefa
+import br.com.zg.todolist.backend.factory.CategoriaFactory
+import br.com.zg.todolist.backend.factory.TarefaFactory
 
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -13,10 +13,10 @@ class TarefaTest {
 
     @Test
     void deveCriarTarefaComCategoriaInjetadaComSucesso() {
-        def categoria = new Categoria("Estudos")
+        def categoria = CategoriaFactory.getCategoria("Estudos")
         def data = LocalDate.of(2026, 12, 31)
 
-        def tarefa = new Tarefa("Estudar Java", "Revisar SOLID", data, 5, categoria)
+        def tarefa = TarefaFactory.criarTarefaSimples("Estudar Java", "Revisar SOLID", data, 5, categoria)
 
         assertEquals("Estudar Java", tarefa.getNome())
         assertEquals("Estudos", tarefa.getCategoria().getNome())
@@ -26,34 +26,35 @@ class TarefaTest {
 
     @Test
     void deveLancarExcecaoQuandoPrioridadeForInvalida() {
-        def categoria = new Categoria("Trabalho")
+        def categoria = CategoriaFactory.getCategoria("Trabalho")
         def data = LocalDate.now()
 
         assertThrows(IllegalArgumentException) {
-            new Tarefa("Reunião", "Apresentação", data, 6, categoria)
+            TarefaFactory.criarTarefaSimples("Reunião", "Apresentação", data, 6, categoria)
         }
 
         assertThrows(IllegalArgumentException) {
-            new Tarefa("Reunião", "Apresentação", data, 0, categoria)
+            TarefaFactory.criarTarefaSimples("Reunião", "Apresentação", data, 0, categoria)
         }
     }
 
     @Test
     void deveLancarExcecaoQuandoCategoriaForVaziaOuNula() {
         assertThrows(IllegalArgumentException) {
-            new Categoria("")
+            CategoriaFactory.getCategoria("")
         }
 
         assertThrows(IllegalArgumentException) {
-            new Categoria(null)
+            CategoriaFactory.getCategoria(null)
         }
     }
 
     @Test
     void deveFormatarToStringCorretamenteSemAlarme() {
-        def categoria = new Categoria("Casa")
+        def categoria = CategoriaFactory.getCategoria("Casa")
         def data = LocalDate.of(2026, 10, 15)
-        def tarefa = new Tarefa("Limpeza", "Limpar o quarto", data, 2, categoria)
+
+        def tarefa = TarefaFactory.criarTarefaSimples("Limpeza", "Limpar o quarto", data, 2, categoria)
 
         def esperado = "[TODO] Prioridade 2 | Limpeza (Categoria: Casa) - Limpar o quarto | Prazo: 15/10/2026"
         assertEquals(esperado, tarefa.toString())
@@ -61,11 +62,11 @@ class TarefaTest {
 
     @Test
     void deveFormatarToStringCorretamenteComAlarme() {
-        def categoria = new Categoria("Casa")
+        def categoria = CategoriaFactory.getCategoria("Casa")
         def data = LocalDate.of(2026, 10, 15)
-        def tarefa = new Tarefa("Limpeza", "Limpar o quarto", data, 2, categoria)
+        def alarme = LocalDateTime.of(2026, 10, 15, 14, 30)
 
-        tarefa.setHorarioAlarme(LocalDateTime.of(2026, 10, 15, 14, 30))
+        def tarefa = TarefaFactory.criarTarefaComAlarme("Limpeza", "Limpar o quarto", data, 2, categoria, alarme)
 
         def esperado = "[TODO] Prioridade 2 | Limpeza (Categoria: Casa) - Limpar o quarto | Prazo: 15/10/2026 | Alarme: 15/10/2026 14:30"
         assertEquals(esperado, tarefa.toString())

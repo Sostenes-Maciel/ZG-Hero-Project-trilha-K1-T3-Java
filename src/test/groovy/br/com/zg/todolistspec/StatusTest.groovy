@@ -19,4 +19,11 @@ class StatusTest {
         assertEquals("DOING", Status.DOING.toString())
         assertEquals("DONE", Status.DONE.toString())
     }
+
+    @Test
+    void deveAvancarOStatusCorretamente() {
+        assertEquals(Status.DOING, Status.TODO.avancar())
+        assertEquals(Status.DONE, Status.DOING.avancar())
+        assertEquals(Status.DONE, Status.DONE.avancar())
+    }
 }

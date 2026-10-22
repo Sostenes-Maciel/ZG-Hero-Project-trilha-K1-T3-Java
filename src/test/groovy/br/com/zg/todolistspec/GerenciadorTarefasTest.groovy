@@ -1,8 +1,14 @@
-package br.com.zg.todolist.backend.service
+package br.com.zg.todolistspec
 
-import br.com.zg.todolist.backend.model.Categoria
 import br.com.zg.todolist.backend.model.Status
 import br.com.zg.todolist.backend.model.Tarefa
+import br.com.zg.todolist.backend.factory.CategoriaFactory
+import br.com.zg.todolist.backend.factory.TarefaFactory
+import br.com.zg.todolist.backend.observer.AlarmeObserver
+import br.com.zg.todolist.backend.service.GerenciadorTarefasService
+import br.com.zg.todolist.backend.service.IAlarmeService
+import br.com.zg.todolist.backend.strategy.OrdenacaoPorData
+
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -21,10 +27,10 @@ class GerenciadorTarefasTest {
 
     @Test
     void deveAdicionarEOrdenarTarefasCorretamente() {
-        def categoria = new Categoria("Estudos")
-        def t1 = new Tarefa("Baixa", "Desc", LocalDate.now().plusDays(2), 1, categoria)
-        def t2 = new Tarefa("Alta", "Desc", LocalDate.now().plusDays(2), 5, categoria)
-        def t3 = new Tarefa("Alta Perto", "Desc", LocalDate.now().plusDays(1), 5, categoria)
+        def categoria = CategoriaFactory.getCategoria("Estudos")
+        def t1 = TarefaFactory.criarTarefaSimples("Baixa", "Desc", LocalDate.now().plusDays(2), 1, categoria)
+        def t2 = TarefaFactory.criarTarefaSimples("Alta", "Desc", LocalDate.now().plusDays(2), 5, categoria)
+        def t3 = TarefaFactory.criarTarefaSimples("Alta Perto", "Desc", LocalDate.now().plusDays(1), 5, categoria)
 
         gerenciador.adicionarTarefa(t1)
         gerenciador.adicionarTarefa(t2)
@@ -39,12 +45,29 @@ class GerenciadorTarefasTest {
     }
 
     @Test
+    void deveAlterarEstrategiaDeOrdenacaoComSucesso() {
+        def categoria = CategoriaFactory.getCategoria("Estudos")
+        def t1 = TarefaFactory.criarTarefaSimples("Para Hoje", "Desc", LocalDate.now(), 1, categoria)
+        def t2 = TarefaFactory.criarTarefaSimples("Para Amanha", "Desc", LocalDate.now().plusDays(1), 5, categoria)
+
+        gerenciador.adicionarTarefa(t1)
+        gerenciador.adicionarTarefa(t2)
+
+        gerenciador.setEstrategiaOrdenacao(new OrdenacaoPorData())
+
+        def tarefas = gerenciador.listarTarefas()
+
+        assertEquals("Para Hoje", tarefas[0].getNome())
+        assertEquals("Para Amanha", tarefas[1].getNome())
+    }
+
+    @Test
     void deveAtualizarTarefaComSucesso() {
-        def categoria = new Categoria("Estudos")
-        def original = new Tarefa("Original", "Desc", LocalDate.now(), 3, categoria)
+        def categoria = CategoriaFactory.getCategoria("Estudos")
+        def original = TarefaFactory.criarTarefaSimples("Original", "Desc", LocalDate.now(), 3, categoria)
         gerenciador.adicionarTarefa(original)
 
-        def atualizada = new Tarefa("Atualizada", "Desc", LocalDate.now(), 4, categoria)
+        def atualizada = TarefaFactory.criarTarefaSimples("Atualizada", "Desc", LocalDate.now(), 4, categoria)
         gerenciador.atualizarTarefa(0, atualizada)
 
         assertEquals("Atualizada", gerenciador.listarTarefas()[0].getNome())
@@ -53,8 +76,8 @@ class GerenciadorTarefasTest {
 
     @Test
     void deveLancarExcecaoAoAtualizarOuRemoverIndiceInvalido() {
-        def categoria = new Categoria("Estudos")
-        def tarefa = new Tarefa("Teste", "Desc", LocalDate.now(), 3, categoria)
+        def categoria = CategoriaFactory.getCategoria("Estudos")
+        def tarefa = TarefaFactory.criarTarefaSimples("Teste", "Desc", LocalDate.now(), 3, categoria)
 
         assertThrows(IndexOutOfBoundsException) {
             gerenciador.atualizarTarefa(0, tarefa)
@@ -67,8 +90,8 @@ class GerenciadorTarefasTest {
 
     @Test
     void deveRemoverTarefaComSucesso() {
-        def categoria = new Categoria("Estudos")
-        def tarefa = new Tarefa("Teste", "Desc", LocalDate.now(), 3, categoria)
+        def categoria = CategoriaFactory.getCategoria("Estudos")
+        def tarefa = TarefaFactory.criarTarefaSimples("Teste", "Desc", LocalDate.now(), 3, categoria)
         gerenciador.adicionarTarefa(tarefa)
 
         gerenciador.removerTarefa(0)
@@ -78,11 +101,11 @@ class GerenciadorTarefasTest {
 
     @Test
     void deveFiltrarTarefasComPredicate() {
-        def cat1 = new Categoria("Trabalho")
-        def cat2 = new Categoria("Lazer")
+        def cat1 = CategoriaFactory.getCategoria("Trabalho")
+        def cat2 = CategoriaFactory.getCategoria("Lazer")
 
-        def t1 = new Tarefa("T1", "Desc", LocalDate.now(), 3, cat1)
-        def t2 = new Tarefa("T2", "Desc", LocalDate.now(), 3, cat2)
+        def t1 = TarefaFactory.criarTarefaSimples("T1", "Desc", LocalDate.now(), 3, cat1)
+        def t2 = TarefaFactory.criarTarefaSimples("T2", "Desc", LocalDate.now(), 3, cat2)
 
         t2.setStatus(Status.DONE)
 
@@ -100,8 +123,8 @@ class GerenciadorTarefasTest {
 
     @Test
     void deveAgendarAlarmeAtravesDoServicoInjetado() {
-        def categoria = new Categoria("Estudos")
-        def tarefa = new Tarefa("Teste Alarme", "Desc", LocalDate.now(), 3, categoria)
+        def categoria = CategoriaFactory.getCategoria("Estudos")
+        def tarefa = TarefaFactory.criarTarefaSimples("Teste Alarme", "Desc", LocalDate.now(), 3, categoria)
 
         gerenciador.agendarAlarmeSeNecessario(tarefa, 15)
 
@@ -111,13 +134,14 @@ class GerenciadorTarefasTest {
 
     @Test
     void naoDeveAgendarAlarmeSeTempoForZeroOuMenor() {
-        def categoria = new Categoria("Estudos")
-        def tarefa = new Tarefa("Teste Alarme", "Desc", LocalDate.now(), 3, categoria)
+        def categoria = CategoriaFactory.getCategoria("Estudos")
+        def tarefa = TarefaFactory.criarTarefaSimples("Teste Alarme", "Desc", LocalDate.now(), 3, categoria)
 
         gerenciador.agendarAlarmeSeNecessario(tarefa, 0)
 
         assertFalse(alarmeServiceMock.isAlarmeChamado())
     }
+
     @Test
     void deveLancarExcecaoAoTentarAdicionarTarefaNula() {
         assertThrows(IllegalArgumentException) {
@@ -127,35 +151,34 @@ class GerenciadorTarefasTest {
 
     @Test
     void deveLancarExcecaoAoTentarAtualizarComTarefaNula() {
-        def categoria = new Categoria("Estudos")
-        def tarefa = new Tarefa("Valida", "Desc", LocalDate.now(), 3, categoria)
+        def categoria = CategoriaFactory.getCategoria("Estudos")
+        def tarefa = TarefaFactory.criarTarefaSimples("Valida", "Desc", LocalDate.now(), 3, categoria)
         gerenciador.adicionarTarefa(tarefa)
 
         assertThrows(IllegalArgumentException) {
             gerenciador.atualizarTarefa(0, null)
         }
     }
+
     @Test
     void deveProvarOPrincipioOCPCombinandoMultiplosFiltros() {
-        def catEstudos = new Categoria("Estudos")
-        def catLazer = new Categoria("Lazer")
+        def catEstudos = CategoriaFactory.getCategoria("Estudos")
+        def catLazer = CategoriaFactory.getCategoria("Lazer")
 
-        def t1 = new Tarefa("T1", "Alta", LocalDate.now(), 5, catEstudos)
-        def t2 = new Tarefa("T2", "Alta feita", LocalDate.now(), 5, catEstudos)
-        t2.setStatus(Status.DONE) // T2 está concluída
+        def t1 = TarefaFactory.criarTarefaSimples("T1", "Alta", LocalDate.now(), 5, catEstudos)
+        def t2 = TarefaFactory.criarTarefaSimples("T2", "Alta feita", LocalDate.now(), 5, catEstudos)
+        t2.setStatus(Status.DONE)
 
-        def t3 = new Tarefa("T3", "Baixa", LocalDate.now(), 1, catLazer)
+        def t3 = TarefaFactory.criarTarefaSimples("T3", "Baixa", LocalDate.now(), 1, catLazer)
 
         gerenciador.adicionarTarefa(t1)
         gerenciador.adicionarTarefa(t2)
         gerenciador.adicionarTarefa(t3)
 
-        // MÁGICA DO OCP: Criamos um filtro complexo (Prioridade 5 + Status TODO) dinamicamente!
         def resultado = gerenciador.filtrarTarefas { t ->
             t.getPrioridade() == 5 && t.getStatus() == Status.TODO
         }
 
-        // Deve encontrar apenas a T1, ignorando a T2 (que é DONE) e a T3 (Prioridade 1)
         assertEquals(1, resultado.size())
         assertEquals("T1", resultado[0].getNome())
     }
@@ -176,6 +199,12 @@ class AlarmeServiceMock implements IAlarmeService {
     void encerrarAlarmes() {
     }
 
+    void adicionarObservador(AlarmeObserver observador) {
+    }
+
+    void removerObservador(AlarmeObserver observador) {
+    }
+
     boolean isAlarmeChamado() {
         return alarmeChamado
     }
@@ -183,5 +212,4 @@ class AlarmeServiceMock implements IAlarmeService {
     long getMinutosConfigurados() {
         return minutosConfigurados
     }
-
 }
