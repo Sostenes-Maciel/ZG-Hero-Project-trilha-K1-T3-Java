@@ -211,6 +211,27 @@ O projeto passou por uma extensa refatoração focada na qualidade, legibilidade
 
 * Desacoplamento de Entidades: A classe Tarefa parou de gerenciar categorias como simples Strings. Ela foi refatorada para receber um objeto autônomo Categoria diretamente em seu construtor, fortalecendo a coesão do modelo de domínio e permitindo evolução independente das categorias.
 
+## Atualização - Refatoração com Design Patterns
+
+A arquitetura foi redesenhada utilizando 6 padrões de projeto, divididos em três categorias:
+
+### Criacionais
+1. **Builder (`TarefaBuilder`):** Substituiu construtores extensos (*Telescoping Constructor*) por uma interface fluente, facilitando a montagem de tarefas com atributos opcionais.
+2. **Factory Method (`TarefaFactory` e `CategoriaFactory`):** Removeu o acoplamento da View e dos Services com a instanciação direta (`new`). A criação de objetos agora é responsabilidade exclusiva das fábricas.
+
+### Estruturais
+3. **Flyweight (`CategoriaFactory`):** Implementação de cache (Mapa) para objetos do tipo `Categoria`. Solicitações de categorias com o mesmo nome retornam a mesma instância em memória, otimizando recursos.
+
+### Comportamentais
+4. **State (`Status`):** Encapsulou a regra de progressão de status (TODO -> DOING -> DONE) no próprio enum, eliminando condicionais (`if/else`) nos serviços e respeitando o princípio Open/Closed (OCP).
+5. **Strategy (`EstrategiaOrdenacao`):** Permitiu a injeção dinâmica da regra de ordenação e filtragem das tarefas no `GerenciadorTarefasService`, tornando o algoritmo intercambiável em tempo de execução.
+6. **Observer (`AlarmeObserver`):** Desacoplou a lógica de notificação do `AlarmeService`. O serviço agora atua apenas como *Subject*, enquanto os *Observers* (Console, Som, Popup) reagem aos disparos de forma independente.
+
+## Testes Unitários
+
+A aplicação conta com uma suíte de testes robusta (100% verde), incluindo o uso de Mocks para isolar componentes. Foram implementados testes específicos para comprovar o funcionamento mecânico dos padrões **Flyweight**, **State**, **Strategy** e **Observer**.
+
+
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
 
