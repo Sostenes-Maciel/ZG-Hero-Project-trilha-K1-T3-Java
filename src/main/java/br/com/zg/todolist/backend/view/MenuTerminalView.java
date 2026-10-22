@@ -1,12 +1,11 @@
 package br.com.zg.todolist.backend.view;
 
+import br.com.zg.todolist.backend.controller.CategoriaController;
+import br.com.zg.todolist.backend.controller.TarefaController;
 import br.com.zg.todolist.backend.model.Categoria;
 import br.com.zg.todolist.backend.model.Status;
 import br.com.zg.todolist.backend.model.Tarefa;
-import br.com.zg.todolist.backend.factory.CategoriaFactory;
-import br.com.zg.todolist.backend.factory.TarefaFactory;
-import br.com.zg.todolist.backend.service.IAlarmeService;
-import br.com.zg.todolist.backend.service.IGerenciadorTarefas;
+import br.com.zg.todolist.backend.model.factory.TarefaFactory;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -16,13 +15,13 @@ import java.util.Scanner;
 
 public class MenuTerminalView {
 
-    private final IGerenciadorTarefas gerenciador;
-    private final IAlarmeService alarmeService;
+    private final TarefaController tarefaController;
+    private final CategoriaController categoriaController;
     private final Scanner sc;
 
-    public MenuTerminalView(IGerenciadorTarefas gerenciador, IAlarmeService alarmeService) {
-        this.gerenciador = gerenciador;
-        this.alarmeService = alarmeService;
+    public MenuTerminalView(TarefaController tarefaController, CategoriaController categoriaController) {
+        this.tarefaController = tarefaController;
+        this.categoriaController = categoriaController;
         this.sc = new Scanner(System.in);
     }
 
@@ -51,7 +50,7 @@ public class MenuTerminalView {
                         break;
                     case 2:
                         System.out.println("\n-- Suas tarefas --");
-                        List<Tarefa> tarefas = gerenciador.listarTarefas();
+                        List<Tarefa> tarefas = tarefaController.listarTodasTarefas();
                         if (tarefas.isEmpty()) {
                             System.out.println("Nenhuma tarefa foi encontrada!");
                         } else {
@@ -80,7 +79,7 @@ public class MenuTerminalView {
                 sc.nextLine();
             }
         }
-        alarmeService.encerrarAlarmes();
+        tarefaController.desligarAlarmes();
         sc.close();
     }
 
@@ -105,10 +104,11 @@ public class MenuTerminalView {
             System.out.print("Categoria: ");
             String nomeCategoria = sc.nextLine();
 
-            Categoria categoria = CategoriaFactory.getCategoria(nomeCategoria);
+            // Alterado: Agora a View pede ao Controller
+            Categoria categoria = categoriaController.obterCategoria(nomeCategoria);
             Tarefa novaTarefa = TarefaFactory.criarTarefaSimples(nome, descricao, dataTermino, prioridade, categoria);
 
-            gerenciador.adicionarTarefa(novaTarefa);
+            tarefaController.criarTarefa(novaTarefa);
             System.out.println("Tarefa adicionada com sucesso!");
 
             System.out.print("\nDeseja configurar um alarme para esta tarefa? (1 - Sim / 2 - Não): ");
@@ -121,7 +121,7 @@ public class MenuTerminalView {
                 sc.nextLine();
 
                 if (minutosAlarme > 0) {
-                    alarmeService.configurarAlarme(novaTarefa, minutosAlarme);
+                    tarefaController.agendarAlarme(novaTarefa, minutosAlarme);
                 } else {
                     System.out.println("Tempo inválido. O alarme ignorado.");
                 }
@@ -136,7 +136,7 @@ public class MenuTerminalView {
 
     private void atualizarTarefa() {
         System.out.println("-- Atualizando Tarefa --");
-        List<Tarefa> tarefas = gerenciador.listarTarefas();
+        List<Tarefa> tarefas = tarefaController.listarTodasTarefas();
 
         if (tarefas.isEmpty()) {
             System.out.println("Não há tarefas para atualizar.");
@@ -169,7 +169,8 @@ public class MenuTerminalView {
             System.out.print("Nova Categoria: ");
             String nomeCategoria = sc.nextLine();
 
-            Categoria categoria = CategoriaFactory.getCategoria(nomeCategoria);
+            // Alterado: Agora a View pede ao Controller
+            Categoria categoria = categoriaController.obterCategoria(nomeCategoria);
 
             System.out.print("Novo Status (1 - TODO, 2 - DOING, 3 - DONE): ");
             int opcaoStatus = sc.nextInt();
@@ -178,7 +179,7 @@ public class MenuTerminalView {
             Tarefa tarefaAtualizada = TarefaFactory.criarTarefaSimples(nome, descricao, dataTermino, prioridade, categoria);
             tarefaAtualizada.setStatus(obterStatusPorOpcao(opcaoStatus));
 
-            gerenciador.atualizarTarefa(indice, tarefaAtualizada);
+            tarefaController.atualizarTarefa(indice, tarefaAtualizada);
             System.out.println("Tarefa atualizada com sucesso!");
 
             System.out.print("\nDeseja configurar um alarme para esta tarefa atualizada? (1 - Sim / 2 - Não): ");
@@ -191,7 +192,7 @@ public class MenuTerminalView {
                 sc.nextLine();
 
                 if (minutosAlarme > 0) {
-                    alarmeService.configurarAlarme(tarefaAtualizada, minutosAlarme);
+                    tarefaController.agendarAlarme(tarefaAtualizada, minutosAlarme);
                 } else {
                     System.out.println("Tempo inválido. O alarme ignorado.");
                 }
@@ -206,7 +207,7 @@ public class MenuTerminalView {
 
     private void removerTarefa() {
         System.out.println("-- Removendo Tarefa --");
-        List<Tarefa> tarefas = gerenciador.listarTarefas();
+        List<Tarefa> tarefas = tarefaController.listarTodasTarefas();
 
         if (tarefas.isEmpty()) {
             System.out.println("Não há tarefas para remover.");
@@ -220,7 +221,7 @@ public class MenuTerminalView {
             int indice = sc.nextInt();
             sc.nextLine();
 
-            gerenciador.removerTarefa(indice);
+            tarefaController.removerTarefa(indice);
             System.out.println("Tarefa removida com sucesso!");
 
         } catch (IndexOutOfBoundsException e) {
@@ -248,20 +249,20 @@ public class MenuTerminalView {
                 case 1:
                     System.out.print("Digite o nome da Categoria: ");
                     String categoria = sc.nextLine();
-                    resultado = gerenciador.filtrarTarefas(t -> t.getCategoria().getNome().equalsIgnoreCase(categoria));
+                    resultado = tarefaController.filtrarTarefas(t -> t.getCategoria().getNome().equalsIgnoreCase(categoria));
                     break;
                 case 2:
                     System.out.print("Digite o número da Prioridade (1 a 5): ");
                     int prioridade = sc.nextInt();
                     sc.nextLine();
-                    resultado = gerenciador.filtrarTarefas(t -> t.getPrioridade() == prioridade);
+                    resultado = tarefaController.filtrarTarefas(t -> t.getPrioridade() == prioridade);
                     break;
                 case 3:
                     System.out.print("Qual status? (1 - TODO, 2 - DOING, 3 - DONE): ");
                     int opStatus = sc.nextInt();
                     sc.nextLine();
                     Status statusBusca = obterStatusPorOpcao(opStatus);
-                    resultado = gerenciador.filtrarTarefas(t -> t.getStatus() == statusBusca);
+                    resultado = tarefaController.filtrarTarefas(t -> t.getStatus() == statusBusca);
                     break;
                 default:
                     System.out.println("Opção de filtro inválida.");

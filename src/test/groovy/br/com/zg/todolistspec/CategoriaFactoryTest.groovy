@@ -1,5 +1,6 @@
 package br.com.zg.todolist.backend.factory
 
+import br.com.zg.todolist.backend.model.factory.CategoriaFactory
 import org.junit.jupiter.api.Test
 import static org.junit.jupiter.api.Assertions.*
 

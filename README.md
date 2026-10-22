@@ -231,6 +231,30 @@ A arquitetura foi redesenhada utilizando 6 padrões de projeto, divididos em tr�
 
 A aplicação conta com uma suíte de testes robusta (100% verde), incluindo o uso de Mocks para isolar componentes. Foram implementados testes específicos para comprovar o funcionamento mecânico dos padrões **Flyweight**, **State**, **Strategy** e **Observer**.
 
+# Atualização - Refatoração Arquitetural (MVC)
+
+
+O objetivo principal desta arquitetura é garantir alta coesão, baixo acoplamento e preparar o terreno para uma futura migração para frameworks robustos, como o Spring Boot.
+
+##  Estrutura e Arquitetura MVC
+
+A aplicação foi fisicamente separada em ambientes e pacotes com responsabilidades estritas:
+
+*   **Frontend (View Web):**
+  * Diretório `frontend/` com a implementação em Vanilla JavaScript, HTML e CSS.
+  * Opera de forma independente como o "V" do MVC para a web.
+*   **Backend (Java):**
+  * **`view`:** Contém a `MenuTerminalView`, uma interface secundária de console para testes locais. **Regra de Ouro aplicada:** A View nunca interage diretamente com o Model, toda comunicação é feita via Controller.
+  * **`controller`:** Camada responsável por receber as requisições da View, rotear os comandos e orquestrar as ações. Implementada por `TarefaController` e `CategoriaController`.
+  * **`model`:** Representa o coração da aplicação. Contém todas as regras de negócio, validações, entidades (`Tarefa`, `Categoria`, `Status`), serviços (`GerenciadorTarefasService`, `AlarmeService`) e a implementação dos Design Patterns.
+    
+Reestruturação de Pacotes (Separação Física): O backend foi reorganizado em pacotes independentes e paralelos (model, controller e view). Corrigiu-se o aninhamento incorreto onde o Controller estava dentro do Model.
+
+Criação dos Controllers (CRUD): Foram implementados o TarefaController e o CategoriaController para centralizar o recebimento das requisições e orquestrar as chamadas para os serviços do Model.
+
+Isolamento Total da View (MenuTerminalView): Foram removidas todas as chamadas diretas aos serviços (GerenciadorTarefasService) e fábricas (CategoriaFactory) que existiam dentro da View. A interface passou a se comunicar estrita e exclusivamente através dos Controllers.
+
+Resolução de Ambiguidade e Injeção nos Testes: Os testes em Groovy (MenuTerminalTest e TarefaControllerTest) foram refatorados para respeitar a nova injeção de dependências dos Controllers, corrigindo erros de sobrecarga de métodos (assertDoesNotThrow) e garantindo cobertura 100% verde com Mocks isolados.
 
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**

@@ -1,8 +1,8 @@
 package br.com.zg.todolistspec
 
 import br.com.zg.todolist.backend.model.Status
-import br.com.zg.todolist.backend.factory.CategoriaFactory
-import br.com.zg.todolist.backend.factory.TarefaFactory
+import br.com.zg.todolist.backend.model.factory.CategoriaFactory
+import br.com.zg.todolist.backend.model.factory.TarefaFactory
 
 import org.junit.jupiter.api.Test
 import java.time.LocalDate

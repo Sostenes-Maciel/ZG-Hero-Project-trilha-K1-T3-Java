@@ -1,8 +1,8 @@
-package br.com.zg.todolist.backend.service;
+package br.com.zg.todolist.backend.model.service;
 
 import br.com.zg.todolist.backend.model.Tarefa;
-import br.com.zg.todolist.backend.strategy.EstrategiaOrdenacao;
-import br.com.zg.todolist.backend.strategy.OrdenacaoPorPrioridadeEData;
+import br.com.zg.todolist.backend.model.strategy.EstrategiaOrdenacao;
+import br.com.zg.todolist.backend.model.strategy.OrdenacaoPorPrioridadeEData;
 
 import java.util.ArrayList;
 import java.util.List;

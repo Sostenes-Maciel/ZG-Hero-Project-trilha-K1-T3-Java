@@ -2,12 +2,12 @@ package br.com.zg.todolistspec
 
 import br.com.zg.todolist.backend.model.Status
 import br.com.zg.todolist.backend.model.Tarefa
-import br.com.zg.todolist.backend.factory.CategoriaFactory
-import br.com.zg.todolist.backend.factory.TarefaFactory
-import br.com.zg.todolist.backend.observer.AlarmeObserver
-import br.com.zg.todolist.backend.service.GerenciadorTarefasService
-import br.com.zg.todolist.backend.service.IAlarmeService
-import br.com.zg.todolist.backend.strategy.OrdenacaoPorData
+import br.com.zg.todolist.backend.model.factory.CategoriaFactory
+import br.com.zg.todolist.backend.model.factory.TarefaFactory
+import br.com.zg.todolist.backend.model.observer.AlarmeObserver
+import br.com.zg.todolist.backend.model.service.GerenciadorTarefasService
+import br.com.zg.todolist.backend.model.service.IAlarmeService
+import br.com.zg.todolist.backend.model.strategy.OrdenacaoPorData
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
