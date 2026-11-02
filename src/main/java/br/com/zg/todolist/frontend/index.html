@@ -51,18 +51,18 @@
     <main class="conteudo">
 
         <section class="dashboard-panel">
-            <div class="stat-card stat-card--todo">
+            <button type="button" class="stat-card stat-card--todo" data-status="TODO" aria-label="Ver tarefas a fazer" aria-pressed="false">
                 <span class="stat-label">A fazer</span>
                 <strong id="resumoTodo">0</strong>
-            </div>
-            <div class="stat-card stat-card--doing">
+            </button>
+            <button type="button" class="stat-card stat-card--doing" data-status="DOING" aria-label="Ver tarefas em andamento" aria-pressed="false">
                 <span class="stat-label">Em andamento</span>
                 <strong id="resumoDoing">0</strong>
-            </div>
-            <div class="stat-card stat-card--done">
+            </button>
+            <button type="button" class="stat-card stat-card--done" data-status="DONE" aria-label="Ver tarefas concluídas" aria-pressed="false">
                 <span class="stat-label">Concluído</span>
                 <strong id="resumoDone">0</strong>
-            </div>
+            </button>
         </section>
 
         <section id="cadastrar" class="secao ativa">
@@ -132,7 +132,7 @@
 
         <section id="tarefas" class="secao">
             <div class="secao-header">
-                <h2>Minhas Tarefas</h2>
+                <h2 id="tituloListaTarefas">Minhas Tarefas</h2>
                 <span class="chip">Lista</span>
             </div>
 

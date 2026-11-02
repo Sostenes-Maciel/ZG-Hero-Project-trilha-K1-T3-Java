@@ -15,6 +15,19 @@ const botaoStatusMultiplo = document.getElementById("botaoStatusMultiplo");
 
 let tarefas = carregarTarefas();
 let tarefaEmEdicao = null;
+let statusDashboard = null;
+
+window.addEventListener("tarefas:filtrar-status", (evento) => {
+    statusDashboard = evento.detail.status;
+    atualizarSelecaoDashboard();
+    listarTarefas();
+});
+
+window.addEventListener("tarefas:mostrar-todas", () => {
+    statusDashboard = null;
+    atualizarSelecaoDashboard();
+    listarTarefas();
+});
 
 window.addEventListener("storage", (evento) => {
     if (evento.key !== "tarefas") return;
@@ -74,13 +87,44 @@ export function listarTarefas() {
     listaTarefas.innerHTML = "";
     atualizarResumoDashboard();
 
-    if (tarefas.length === 0) {
-        listaTarefas.innerHTML = "<p class='lista-vazia'>Nenhuma tarefa cadastrada.</p>";
+    const tarefasVisiveis = statusDashboard
+        ? tarefas.filter((tarefa) => tarefa.status === statusDashboard)
+        : tarefas;
+    const tituloLista = document.getElementById("tituloListaTarefas");
+
+    if (tituloLista) {
+        tituloLista.textContent = statusDashboard
+            ? `Tarefas: ${descricaoStatus(statusDashboard)}`
+            : "Minhas Tarefas";
+    }
+
+    if (tarefasVisiveis.length === 0) {
+        const mensagem = statusDashboard
+            ? `Nenhuma tarefa ${descricaoStatus(statusDashboard).toLowerCase()} no momento.`
+            : "Nenhuma tarefa cadastrada.";
+
+        listaTarefas.innerHTML = `<p class="lista-vazia">${mensagem}</p>`;
         return;
     }
 
-    tarefas.forEach((tarefa) => {
+    tarefasVisiveis.forEach((tarefa) => {
         listaTarefas.appendChild(criarCardTarefa(tarefa));
+    });
+}
+
+function descricaoStatus(status) {
+    const descricoes = {
+        TODO: "A fazer",
+        DOING: "Em andamento",
+        DONE: "Concluídas"
+    };
+
+    return descricoes[status] || "Minhas Tarefas";
+}
+
+function atualizarSelecaoDashboard() {
+    document.querySelectorAll(".stat-card[data-status]").forEach((card) => {
+        card.setAttribute("aria-pressed", String(card.dataset.status === statusDashboard));
     });
 }
 

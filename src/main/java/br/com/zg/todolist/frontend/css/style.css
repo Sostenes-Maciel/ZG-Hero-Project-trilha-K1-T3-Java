@@ -347,6 +347,10 @@ body.alto-contraste {
 }
 
 .stat-card {
+    appearance: none;
+    color: var(--texto-principal);
+    text-align: left;
+    cursor: pointer;
     background: var(--bg-panel);
     border: var(--borda-tamanho) solid var(--borda-cor);
     border-radius: 18px;
@@ -360,6 +364,15 @@ body.alto-contraste {
 
 .stat-card:hover {
     transform: translateY(-4px);
+}
+
+.stat-card:focus-visible {
+    outline: 3px solid var(--texto-secundario);
+    outline-offset: 3px;
+}
+
+.stat-card[aria-pressed="true"] {
+    box-shadow: 0 0 0 2px var(--texto-secundario), var(--sombra-padrao);
 }
 
 .stat-label {

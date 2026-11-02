@@ -22,6 +22,21 @@ export function configurarMenu() {
 
         botao.addEventListener("click", () => {
             alternarSecaoAtiva(botoesMenu, secoes, botao);
+            if (botao.dataset.secao === "tarefas") {
+                window.dispatchEvent(new CustomEvent("tarefas:mostrar-todas"));
+            }
+        });
+    });
+
+    document.querySelectorAll(".stat-card[data-status]").forEach((card) => {
+        card.addEventListener("click", () => {
+            const botaoTarefas = document.querySelector('.menu-item[data-secao="tarefas"]');
+            if (!botaoTarefas) return;
+
+            alternarSecaoAtiva(botoesMenu, secoes, botaoTarefas);
+            window.dispatchEvent(new CustomEvent("tarefas:filtrar-status", {
+                detail: { status: card.dataset.status }
+            }));
         });
     });
 }
