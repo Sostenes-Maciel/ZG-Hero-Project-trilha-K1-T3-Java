@@ -13,9 +13,12 @@
 <body>
 
 <header class="topo">
-    <div>
-        <h1>TODO List</h1>
-        <p>Organize suas tarefas</p>
+    <div class="topo-inner">
+        <div>
+            <p class="eyebrow">Planejamento inteligente</p>
+            <h1>TODO List</h1>
+        </div>
+        <div class="topo-badge">Organize seu dia com foco</div>
     </div>
 </header>
 
@@ -23,18 +26,20 @@
 
 <div class="layout">
 
-    <!-- MENU LATERAL -->
     <aside class="menu">
-        <h2>Menu</h2>
+        <div class="menu-header">
+            <span class="menu-icon">☰</span>
+            <h2>Menu</h2>
+        </div>
         <nav>
             <button type="button" class="menu-item ativo" data-secao="cadastrar">
-                Cadastrar tarefa
+                <span>✦</span> Cadastrar tarefa
             </button>
             <button type="button" class="menu-item" data-secao="tarefas">
-                Minhas tarefas
+                <span>✓</span> Minhas tarefas
             </button>
             <button type="button" class="menu-item" data-secao="filtros">
-                Filtros
+                <span>⌕</span> Filtros
             </button>
         </nav>
 
@@ -43,12 +48,28 @@
         </button>
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="conteudo">
 
-        <!-- SEÇÃO: CADASTRO -->
+        <section class="dashboard-panel">
+            <div class="stat-card stat-card--todo">
+                <span class="stat-label">A fazer</span>
+                <strong id="resumoTodo">0</strong>
+            </div>
+            <div class="stat-card stat-card--doing">
+                <span class="stat-label">Em andamento</span>
+                <strong id="resumoDoing">0</strong>
+            </div>
+            <div class="stat-card stat-card--done">
+                <span class="stat-label">Concluído</span>
+                <strong id="resumoDone">0</strong>
+            </div>
+        </section>
+
         <section id="cadastrar" class="secao ativa">
-            <h2>Nova Tarefa</h2>
+            <div class="secao-header">
+                <h2>Nova Tarefa</h2>
+                <span class="chip">Cadastro</span>
+            </div>
 
             <form id="formTarefa">
                 <div class="campo">
@@ -109,9 +130,11 @@
             </form>
         </section>
 
-        <!-- SEÇÃO: LISTAGEM -->
         <section id="tarefas" class="secao">
-            <h2>Minhas Tarefas</h2>
+            <div class="secao-header">
+                <h2>Minhas Tarefas</h2>
+                <span class="chip">Lista</span>
+            </div>
 
             <div id="listaTarefas"></div>
 
@@ -135,9 +158,11 @@
             </div>
         </section>
 
-        <!-- SEÇÃO: FILTROS -->
         <section id="filtros" class="secao">
-            <h2>Filtrar tarefas</h2>
+            <div class="secao-header">
+                <h2>Filtrar tarefas</h2>
+                <span class="chip">Busca</span>
+            </div>
 
             <div class="filtro">
                 <label class="checkbox-inline" for="ativarCategoria">

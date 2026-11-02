@@ -72,15 +72,30 @@ function criarCardTarefa(tarefa, incluirAcoes = true) {
 
 export function listarTarefas() {
     listaTarefas.innerHTML = "";
+    atualizarResumoDashboard();
 
     if (tarefas.length === 0) {
-        listaTarefas.innerHTML = "<p>Nenhuma tarefa cadastrada.</p>";
+        listaTarefas.innerHTML = "<p class='lista-vazia'>Nenhuma tarefa cadastrada.</p>";
         return;
     }
 
     tarefas.forEach((tarefa) => {
         listaTarefas.appendChild(criarCardTarefa(tarefa));
     });
+}
+
+function atualizarResumoDashboard() {
+    const totalTodo = tarefas.filter((tarefa) => tarefa.status === "TODO").length;
+    const totalDoing = tarefas.filter((tarefa) => tarefa.status === "DOING").length;
+    const totalDone = tarefas.filter((tarefa) => tarefa.status === "DONE").length;
+
+    const resumoTodo = document.getElementById("resumoTodo");
+    const resumoDoing = document.getElementById("resumoDoing");
+    const resumoDone = document.getElementById("resumoDone");
+
+    if (resumoTodo) resumoTodo.textContent = totalTodo;
+    if (resumoDoing) resumoDoing.textContent = totalDoing;
+    if (resumoDone) resumoDone.textContent = totalDone;
 }
 
 function configurarAlarme(tarefa, horario) {

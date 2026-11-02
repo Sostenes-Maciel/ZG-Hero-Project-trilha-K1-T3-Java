@@ -28,7 +28,12 @@ export function configurarMenu() {
 
 function alternarSecaoAtiva(botoesMenu, secoes, botaoClicado) {
     botoesMenu.forEach((item) => item.classList.remove("ativo"));
-    secoes.forEach((secao) => secao.classList.remove("ativa"));
+    secoes.forEach((secao) => {
+        secao.classList.remove("ativa");
+        secao.style.animation = "none";
+        void secao.offsetWidth;
+        secao.style.animation = "fadeUp 0.35s ease";
+    });
 
     botaoClicado.classList.add("ativo");
 
@@ -68,4 +73,5 @@ function aplicarAltoContrasteSalvo() {
 
 function atualizarTextoBotaoContraste(estaAtivo) {
     botaoContraste.textContent = estaAtivo ? "Desativar alto contraste" : "Alto contraste";
+    botaoContraste.setAttribute("aria-pressed", String(estaAtivo));
 }
