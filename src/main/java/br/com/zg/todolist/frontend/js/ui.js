@@ -32,6 +32,8 @@ export function configurarMenu() {
         });
     });
 
+    configurarBuscaNavegacao();
+
     document.querySelectorAll(".stat-card[data-status]").forEach((card) => {
         card.addEventListener("click", () => {
             const botaoTarefas = document.querySelector('.menu-item[data-secao="tarefas"]');
@@ -66,6 +68,43 @@ export function configurarMenu() {
 
     configurarCarrossel();
     configurarAnimacoesAoRolar();
+}
+
+function configurarBuscaNavegacao() {
+    const formularioBusca = document.getElementById("buscaNavegacao");
+    const campoBusca = document.getElementById("termoNavegacao");
+    if (!formularioBusca || !campoBusca) return;
+
+    const destinos = [
+        { secao: "cadastrar", termos: ["cadastro", "cadastrar", "nova tarefa", "criar tarefa"] },
+        { secao: "tarefas", termos: ["tarefas", "minhas tarefas", "lista"] },
+        { secao: "filtros", termos: ["filtro", "filtrar", "busca"] },
+        { secao: "inicio", termos: ["inicio", "home", "principal"] }
+    ];
+
+    formularioBusca.addEventListener("submit", (evento) => {
+        evento.preventDefault();
+        const termo = campoBusca.value.trim().normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        if (!termo) {
+            mostrarMensagem("Digite uma página, como cadastro ou tarefas.", "erro");
+            campoBusca.focus();
+            return;
+        }
+
+        const destino = destinos.find(({ termos }) => termos.some((palavra) => termo.includes(palavra)));
+        const botaoDestino = destino
+            && document.querySelector(`.menu-item[data-secao="${destino.secao}"]`);
+
+        if (!botaoDestino) {
+            mostrarMensagem("Não encontrei essa página. Tente cadastro, tarefas ou filtros.", "erro");
+            campoBusca.focus();
+            return;
+        }
+
+        botaoDestino.click();
+        campoBusca.value = "";
+    });
 }
 
 function fecharMenuSuspenso(menu, botaoMenu) {
