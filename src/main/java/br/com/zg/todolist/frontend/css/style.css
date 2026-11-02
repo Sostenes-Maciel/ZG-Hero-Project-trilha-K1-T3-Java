@@ -41,7 +41,7 @@
 
 body.alto-contraste {
     --bg-body: #121212;
-    --bg-panel: rgba(28, 28, 28, 0.95);
+    --bg-panel: #202020;
     --bg-elemento: #1e1e1e;
     --bg-topo: linear-gradient(135deg, #111111 0%, #1d1d1d 100%);
     --bg-surface: #141414;
@@ -179,6 +179,24 @@ body.alto-contraste {
 .inicio-apresentacao .btn-principal:hover {
     background: #fff;
     color: #1b3d2a;
+}
+
+.alto-contraste .inicio-apresentacao {
+    background: var(--bg-elemento);
+    color: var(--texto-principal);
+    border: 1px solid var(--borda-cor);
+}
+
+.alto-contraste .inicio-apresentacao .eyebrow,
+.alto-contraste .inicio-apresentacao h2,
+.alto-contraste .inicio-apresentacao > p:not(.eyebrow) {
+    color: var(--texto-principal);
+}
+
+.alto-contraste .inicio-apresentacao .btn-principal,
+.alto-contraste .inicio-apresentacao .btn-principal:hover {
+    background: #fff;
+    color: #121212;
 }
 
 .carrossel {
@@ -396,6 +414,17 @@ body.alto-contraste {
 .rodape p:first-child,
 .rodape p:nth-child(2) {
     color: var(--texto-destaque);
+}
+
+.alto-contraste .rodape {
+    background: var(--bg-elemento);
+    color: var(--texto-principal);
+    border-top-color: var(--borda-cor);
+}
+
+.alto-contraste .rodape p:first-child,
+.alto-contraste .rodape p:nth-child(2) {
+    color: var(--texto-principal);
     font-weight: 700;
 }
 
@@ -476,9 +505,15 @@ body.alto-contraste {
     padding: 0 4px;
 }
 
+.menu-controles {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
 .menu-toggle {
     display: none;
-    margin-left: auto;
     width: 40px;
     height: 40px;
     place-items: center;
@@ -488,6 +523,15 @@ body.alto-contraste {
     color: var(--texto-principal);
     font-size: 1.2rem;
     cursor: pointer;
+}
+
+.menu-toggle span {
+    display: inline-block;
+    transition: transform 0.22s ease;
+}
+
+.menu-toggle[aria-expanded="true"] span {
+    transform: rotate(90deg);
 }
 
 .menu-icon {
@@ -572,7 +616,7 @@ button[hidden] {
 .botao-contraste {
     width: 40px;
     height: 40px;
-    margin: 18px 0 0 auto;
+    margin: 0;
     padding: 0;
     justify-content: center;
     border: 1px solid var(--borda-cor);
@@ -1239,17 +1283,6 @@ body.alto-contraste ::placeholder {
     }
 }
 
-@keyframes menuDropdown {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 @media (max-width: 860px) {
     .layout {
         grid-template-columns: 1fr;
@@ -1269,22 +1302,35 @@ body.alto-contraste ::placeholder {
     }
 
     .menu nav {
-        display: none;
-    }
-
-    .menu.menu-aberto nav {
         position: absolute;
         top: calc(100% + 8px);
         right: 0;
         left: 0;
         z-index: 30;
         display: flex;
-        padding: 12px;
-        border: 1px solid var(--borda-cor);
+        max-height: 0;
+        overflow: hidden;
+        visibility: hidden;
+        padding: 0 12px;
+        border: 1px solid transparent;
         border-radius: 16px;
         background: var(--bg-elemento);
         box-shadow: var(--sombra-padrao);
-        animation: menuDropdown 0.22s ease-out;
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    .menu.menu-aberto nav {
+        visibility: visible;
+        padding: 12px;
+        border-color: var(--borda-cor);
+        animation: menuDropdownAbrir 0.26s ease both;
+    }
+
+    .menu.menu-fechando nav {
+        visibility: visible;
+        pointer-events: none;
+        animation: menuDropdownFechar 0.26s ease both;
     }
 
     .dashboard-panel {
@@ -1298,6 +1344,40 @@ body.alto-contraste ::placeholder {
     .inicio-apresentacao,
     .carrossel {
         min-height: auto;
+    }
+}
+
+@keyframes menuDropdownAbrir {
+    from {
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        max-height: 360px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes menuDropdownFechar {
+    from {
+        max-height: 360px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        opacity: 0;
+        transform: translateY(-8px);
     }
 }
 

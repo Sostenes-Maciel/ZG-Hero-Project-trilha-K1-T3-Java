@@ -1,5 +1,6 @@
 const mensagem = document.getElementById("mensagem");
 const botaoContraste = document.getElementById("botaoContraste");
+let temporizadorFechamentoMenu;
 
 export function mostrarMensagem(texto, tipo) {
     if (!mensagem) return;
@@ -45,7 +46,14 @@ export function configurarMenu() {
 
     botaoMenu?.addEventListener("click", () => {
         if (!menu) return;
-        const aberto = menu.classList.toggle("menu-aberto");
+        const aberto = !menu.classList.contains("menu-aberto");
+        if (aberto) {
+            clearTimeout(temporizadorFechamentoMenu);
+            menu.classList.remove("menu-fechando");
+            menu.classList.add("menu-aberto");
+        } else {
+            fecharMenuSuspenso(menu, botaoMenu);
+        }
         botaoMenu.setAttribute("aria-expanded", String(aberto));
         botaoMenu.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
     });
@@ -63,6 +71,11 @@ export function configurarMenu() {
 function fecharMenuSuspenso(menu, botaoMenu) {
     if (!menu || !botaoMenu) return;
     menu.classList.remove("menu-aberto");
+    menu.classList.add("menu-fechando");
+    clearTimeout(temporizadorFechamentoMenu);
+    temporizadorFechamentoMenu = setTimeout(() => {
+        menu.classList.remove("menu-fechando");
+    }, 280);
     botaoMenu.setAttribute("aria-expanded", "false");
     botaoMenu.setAttribute("aria-label", "Abrir menu");
 }
