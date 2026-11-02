@@ -80,6 +80,8 @@ html {
 }
 
 body {
+    display: flex;
+    flex-direction: column;
     margin: 0;
     min-height: 100vh;
     font-family: "Segoe UI", Arial, sans-serif;
@@ -95,6 +97,7 @@ body.alto-contraste {
 
 .layout {
     display: grid;
+    flex: 1;
     grid-template-columns: 220px minmax(0, 1fr);
     gap: 28px;
     width: min(1200px, calc(100% - 32px));
@@ -398,7 +401,7 @@ body.alto-contraste {
 }
 
 .rodape {
-    margin-top: 24px;
+    margin-top: auto;
     padding: 12px 18px;
     background: linear-gradient(180deg, rgba(25, 49, 38, 0.95) 0%, #173327 100%);
     color: var(--texto-claro);

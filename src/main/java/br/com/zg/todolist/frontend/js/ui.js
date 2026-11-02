@@ -86,7 +86,10 @@ function configurarCarrossel() {
 
     const slides = [...carrossel.querySelectorAll(".carrossel-slide")];
     const pontos = [...carrossel.querySelectorAll(".carrossel-ponto")];
+    if (slides.length < 2 || pontos.length !== slides.length) return;
+
     let indiceAtual = 0;
+    let temporizadorCarrossel;
 
     function mostrarSlide(indice) {
         indiceAtual = (indice + slides.length) % slides.length;
@@ -99,13 +102,45 @@ function configurarCarrossel() {
         });
     }
 
+    function pausarCarrossel() {
+        window.clearInterval(temporizadorCarrossel);
+    }
+
+    function iniciarCarrossel() {
+        pausarCarrossel();
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            && !document.hidden
+            && !carrossel.matches(":hover")
+            && !carrossel.contains(document.activeElement)) {
+            temporizadorCarrossel = window.setInterval(() => {
+                mostrarSlide(indiceAtual + 1);
+            }, 5000);
+        }
+    }
+
     carrossel.querySelector(".carrossel-anterior")
-        .addEventListener("click", () => mostrarSlide(indiceAtual - 1));
+        .addEventListener("click", () => {
+            mostrarSlide(indiceAtual - 1);
+            iniciarCarrossel();
+        });
     carrossel.querySelector(".carrossel-proximo")
-        .addEventListener("click", () => mostrarSlide(indiceAtual + 1));
+        .addEventListener("click", () => {
+            mostrarSlide(indiceAtual + 1);
+            iniciarCarrossel();
+        });
     pontos.forEach((ponto, indice) => {
-        ponto.addEventListener("click", () => mostrarSlide(indice));
+        ponto.addEventListener("click", () => {
+            mostrarSlide(indice);
+            iniciarCarrossel();
+        });
     });
+
+    carrossel.addEventListener("mouseenter", pausarCarrossel);
+    carrossel.addEventListener("mouseleave", iniciarCarrossel);
+    carrossel.addEventListener("focusin", pausarCarrossel);
+    carrossel.addEventListener("focusout", iniciarCarrossel);
+    document.addEventListener("visibilitychange", iniciarCarrossel);
+    iniciarCarrossel();
 }
 
 function configurarAnimacoesAoRolar() {
