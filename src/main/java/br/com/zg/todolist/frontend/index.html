@@ -137,15 +137,21 @@
                 <span class="chip">Lista</span>
             </div>
 
+            <label class="busca-tarefas" for="buscaTarefas">
+                <span aria-hidden="true">⌕</span>
+                <input type="search" id="buscaTarefas" placeholder="Buscar por tarefa, descrição ou categoria" autocomplete="off">
+            </label>
+
             <div id="listaTarefas"></div>
 
-            <div class="acoes-multiplas">
+            <div class="acoes-multiplas" id="acoesMultiplas" hidden>
                 <label class="checkbox-inline">
                     <input type="checkbox" id="selecionarTodas">
                     Selecionar todas
                 </label>
 
-                <label for="statusMultiplo">Novo status:</label>
+                <span id="quantidadeSelecionadas" class="quantidade-selecionadas" aria-live="polite"></span>
+                <label for="statusMultiplo" class="rotulo-status-multiplo">Novo status:</label>
                 <select id="statusMultiplo">
                     <option value="">Selecione</option>
                     <option value="TODO">TODO</option>
@@ -178,7 +184,7 @@
                     <input type="checkbox" id="ativarPrioridade">
                     Filtrar por prioridade
                 </label>
-                <label for="filtroPrioridade"></label><select id="filtroPrioridade" disabled>
+                <select id="filtroPrioridade" aria-label="Prioridade" disabled>
                     <option value="">Qualquer prioridade</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -193,7 +199,7 @@
                     <input type="checkbox" id="ativarStatus">
                     Filtrar por status
                 </label>
-                <label for="filtroStatus"></label><select id="filtroStatus" disabled>
+                <select id="filtroStatus" aria-label="Status" disabled>
                     <option value="">Qualquer status</option>
                     <option value="TODO">TODO</option>
                     <option value="DOING">DOING</option>
@@ -210,11 +216,24 @@
                 </button>
             </div>
 
+            <div id="filtrosAtivos" class="filtros-ativos" aria-label="Filtros ativos"></div>
             <div id="resultadoFiltros" aria-live="polite"></div>
         </section>
 
     </main>
 </div>
+
+<dialog id="modalConfirmacao" class="modal-confirmacao" aria-labelledby="tituloModalConfirmacao">
+    <div class="modal-conteudo">
+        <span class="modal-icone" aria-hidden="true">!</span>
+        <h2 id="tituloModalConfirmacao">Excluir tarefa?</h2>
+        <p id="mensagemModalConfirmacao"></p>
+        <div class="botoes-confirmacao">
+            <button type="button" class="btn-cancelar-remocao" id="botaoCancelarRemocao">Manter tarefa</button>
+            <button type="button" class="btn-confirmar-remocao" id="botaoConfirmarRemocao">Excluir</button>
+        </div>
+    </div>
+</dialog>
 
 <footer class="rodape">
     <p>Criado por Sóstenes Maciel para a trilha de Javascript</p>

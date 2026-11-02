@@ -5,6 +5,7 @@ const filtroStatus = document.getElementById("filtroStatus");
 const botaoFiltrar = document.getElementById("botaoFiltrar");
 const botaoLimparFiltros = document.getElementById("botaoLimparFiltros");
 const resultadoFiltros = document.getElementById("resultadoFiltros");
+const filtrosAtivos = document.getElementById("filtrosAtivos");
 
 const ativarCategoria = document.getElementById("ativarCategoria");
 const ativarPrioridade = document.getElementById("ativarPrioridade");
@@ -61,6 +62,16 @@ function criarCardFiltro(tarefa) {
 function mostrarResultadoFiltro(tarefasFiltradas) {
     resultadoFiltros.innerHTML = "";
 
+    if (tarefasFiltradas === null) {
+        mostrarEstadoFiltro("Ative um ou mais filtros para encontrar tarefas específicas.");
+        return;
+    }
+
+    if (tarefasFiltradas.length === 0) {
+        mostrarEstadoFiltro("Nenhuma tarefa corresponde aos filtros selecionados.", "Limpar filtros");
+        return;
+    }
+
     const quantidade = document.createElement("p");
     quantidade.textContent = `${tarefasFiltradas.length} tarefa(s) encontrada(s).`;
     quantidade.classList.add("quantidade-resultados");
@@ -71,21 +82,88 @@ function mostrarResultadoFiltro(tarefasFiltradas) {
     });
 }
 
+function mostrarEstadoFiltro(texto, textoAcao) {
+    const estado = document.createElement("div");
+    estado.className = "lista-vazia";
+    const mensagem = document.createElement("p");
+    mensagem.textContent = texto;
+    estado.appendChild(mensagem);
+
+    if (textoAcao) {
+        const acao = document.createElement("button");
+        acao.type = "button";
+        acao.textContent = textoAcao;
+        acao.addEventListener("click", limparFiltros);
+        estado.appendChild(acao);
+    }
+
+    resultadoFiltros.appendChild(estado);
+}
+
+function obterFiltrosAtivos() {
+    const ativos = [];
+
+    if (ativarCategoria.checked && filtroCategoria.value.trim()) {
+        ativos.push({
+            checkbox: ativarCategoria,
+            input: filtroCategoria,
+            rotulo: "Categoria",
+            valor: filtroCategoria.value.trim(),
+            corresponde: (tarefa) => tarefa.categoria.toLocaleLowerCase("pt-BR")
+                === filtroCategoria.value.trim().toLocaleLowerCase("pt-BR")
+        });
+    }
+
+    if (ativarPrioridade.checked && filtroPrioridade.value) {
+        ativos.push({
+            checkbox: ativarPrioridade,
+            input: filtroPrioridade,
+            rotulo: "Prioridade",
+            valor: filtroPrioridade.value,
+            corresponde: (tarefa) => tarefa.prioridade === Number(filtroPrioridade.value)
+        });
+    }
+
+    if (ativarStatus.checked && filtroStatus.value) {
+        ativos.push({
+            checkbox: ativarStatus,
+            input: filtroStatus,
+            rotulo: "Status",
+            valor: descricaoStatus(filtroStatus.value),
+            corresponde: (tarefa) => tarefa.status === filtroStatus.value
+        });
+    }
+
+    return ativos;
+}
+
+function renderizarFiltrosAtivos(ativos) {
+    filtrosAtivos.innerHTML = "";
+    ativos.forEach((filtro) => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "filtro-ativo";
+        chip.setAttribute("aria-label", `Remover filtro ${filtro.rotulo}: ${filtro.valor}`);
+        chip.textContent = `${filtro.rotulo}: ${filtro.valor} ×`;
+        chip.addEventListener("click", () => {
+            filtro.checkbox.checked = false;
+            filtro.input.value = "";
+            filtro.input.disabled = true;
+            filtrarTarefas();
+        });
+        filtrosAtivos.appendChild(chip);
+    });
+}
+
 function filtrarTarefas() {
     if (!obterTarefas) return;
 
     const tarefas = obterTarefas();
-    const categoria = filtroCategoria.value.trim().toLowerCase();
-    const prioridade = Number(filtroPrioridade.value);
-    const status = filtroStatus.value;
-
-    const tarefasFiltradas = tarefas.filter((tarefa) => {
-        const correspondeCategoria = !ativarCategoria.checked || tarefa.categoria.toLowerCase() === categoria;
-        const correspondePrioridade = !ativarPrioridade.checked || tarefa.prioridade === prioridade;
-        const correspondeStatus = !ativarStatus.checked || tarefa.status === status;
-
-        return correspondeCategoria && correspondePrioridade && correspondeStatus;
-    });
+    const ativos = obterFiltrosAtivos();
+    renderizarFiltrosAtivos(ativos);
+    const tarefasFiltradas = tarefas.filter((tarefa) =>
+        ativos.every((filtro) => filtro.corresponde(tarefa))
+    );
 
     mostrarResultadoFiltro(tarefasFiltradas);
 }
@@ -104,18 +182,20 @@ function limparFiltro(checkbox, inputElement) {
     inputElement.disabled = true;
 }
 
+function limparFiltros() {
+    limparFiltro(ativarCategoria, filtroCategoria);
+    limparFiltro(ativarPrioridade, filtroPrioridade);
+    limparFiltro(ativarStatus, filtroStatus);
+    filtrosAtivos.innerHTML = "";
+    mostrarResultadoFiltro(null);
+}
+
 export function iniciarFiltros() {
     configurarToggleFiltro(ativarCategoria, filtroCategoria);
     configurarToggleFiltro(ativarPrioridade, filtroPrioridade);
     configurarToggleFiltro(ativarStatus, filtroStatus);
 
     botaoFiltrar.addEventListener("click", filtrarTarefas);
-
-    botaoLimparFiltros.addEventListener("click", () => {
-        limparFiltro(ativarCategoria, filtroCategoria);
-        limparFiltro(ativarPrioridade, filtroPrioridade);
-        limparFiltro(ativarStatus, filtroStatus);
-
-        resultadoFiltros.innerHTML = "";
-    });
+    botaoLimparFiltros.addEventListener("click", limparFiltros);
+    mostrarResultadoFiltro(null);
 }

@@ -12,19 +12,30 @@ const botaoCancelarEdicao = document.getElementById("botaoCancelarEdicao");
 const selecionarTodas = document.getElementById("selecionarTodas");
 const statusMultiplo = document.getElementById("statusMultiplo");
 const botaoStatusMultiplo = document.getElementById("botaoStatusMultiplo");
+const buscaTarefas = document.getElementById("buscaTarefas");
+const acoesMultiplas = document.getElementById("acoesMultiplas");
+const quantidadeSelecionadas = document.getElementById("quantidadeSelecionadas");
+const modalConfirmacao = document.getElementById("modalConfirmacao");
+const mensagemModalConfirmacao = document.getElementById("mensagemModalConfirmacao");
+const botaoCancelarRemocao = document.getElementById("botaoCancelarRemocao");
+const botaoConfirmarRemocao = document.getElementById("botaoConfirmarRemocao");
 
 let tarefas = carregarTarefas();
 let tarefaEmEdicao = null;
 let statusDashboard = null;
+let tarefasSelecionadas = new Set();
+let tarefaPendenteRemocao = null;
 
 window.addEventListener("tarefas:filtrar-status", (evento) => {
     statusDashboard = evento.detail.status;
+    limparSelecao();
     atualizarSelecaoDashboard();
     listarTarefas();
 });
 
 window.addEventListener("tarefas:mostrar-todas", () => {
     statusDashboard = null;
+    limparSelecao();
     atualizarSelecaoDashboard();
     listarTarefas();
 });
@@ -32,6 +43,7 @@ window.addEventListener("tarefas:mostrar-todas", () => {
 window.addEventListener("storage", (evento) => {
     if (evento.key !== "tarefas") return;
     tarefas = evento.newValue ? JSON.parse(evento.newValue) : [];
+    limparSelecao();
     listarTarefas();
 });
 
@@ -68,12 +80,12 @@ function criarCardTarefa(tarefa, incluirAcoes = true) {
 
     card.innerHTML = `
         <div class="titulo-tarefa">
-            <input type="checkbox" class="checkbox-tarefa" value="${tarefa.id}" aria-label="Selecionar tarefa ${tarefa.nome}">
+            <input type="checkbox" class="checkbox-tarefa" value="${tarefa.id}" aria-label="Selecionar tarefa ${tarefa.nome}" ${tarefasSelecionadas.has(tarefa.id) ? "checked" : ""}>
             <h3>${tarefa.nome}</h3>
             <span class="status-indicador">${descricaoStatus(tarefa.status)}</span>
         </div>
         <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
-        <p><strong>Data de término:</strong> ${formatarData(tarefa.dataTermino)}</p>
+        <p><strong>Prazo:</strong> <span class="prazo-indicador ${classePrazo(tarefa)}">${descricaoPrazo(tarefa)}</span> · ${formatarData(tarefa.dataTermino)}</p>
         <p><strong>Prioridade:</strong> ${tarefa.prioridade}/5</p>
         <p><strong>Categoria:</strong> ${tarefa.categoria}</p>
         ${infoAlarme}
@@ -87,9 +99,14 @@ export function listarTarefas() {
     listaTarefas.innerHTML = "";
     atualizarResumoDashboard();
 
-    const tarefasVisiveis = statusDashboard
+    const tarefasDoStatus = statusDashboard
         ? tarefas.filter((tarefa) => tarefa.status === statusDashboard)
         : tarefas;
+    const busca = buscaTarefas.value.trim().toLocaleLowerCase("pt-BR");
+    const tarefasVisiveis = tarefasDoStatus.filter((tarefa) => {
+        const texto = `${tarefa.nome} ${tarefa.descricao} ${tarefa.categoria}`.toLocaleLowerCase("pt-BR");
+        return texto.includes(busca);
+    });
     const tituloLista = document.getElementById("tituloListaTarefas");
 
     if (tituloLista) {
@@ -98,18 +115,15 @@ export function listarTarefas() {
             : "Minhas Tarefas";
     }
 
-    if (tarefasVisiveis.length === 0) {
-        const mensagem = statusDashboard
-            ? `Nenhuma tarefa ${descricaoStatus(statusDashboard).toLowerCase()} no momento.`
-            : "Nenhuma tarefa cadastrada.";
-
-        listaTarefas.innerHTML = `<p class="lista-vazia">${mensagem}</p>`;
-        return;
-    }
-
     tarefasVisiveis.forEach((tarefa) => {
         listaTarefas.appendChild(criarCardTarefa(tarefa));
     });
+
+    if (tarefasVisiveis.length === 0) {
+        mostrarEstadoVazio(tarefasDoStatus.length, busca);
+    }
+
+    atualizarAcoesMultiplas(tarefasVisiveis);
 }
 
 function descricaoStatus(status) {
@@ -122,10 +136,94 @@ function descricaoStatus(status) {
     return descricoes[status] || "Minhas Tarefas";
 }
 
+function descricaoPrazo(tarefa) {
+    if (tarefa.status === "DONE") return "Concluída";
+    const diasRestantes = calcularDiasAtePrazo(tarefa.dataTermino);
+    if (diasRestantes < 0) return `Atrasada há ${Math.abs(diasRestantes)} dia(s)`;
+    if (diasRestantes === 0) return "Vence hoje";
+    if (diasRestantes === 1) return "Vence amanhã";
+    return `Em ${diasRestantes} dias`;
+}
+
+function classePrazo(tarefa) {
+    if (tarefa.status === "DONE") return "prazo-concluido";
+    const diasRestantes = calcularDiasAtePrazo(tarefa.dataTermino);
+    if (diasRestantes < 0) return "prazo-atrasado";
+    if (diasRestantes <= 1) return "prazo-proximo";
+    return "prazo-normal";
+}
+
+function calcularDiasAtePrazo(data) {
+    const [ano, mes, dia] = data.split("-").map(Number);
+    const prazo = new Date(ano, mes - 1, dia);
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    return Math.round((prazo - hoje) / 86400000);
+}
+
+function mostrarEstadoVazio(totalNoStatus, busca) {
+    const estado = document.createElement("div");
+    estado.className = "lista-vazia";
+    const texto = document.createElement("p");
+    const acao = document.createElement("button");
+    acao.type = "button";
+
+    if (totalNoStatus === 0 && tarefas.length === 0) {
+        texto.textContent = "Sua lista ainda está vazia. Crie uma tarefa para começar.";
+        acao.textContent = "Cadastrar tarefa";
+        acao.addEventListener("click", () => {
+            document.querySelector('.menu-item[data-secao="cadastrar"]')?.click();
+        });
+    } else if (busca) {
+        texto.textContent = "Nenhuma tarefa corresponde à sua busca.";
+        acao.textContent = "Limpar busca";
+        acao.addEventListener("click", () => {
+            buscaTarefas.value = "";
+            limparSelecao();
+            listarTarefas();
+            buscaTarefas.focus();
+        });
+    } else if (statusDashboard) {
+        texto.textContent = `Não há tarefas com status ${descricaoStatus(statusDashboard)}.`;
+        acao.textContent = "Ver todas as tarefas";
+        acao.addEventListener("click", () => {
+            document.querySelector('.menu-item[data-secao="tarefas"]')?.click();
+        });
+    } else {
+        texto.textContent = "Nenhuma tarefa encontrada.";
+        acao.textContent = "Cadastrar tarefa";
+        acao.addEventListener("click", () => {
+            document.querySelector('.menu-item[data-secao="cadastrar"]')?.click();
+        });
+    }
+
+    estado.append(texto, acao);
+    listaTarefas.appendChild(estado);
+}
+
 function atualizarSelecaoDashboard() {
     document.querySelectorAll(".stat-card[data-status]").forEach((card) => {
         card.setAttribute("aria-pressed", String(card.dataset.status === statusDashboard));
     });
+}
+
+function atualizarAcoesMultiplas(tarefasVisiveis) {
+    const idsVisiveis = new Set(tarefasVisiveis.map((tarefa) => tarefa.id));
+    const selecionadasVisiveis = [...tarefasSelecionadas].filter((id) => idsVisiveis.has(id));
+    acoesMultiplas.hidden = tarefasVisiveis.length === 0;
+    quantidadeSelecionadas.textContent = selecionadasVisiveis.length
+        ? `${selecionadasVisiveis.length} selecionada(s)`
+        : "";
+    selecionarTodas.checked = tarefasVisiveis.length > 0
+        && selecionadasVisiveis.length === tarefasVisiveis.length;
+    selecionarTodas.indeterminate = selecionadasVisiveis.length > 0
+        && selecionadasVisiveis.length < tarefasVisiveis.length;
+}
+
+function limparSelecao() {
+    tarefasSelecionadas.clear();
+    selecionarTodas.checked = false;
+    selecionarTodas.indeterminate = false;
 }
 
 function atualizarResumoDashboard() {
@@ -268,36 +366,20 @@ export function iniciarCancelamentoEdicao() {
 }
 
 export function iniciarRemocao(id) {
-    const card = document.querySelector(`[data-tarefa-id="${id}"]`);
-    if (!card) return;
+    const tarefa = tarefas.find((item) => item.id === id);
+    if (!tarefa) return;
 
-    const confirmacao = document.createElement("div");
-    confirmacao.classList.add("confirmacao-remocao");
-    confirmacao.innerHTML = `
-        <p>Deseja realmente remover esta tarefa?</p>
-        <div class="botoes-confirmacao">
-            <button type="button" class="btn-confirmar-remocao">Remover</button>
-            <button type="button" class="btn-cancelar-remocao">Cancelar</button>
-        </div>
-    `;
-
-    card.appendChild(confirmacao);
-
-    confirmacao.querySelector(".btn-confirmar-remocao").addEventListener("click", () => {
-        tarefas = carregarTarefas();
-        tarefas = tarefas.filter((tarefa) => tarefa.id !== id);
-
-        salvarTarefas();
-        listarTarefas();
-        mostrarMensagem("Tarefa removida com sucesso!", "removido"); // ou "sucesso" dependendo da sua config UI
-    });
-
-    confirmacao.querySelector(".btn-cancelar-remocao").addEventListener("click", () => {
-        confirmacao.remove();
-    });
+    tarefaPendenteRemocao = id;
+    mensagemModalConfirmacao.textContent = `A tarefa “${tarefa.nome}” será removida permanentemente.`;
+    modalConfirmacao.showModal();
 }
 
 export function iniciarAcoesDosCards() {
+    buscaTarefas.addEventListener("input", () => {
+        limparSelecao();
+        listarTarefas();
+    });
+
     listaTarefas.addEventListener("click", (event) => {
         const botaoEditar = event.target.closest(".btn-editar");
         const botaoRemover = event.target.closest(".btn-remover");
@@ -309,6 +391,48 @@ export function iniciarAcoesDosCards() {
         if (botaoRemover) {
             iniciarRemocao(Number(botaoRemover.dataset.id));
         }
+    });
+
+    listaTarefas.addEventListener("change", (event) => {
+        const checkbox = event.target.closest(".checkbox-tarefa");
+        if (!checkbox) return;
+
+        const id = Number(checkbox.value);
+        if (checkbox.checked) {
+            tarefasSelecionadas.add(id);
+        } else {
+            tarefasSelecionadas.delete(id);
+        }
+        atualizarAcoesMultiplas(tarefasFiltradasVisiveis());
+    });
+
+    botaoCancelarRemocao.addEventListener("click", () => modalConfirmacao.close());
+    botaoConfirmarRemocao.addEventListener("click", () => {
+        if (tarefaPendenteRemocao === null) return;
+        tarefas = carregarTarefas().filter((tarefa) => tarefa.id !== tarefaPendenteRemocao);
+        tarefasSelecionadas.delete(tarefaPendenteRemocao);
+        salvarTarefas();
+        modalConfirmacao.close();
+        tarefaPendenteRemocao = null;
+        listarTarefas();
+        mostrarMensagem("Tarefa removida com sucesso!", "removido");
+    });
+    modalConfirmacao.addEventListener("close", () => {
+        tarefaPendenteRemocao = null;
+    });
+    modalConfirmacao.addEventListener("click", (event) => {
+        if (event.target === modalConfirmacao) modalConfirmacao.close();
+    });
+}
+
+function tarefasFiltradasVisiveis() {
+    const statusTarefas = statusDashboard
+        ? tarefas.filter((tarefa) => tarefa.status === statusDashboard)
+        : tarefas;
+    const busca = buscaTarefas.value.trim().toLocaleLowerCase("pt-BR");
+    return statusTarefas.filter((tarefa) => {
+        const texto = `${tarefa.nome} ${tarefa.descricao} ${tarefa.categoria}`.toLocaleLowerCase("pt-BR");
+        return texto.includes(busca);
     });
 }
 
@@ -322,25 +446,21 @@ export function iniciarStatusMultiplo() {
             return;
         }
 
-        const selecionadas = document.querySelectorAll(".checkbox-tarefa:checked");
-        if (selecionadas.length === 0) {
+        if (tarefasSelecionadas.size === 0) {
             mostrarMensagem("Selecione pelo menos uma tarefa.", "erro");
             return;
         }
 
-        selecionadas.forEach((checkbox) => {
-            const id = Number(checkbox.value);
+        tarefasSelecionadas.forEach((id) => {
             const tarefa = tarefas.find((item) => item.id === id);
             if (tarefa) {
                 tarefa.status = novoStatus;
             }
         });
 
+        limparSelecao();
         salvarTarefas();
         listarTarefas();
-
-        selecionadas.forEach(cb => cb.checked = false); // Correção UI
-        selecionarTodas.checked = false;
         statusMultiplo.value = "";
 
         mostrarMensagem("Status das tarefas atualizado com sucesso!", "sucesso");
@@ -349,9 +469,16 @@ export function iniciarStatusMultiplo() {
 
 export function iniciarSelecionarTodas() {
     selecionarTodas.addEventListener("change", () => {
-        const checkboxes = document.querySelectorAll(".checkbox-tarefa");
+        const checkboxes = listaTarefas.querySelectorAll(".checkbox-tarefa");
         checkboxes.forEach((checkbox) => {
             checkbox.checked = selecionarTodas.checked;
+            const id = Number(checkbox.value);
+            if (checkbox.checked) {
+                tarefasSelecionadas.add(id);
+            } else {
+                tarefasSelecionadas.delete(id);
+            }
         });
+        atualizarAcoesMultiplas(tarefasFiltradasVisiveis());
     });
 }

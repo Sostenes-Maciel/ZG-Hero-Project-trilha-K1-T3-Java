@@ -517,6 +517,10 @@ form,
     box-shadow: 0 12px 20px rgba(39, 77, 50, 0.14);
 }
 
+[hidden] {
+    display: none !important;
+}
+
 .btn-confirmar-remocao {
     background: var(--btn-perigo-bg);
     color: var(--btn-texto);
@@ -706,6 +710,16 @@ body.alto-contraste .acoes-tarefa .btn-remover {
     margin-top: 18px;
 }
 
+.quantidade-selecionadas {
+    color: var(--texto-secundario);
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.rotulo-status-multiplo {
+    margin-left: auto;
+}
+
 .acoes-multiplas label {
     margin: 0;
 }
@@ -717,9 +731,39 @@ body.alto-contraste .acoes-tarefa .btn-remover {
 
 #botaoStatusMultiplo {
     width: auto;
-    margin-left: auto;
     padding: 10px 14px;
     font-size: 0.88rem;
+}
+
+.busca-tarefas {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 0 14px;
+    border: 1px solid var(--borda-cor);
+    border-radius: 12px;
+    background: var(--bg-elemento);
+    color: var(--texto-secundario);
+}
+
+.busca-tarefas span {
+    font-size: 1.25rem;
+}
+
+.busca-tarefas input {
+    width: 100%;
+    padding: 13px 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--texto-principal);
+    font: inherit;
+}
+
+.busca-tarefas:focus-within {
+    border-color: var(--texto-secundario);
+    box-shadow: 0 0 0 4px rgba(91, 148, 105, 0.12);
 }
 
 .filtro {
@@ -753,6 +797,30 @@ body.alto-contraste .acoes-tarefa .btn-remover {
     align-items: center;
     gap: 10px;
     margin: 18px 0;
+}
+
+.filtros-ativos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.filtro-ativo {
+    width: auto;
+    padding: 7px 11px;
+    border: 1px solid var(--borda-cor);
+    border-radius: 999px;
+    background: var(--btn-sec-bg-hover);
+    color: var(--texto-principal);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.filtro-ativo:hover {
+    background: var(--btn-sec-ativo-bg);
+    color: var(--btn-sec-ativo-texto);
 }
 
 #botaoFiltrar,
@@ -807,6 +875,114 @@ input[type="checkbox"] {
     background: rgba(255,255,255,0.4);
     color: var(--texto-secundario);
     font-weight: 600;
+}
+
+.lista-vazia p {
+    margin: 0 0 12px;
+}
+
+.lista-vazia button {
+    width: auto;
+    padding: 9px 13px;
+    border: 1px solid var(--borda-cor);
+    border-radius: 10px;
+    background: var(--bg-elemento);
+    color: var(--texto-principal);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.lista-vazia button:hover {
+    background: var(--btn-sec-bg-hover);
+}
+
+.prazo-indicador {
+    display: inline-block;
+    font-weight: 700;
+}
+
+.prazo-atrasado {
+    color: #b83232;
+}
+
+.prazo-proximo {
+    color: #9a6500;
+}
+
+.prazo-concluido {
+    color: var(--status-done);
+}
+
+.prazo-normal {
+    color: var(--texto-secundario);
+}
+
+.modal-confirmacao {
+    width: min(440px, calc(100% - 32px));
+    padding: 0;
+    border: 1px solid var(--borda-cor);
+    border-radius: 20px;
+    background: var(--bg-elemento);
+    color: var(--texto-principal);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+}
+
+.modal-confirmacao::backdrop {
+    background: rgba(15, 30, 21, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+.modal-conteudo {
+    padding: 26px;
+}
+
+.modal-icone {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(209, 63, 63, 0.12);
+    color: #b83232;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.modal-conteudo h2 {
+    margin: 16px 0 8px;
+    font-size: 1.25rem;
+}
+
+.modal-conteudo p {
+    color: var(--texto-secundario);
+    line-height: 1.5;
+}
+
+.modal-confirmacao .botoes-confirmacao {
+    margin-top: 22px;
+}
+
+.modal-confirmacao .botoes-confirmacao button {
+    width: auto;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.modal-confirmacao .btn-cancelar-remocao {
+    justify-content: center;
+    border: 1px solid var(--borda-cor);
+    background: transparent;
+    color: var(--texto-principal);
+}
+
+.modal-confirmacao .btn-confirmar-remocao {
+    border: 1px solid transparent;
 }
 
 body.alto-contraste .lista-vazia,
@@ -872,11 +1048,13 @@ body.alto-contraste ::placeholder {
     .acoes-tarefa button,
     #botaoFiltrar,
     #botaoLimparFiltros,
-    #botaoStatusMultiplo {
+    #botaoStatusMultiplo,
+    .lista-vazia button {
         width: 100%;
     }
 
-    #botaoStatusMultiplo {
+    #botaoStatusMultiplo,
+    .rotulo-status-multiplo {
         margin-left: 0;
     }
 
