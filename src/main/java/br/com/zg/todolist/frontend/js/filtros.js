@@ -23,6 +23,16 @@ function formatarData(data) {
     return `${dia}/${mes}/${ano}`;
 }
 
+function descricaoStatus(status) {
+    const descricoes = {
+        TODO: "A fazer",
+        DOING: "Em andamento",
+        DONE: "Concluída"
+    };
+
+    return descricoes[status] || status;
+}
+
 function criarCardFiltro(tarefa) {
     const card = document.createElement("div");
     card.classList.add("tarefa", `status-${tarefa.status}`);
@@ -36,12 +46,12 @@ function criarCardFiltro(tarefa) {
         <div class="titulo-tarefa">
             <input type="checkbox" class="checkbox-tarefa" value="${tarefa.id}" aria-label="Selecionar tarefa ${tarefa.nome}">
             <h3>${tarefa.nome}</h3>
+            <span class="status-indicador">${descricaoStatus(tarefa.status)}</span>
         </div>
         <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
         <p><strong>Data de término:</strong> ${formatarData(tarefa.dataTermino)}</p>
         <p><strong>Prioridade:</strong> ${tarefa.prioridade}/5</p>
         <p><strong>Categoria:</strong> ${tarefa.categoria}</p>
-        <p><strong>Status:</strong> ${tarefa.status}</p>
         ${infoAlarme}
     `;
 

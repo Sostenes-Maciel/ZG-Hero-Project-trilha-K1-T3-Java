@@ -560,12 +560,56 @@ form,
 .titulo-tarefa h3 {
     flex: 1;
     margin: 0;
-    padding-left: 12px;
-    border-left: 5px solid var(--borda-cor);
     color: var(--texto-principal);
     font-size: 1.18rem;
     line-height: 1.35;
     word-break: break-word;
+}
+
+.status-indicador {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+    padding: 6px 10px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.status-indicador::before {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    content: "";
+}
+
+.tarefa.status-TODO .status-indicador {
+    color: #76520a;
+    background: rgba(242, 185, 70, 0.2);
+    border-color: rgba(173, 117, 13, 0.25);
+}
+
+.tarefa.status-DOING .status-indicador {
+    color: #245da8;
+    background: rgba(77, 142, 245, 0.14);
+    border-color: rgba(77, 142, 245, 0.24);
+}
+
+.tarefa.status-DONE .status-indicador {
+    color: #23734b;
+    background: rgba(53, 166, 110, 0.15);
+    border-color: rgba(53, 166, 110, 0.25);
+}
+
+.alto-contraste .status-indicador {
+    color: var(--texto-principal) !important;
+    background: transparent !important;
+    border-color: var(--borda-cor) !important;
 }
 
 .tarefa p {
@@ -577,10 +621,6 @@ form,
 .tarefa strong {
     color: var(--texto-principal);
 }
-
-.tarefa.status-TODO .titulo-tarefa h3 { border-left-color: var(--status-todo); }
-.tarefa.status-DOING .titulo-tarefa h3 { border-left-color: var(--status-doing); }
-.tarefa.status-DONE .titulo-tarefa h3 { border-left-color: var(--status-done); }
 
 .acoes-tarefa,
 .confirmacao-remocao {
