@@ -1,4 +1,5 @@
 import { mostrarMensagem } from "./ui.js";
+import { sincronizarAlarmes } from "./alarmes.js";
 import {
     prioridadeValida,
     dataFormatoValido,
@@ -44,6 +45,7 @@ window.addEventListener("storage", (evento) => {
     if (evento.key !== "tarefas") return;
     tarefas = evento.newValue ? JSON.parse(evento.newValue) : [];
     limparSelecao();
+    atualizarAlarmes(tarefas);
     listarTarefas();
 });
 
@@ -54,6 +56,17 @@ function carregarTarefas() {
 
 export function salvarTarefas() {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
+}
+
+export function iniciarAlarmes() {
+    atualizarAlarmes(tarefas);
+}
+
+function atualizarAlarmes(tarefasAtualizadas) {
+    sincronizarAlarmes(tarefasAtualizadas).catch((erro) => {
+        console.error("Não foi possível sincronizar os alarmes.", erro);
+        mostrarMensagem("A tarefa foi salva, mas não foi possível agendar o alarme.", "erro");
+    });
 }
 
 export function formatarData(data) {
@@ -240,26 +253,6 @@ function atualizarResumoDashboard() {
     if (resumoDone) resumoDone.textContent = totalDone;
 }
 
-function configurarAlarme(tarefa, horario) {
-    if (!horario) return;
-
-    const agora = new Date();
-    const [hora, minuto] = horario.split(":").map(Number);
-    const horarioAlarme = new Date();
-
-    horarioAlarme.setHours(hora, minuto, 0, 0);
-
-    if (horarioAlarme <= agora) {
-        horarioAlarme.setDate(horarioAlarme.getDate() + 1);
-    }
-
-    const tempoAteAlarme = horarioAlarme.getTime() - agora.getTime();
-
-    setTimeout(() => {
-        alert(`ALARME DE TAREFA\n\nTarefa: ${tarefa.nome}\nDescrição: ${tarefa.descricao}`);
-    }, tempoAteAlarme);
-}
-
 function obterDadosFormulario() {
     return {
         nome: document.getElementById("nome").value,
@@ -313,7 +306,6 @@ function atualizarTarefaExistente(dados) {
 function adicionarNovaTarefa(dados) {
     const novaTarefa = { id: Date.now(), ...dados };
     tarefas.push(novaTarefa);
-    configurarAlarme(novaTarefa, novaTarefa.alarme);
     mostrarMensagem("Tarefa adicionada com sucesso!", "sucesso");
 }
 
@@ -333,6 +325,7 @@ export function iniciarCadastro() {
         }
 
         salvarTarefas();
+        atualizarAlarmes(tarefas);
         listarTarefas();
         formTarefa.reset();
     });
@@ -412,6 +405,7 @@ export function iniciarAcoesDosCards() {
         tarefas = carregarTarefas().filter((tarefa) => tarefa.id !== tarefaPendenteRemocao);
         tarefasSelecionadas.delete(tarefaPendenteRemocao);
         salvarTarefas();
+        atualizarAlarmes(tarefas);
         modalConfirmacao.close();
         tarefaPendenteRemocao = null;
         listarTarefas();

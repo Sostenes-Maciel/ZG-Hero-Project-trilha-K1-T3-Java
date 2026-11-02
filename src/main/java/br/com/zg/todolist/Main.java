@@ -2,6 +2,7 @@ package br.com.zg.todolist;
 
 import br.com.zg.todolist.backend.controller.CategoriaController;
 import br.com.zg.todolist.backend.controller.TarefaController;
+import br.com.zg.todolist.backend.model.observer.ConsoleAlarmeObserver;
 import br.com.zg.todolist.backend.model.service.AlarmeService;
 import br.com.zg.todolist.backend.model.service.GerenciadorTarefasService;
 import br.com.zg.todolist.backend.view.MenuTerminalView;
@@ -9,6 +10,7 @@ import br.com.zg.todolist.backend.view.MenuTerminalView;
 public class Main {
     public static void main(String[] args) {
         AlarmeService alarmeService = new AlarmeService();
+        alarmeService.adicionarObservador(new ConsoleAlarmeObserver());
         GerenciadorTarefasService gerenciador = new GerenciadorTarefasService(alarmeService);
 
         TarefaController tarefaController = new TarefaController(gerenciador);

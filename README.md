@@ -256,6 +256,13 @@ Isolamento Total da View (MenuTerminalView): Foram removidas todas as chamadas d
 
 Resolução de Ambiguidade e Injeção nos Testes: Os testes em Groovy (MenuTerminalTest e TarefaControllerTest) foram refatorados para respeitar a nova injeção de dependências dos Controllers, corrigindo erros de sobrecarga de métodos (assertDoesNotThrow) e garantindo cobertura 100% verde com Mocks isolados.
 
+## Preparação para integração de alarmes com Telegram
+
+O agendamento do frontend está isolado em `src/main/java/br/com/zg/todolist/frontend/js/alarmes.js`. Hoje, o adaptador local usa `setTimeout` e um alerta do navegador; ele é apenas um fallback e depende de a página permanecer aberta. Antes da inicialização, `app.js` aceita um adaptador assíncrono em `window.todoList.agendadorAlarme(tarefas)`. Quando o contrato HTTP for definido, esse ponto poderá enviar a sincronização ao backend sem acoplar a interface a endpoints ou credenciais.
+
+O backend já possui o ponto de extensão `AlarmeObserver`. A aplicação de console registra `ConsoleAlarmeObserver`; uma futura integração pode adicionar um observer de Telegram ao serviço, sem colocar lógica ou credenciais do bot no frontend. O token do Telegram deve permanecer em configuração segura do backend, nunca em JavaScript enviado ao navegador.
+
+O contrato HTTP, a persistência dos alarmes e o vínculo do destinatário Telegram ainda serão definidos no desafio de integração. Para disparos confiáveis com a página fechada, o backend deverá persistir o instante do alarme e executar o agendamento no servidor; o temporizador local não oferece essa garantia.
+
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
-

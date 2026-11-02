@@ -4,7 +4,8 @@ import {
     iniciarCancelamentoEdicao,
     iniciarAcoesDosCards,
     iniciarStatusMultiplo,
-    iniciarSelecionarTodas
+    iniciarSelecionarTodas,
+    iniciarAlarmes
 } from "./tarefas.js";
 
 import {
@@ -16,6 +17,7 @@ import {
     configurarMenu,
     configurarAltoContraste
 } from "./ui.js";
+import { configurarAgendadorAlarme } from "./alarmes.js";
 
 
 definirTarefas(
@@ -30,6 +32,13 @@ definirTarefas(
 configurarMenu();
 
 configurarAltoContraste();
+
+const agendadorBackendAlarme = window.todoList?.agendadorAlarme;
+if (agendadorBackendAlarme) {
+    configurarAgendadorAlarme(agendadorBackendAlarme);
+}
+
+iniciarAlarmes();
 
 iniciarCadastro();
 
