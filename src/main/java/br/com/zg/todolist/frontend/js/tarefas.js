@@ -61,8 +61,8 @@ function criarCardTarefa(tarefa, incluirAcoes = true) {
 
     const infoAcoes = incluirAcoes
         ? `<div class="acoes-tarefa">
-                <button type="button" class="btn-editar" data-id="${tarefa.id}">Editar</button>
-                <button type="button" class="btn-remover" data-id="${tarefa.id}">Remover</button>
+                <button type="button" class="btn-remover" data-id="${tarefa.id}" aria-label="Excluir ${tarefa.nome}">Excluir</button>
+                <button type="button" class="btn-editar" data-id="${tarefa.id}" aria-label="Editar ${tarefa.nome}">Editar</button>
            </div>`
         : "";
 

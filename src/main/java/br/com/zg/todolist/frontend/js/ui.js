@@ -87,6 +87,8 @@ function aplicarAltoContrasteSalvo() {
 }
 
 function atualizarTextoBotaoContraste(estaAtivo) {
-    botaoContraste.textContent = estaAtivo ? "Desativar alto contraste" : "Alto contraste";
+    const rotulo = estaAtivo ? "Desativar alto contraste" : "Ativar alto contraste";
+    botaoContraste.setAttribute("aria-label", rotulo);
+    botaoContraste.title = rotulo;
     botaoContraste.setAttribute("aria-pressed", String(estaAtivo));
 }

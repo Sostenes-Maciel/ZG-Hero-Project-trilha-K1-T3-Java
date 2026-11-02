@@ -332,10 +332,33 @@ body.alto-contraste {
     box-shadow: 0 14px 26px rgba(39, 77, 50, 0.14);
 }
 
+.menu-item:focus-visible,
+.botao-contraste:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--texto-secundario);
+    outline-offset: 3px;
+}
+
+.menu-item[hidden],
+.botao-contraste[hidden],
+button[hidden] {
+    display: none !important;
+}
+
 .botao-contraste {
-    margin-top: 18px;
+    width: 40px;
+    height: 40px;
+    margin: 18px 0 0 auto;
+    padding: 0;
     justify-content: center;
+    border: 1px solid var(--borda-cor);
+    border-radius: 50%;
     text-align: center;
+}
+
+.icone-contraste {
+    font-size: 1.35rem;
+    line-height: 1;
 }
 
 .dashboard-panel {
@@ -469,7 +492,6 @@ form,
 .btn-principal,
 #botaoFiltrar,
 #botaoStatusMultiplo,
-.acoes-tarefa button,
 #botaoLimparFiltros,
 .btn-confirmar-remocao,
 #botaoCancelarEdicao {
@@ -488,7 +510,6 @@ form,
 .btn-principal:hover,
 #botaoFiltrar:hover,
 #botaoStatusMultiplo:hover,
-.acoes-tarefa button:hover,
 #botaoLimparFiltros:hover,
 .btn-confirmar-remocao:hover,
 #botaoCancelarEdicao:hover {
@@ -496,13 +517,11 @@ form,
     box-shadow: 0 12px 20px rgba(39, 77, 50, 0.14);
 }
 
-.acoes-tarefa button:last-child,
 .btn-confirmar-remocao {
     background: var(--btn-perigo-bg);
     color: var(--btn-texto);
 }
 
-.acoes-tarefa button:last-child:hover,
 .btn-confirmar-remocao:hover {
     background: var(--btn-perigo-hover);
 }
@@ -574,11 +593,43 @@ form,
 
 .acoes-tarefa {
     flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 .acoes-tarefa button {
-    flex: 1 1 140px;
-    min-width: 120px;
+    width: auto;
+    min-width: 78px;
+    padding: 8px 12px;
+    border: 1px solid var(--borda-cor);
+    border-radius: 9px;
+    background: var(--bg-surface);
+    color: var(--texto-principal);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.acoes-tarefa .btn-remover {
+    border-color: rgba(209, 63, 63, 0.25);
+    background: transparent;
+    color: #b83232;
+}
+
+.acoes-tarefa .btn-remover:hover {
+    transform: translateY(-1px);
+    background: rgba(209, 63, 63, 0.1);
+}
+
+.acoes-tarefa .btn-editar:hover {
+    transform: translateY(-1px);
+    background: var(--btn-sec-bg-hover);
+}
+
+body.alto-contraste .acoes-tarefa .btn-remover {
+    border-color: var(--borda-cor);
+    color: var(--texto-principal);
 }
 
 .confirmacao-remocao {
@@ -599,6 +650,14 @@ form,
     flex: 1;
 }
 
+.botoes-confirmacao .btn-confirmar-remocao,
+.botoes-confirmacao .btn-cancelar-remocao {
+    width: auto;
+    justify-content: center;
+    padding: 10px 14px;
+    text-align: center;
+}
+
 .acoes-multiplas {
     display: flex;
     align-items: center;
@@ -607,16 +666,74 @@ form,
     margin-top: 18px;
 }
 
+.acoes-multiplas label {
+    margin: 0;
+}
+
+.acoes-multiplas select {
+    width: auto;
+    min-width: 150px;
+}
+
+#botaoStatusMultiplo {
+    width: auto;
+    margin-left: auto;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+}
+
 .filtro {
     padding: 16px 18px;
     margin-bottom: 14px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
 }
 
-.filtro label {
+.filtro .checkbox-inline {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.filtro input[type="text"],
+.filtro select {
+    width: 100%;
+}
+
+.filtro input:disabled,
+.filtro select:disabled {
+    opacity: 0.58;
+}
+
+.acoes-filtros {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+#botaoFiltrar,
+#botaoLimparFiltros {
+    width: auto;
+    min-width: 120px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+}
+
+#botaoLimparFiltros {
+    justify-content: center;
+    border-color: var(--borda-cor);
+    background: transparent;
+    color: var(--texto-principal);
+    text-align: center;
+}
+
+#botaoLimparFiltros:hover {
+    background: var(--btn-sec-bg-hover);
+    color: var(--texto-secundario);
 }
 
 #resultadoFiltros,
@@ -709,6 +826,21 @@ body.alto-contraste ::placeholder {
 
     .botoes-confirmacao,
     .acoes-tarefa {
+        flex-direction: column;
+    }
+
+    .acoes-tarefa button,
+    #botaoFiltrar,
+    #botaoLimparFiltros,
+    #botaoStatusMultiplo {
+        width: 100%;
+    }
+
+    #botaoStatusMultiplo {
+        margin-left: 0;
+    }
+
+    .acoes-filtros {
         flex-direction: column;
     }
 }

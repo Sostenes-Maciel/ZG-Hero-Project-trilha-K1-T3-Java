@@ -43,8 +43,9 @@
             </button>
         </nav>
 
-        <button type="button" class="botao-contraste" id="botaoContraste" aria-pressed="false">
-            Alto contraste
+        <button type="button" class="botao-contraste" id="botaoContraste"
+                aria-label="Ativar alto contraste" title="Ativar alto contraste" aria-pressed="false">
+            <span class="icone-contraste" aria-hidden="true">◐</span>
         </button>
     </aside>
 
@@ -167,20 +168,18 @@
             <div class="filtro">
                 <label class="checkbox-inline" for="ativarCategoria">
                     <input type="checkbox" id="ativarCategoria">
-                    Ativar
+                    Filtrar por categoria
                 </label>
-                <label for="filtroCategoria">Categoria</label>
-                <input type="text" id="filtroCategoria" placeholder="Digite uma categoria" disabled>
+                <label for="filtroCategoria"></label><input type="text" id="filtroCategoria" placeholder="Digite uma categoria" disabled>
             </div>
 
             <div class="filtro">
                 <label class="checkbox-inline" for="ativarPrioridade">
                     <input type="checkbox" id="ativarPrioridade">
-                    Ativar
+                    Filtrar por prioridade
                 </label>
-                <label for="filtroPrioridade">Prioridade</label>
-                <select id="filtroPrioridade" disabled>
-                    <option value="">Selecione</option>
+                <label for="filtroPrioridade"></label><select id="filtroPrioridade" disabled>
+                    <option value="">Qualquer prioridade</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -192,11 +191,10 @@
             <div class="filtro">
                 <label class="checkbox-inline" for="ativarStatus">
                     <input type="checkbox" id="ativarStatus">
-                    Ativar
+                    Filtrar por status
                 </label>
-                <label for="filtroStatus">Status</label>
-                <select id="filtroStatus" disabled>
-                    <option value="">Selecione</option>
+                <label for="filtroStatus"></label><select id="filtroStatus" disabled>
+                    <option value="">Qualquer status</option>
                     <option value="TODO">TODO</option>
                     <option value="DOING">DOING</option>
                     <option value="DONE">DONE</option>
@@ -205,10 +203,10 @@
 
             <div class="acoes-filtros">
                 <button type="button" id="botaoFiltrar" class="btn-principal">
-                    Aplicar filtros
+                    Buscar tarefas
                 </button>
                 <button type="button" id="botaoLimparFiltros">
-                    Limpar filtros
+                    Limpar
                 </button>
             </div>
 
