@@ -16,13 +16,16 @@ export function mostrarMensagem(texto, tipo) {
 export function configurarMenu() {
     const botoesMenu = document.querySelectorAll(".menu-item");
     const secoes = document.querySelectorAll(".secao");
+    const menu = document.querySelector(".menu");
+    const botaoMenu = document.getElementById("botaoMenu");
 
     botoesMenu.forEach((botao) => {
         if (!botao.dataset.secao) return;
 
         botao.addEventListener("click", () => {
             alternarSecaoAtiva(botoesMenu, secoes, botao);
-            if (botao.dataset.secao === "tarefas") {
+            fecharMenuSuspenso(menu, botaoMenu);
+            if (botao.dataset.secao === "tarefas" || botao.dataset.secao === "inicio") {
                 window.dispatchEvent(new CustomEvent("tarefas:mostrar-todas"));
             }
         });
@@ -39,6 +42,75 @@ export function configurarMenu() {
             }));
         });
     });
+
+    botaoMenu?.addEventListener("click", () => {
+        if (!menu) return;
+        const aberto = menu.classList.toggle("menu-aberto");
+        botaoMenu.setAttribute("aria-expanded", String(aberto));
+        botaoMenu.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
+    });
+
+    document.querySelectorAll("[data-ir-para]").forEach((botao) => {
+        botao.addEventListener("click", () => {
+            document.querySelector(`.menu-item[data-secao="${botao.dataset.irPara}"]`)?.click();
+        });
+    });
+
+    configurarCarrossel();
+    configurarAnimacoesAoRolar();
+}
+
+function fecharMenuSuspenso(menu, botaoMenu) {
+    if (!menu || !botaoMenu) return;
+    menu.classList.remove("menu-aberto");
+    botaoMenu.setAttribute("aria-expanded", "false");
+    botaoMenu.setAttribute("aria-label", "Abrir menu");
+}
+
+function configurarCarrossel() {
+    const carrossel = document.querySelector(".carrossel");
+    if (!carrossel) return;
+
+    const slides = [...carrossel.querySelectorAll(".carrossel-slide")];
+    const pontos = [...carrossel.querySelectorAll(".carrossel-ponto")];
+    let indiceAtual = 0;
+
+    function mostrarSlide(indice) {
+        indiceAtual = (indice + slides.length) % slides.length;
+        slides.forEach((slide, i) => {
+            const ativo = i === indiceAtual;
+            slide.classList.toggle("ativo", ativo);
+            slide.setAttribute("aria-hidden", String(!ativo));
+            pontos[i].classList.toggle("ativo", ativo);
+            pontos[i].setAttribute("aria-current", String(ativo));
+        });
+    }
+
+    carrossel.querySelector(".carrossel-anterior")
+        .addEventListener("click", () => mostrarSlide(indiceAtual - 1));
+    carrossel.querySelector(".carrossel-proximo")
+        .addEventListener("click", () => mostrarSlide(indiceAtual + 1));
+    pontos.forEach((ponto, indice) => {
+        ponto.addEventListener("click", () => mostrarSlide(indice));
+    });
+}
+
+function configurarAnimacoesAoRolar() {
+    const elementos = document.querySelectorAll(".revelar");
+    if (!("IntersectionObserver" in window)) {
+        elementos.forEach((elemento) => elemento.classList.add("visivel"));
+        return;
+    }
+
+    const observador = new IntersectionObserver((entradas, observer) => {
+        entradas.forEach((entrada) => {
+            if (!entrada.isIntersecting) return;
+            entrada.target.classList.add("visivel");
+            observer.unobserve(entrada.target);
+        });
+    }, { threshold: 0.12 });
+
+    elementos.forEach((elemento) => observador.observe(elemento));
 }
 
 function alternarSecaoAtiva(botoesMenu, secoes, botaoClicado) {

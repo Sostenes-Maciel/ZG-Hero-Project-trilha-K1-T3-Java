@@ -28,11 +28,17 @@
 
     <aside class="menu">
         <div class="menu-header">
-            <span class="menu-icon">☰</span>
+            <span class="menu-icon" aria-hidden="true">☰</span>
             <h2>Menu</h2>
+            <button type="button" class="menu-toggle" id="botaoMenu" aria-expanded="false" aria-controls="navegacaoPrincipal" aria-label="Abrir menu">
+                <span aria-hidden="true">☰</span>
+            </button>
         </div>
-        <nav>
-            <button type="button" class="menu-item ativo" data-secao="cadastrar">
+        <nav id="navegacaoPrincipal">
+            <button type="button" class="menu-item ativo" data-secao="inicio">
+                <span>⌂</span> Início
+            </button>
+            <button type="button" class="menu-item" data-secao="cadastrar">
                 <span>✦</span> Cadastrar tarefa
             </button>
             <button type="button" class="menu-item" data-secao="tarefas">
@@ -51,22 +57,65 @@
 
     <main class="conteudo">
 
-        <section class="dashboard-panel">
-            <button type="button" class="stat-card stat-card--todo" data-status="TODO" aria-label="Ver tarefas a fazer" aria-pressed="false">
-                <span class="stat-label">A fazer</span>
-                <strong id="resumoTodo">0</strong>
-            </button>
-            <button type="button" class="stat-card stat-card--doing" data-status="DOING" aria-label="Ver tarefas em andamento" aria-pressed="false">
-                <span class="stat-label">Em andamento</span>
-                <strong id="resumoDoing">0</strong>
-            </button>
-            <button type="button" class="stat-card stat-card--done" data-status="DONE" aria-label="Ver tarefas concluídas" aria-pressed="false">
-                <span class="stat-label">Concluído</span>
-                <strong id="resumoDone">0</strong>
-            </button>
+        <section id="inicio" class="secao secao-inicio ativa">
+            <div class="inicio-grid">
+                <div class="inicio-apresentacao revelar">
+                    <p class="eyebrow">Mais clareza para o seu dia</p>
+                    <h2>Transforme planos em progresso.</h2>
+                    <p>Organize suas prioridades, acompanhe cada etapa e veja suas tarefas avançarem em um só lugar.</p>
+                    <button type="button" class="btn-principal" data-ir-para="cadastrar">Cadastrar uma tarefa</button>
+                </div>
+
+                <div class="carrossel revelar" aria-label="Benefícios do TODO List">
+                    <div class="carrossel-trilho">
+                        <article class="carrossel-slide ativo" aria-hidden="false">
+                            <span class="slide-numero">01 / 03</span>
+                            <span class="slide-icone" aria-hidden="true">◎</span>
+                            <h3>Priorize o que importa</h3>
+                            <p>Defina prioridades e prazos para manter o foco no que precisa da sua atenção primeiro.</p>
+                        </article>
+                        <article class="carrossel-slide" aria-hidden="true">
+                            <span class="slide-numero">02 / 03</span>
+                            <span class="slide-icone" aria-hidden="true">↗</span>
+                            <h3>Acompanhe seu progresso</h3>
+                            <p>Visualize o que está por fazer, em andamento e concluído. Pequenos avanços também contam.</p>
+                        </article>
+                        <article class="carrossel-slide" aria-hidden="true">
+                            <span class="slide-numero">03 / 03</span>
+                            <span class="slide-icone" aria-hidden="true">＋</span>
+                            <h3>Comece sem complicação</h3>
+                            <p>Cadastre uma tarefa, escolha uma categoria e atualize o status conforme ela evolui.</p>
+                        </article>
+                    </div>
+                    <div class="carrossel-controles">
+                        <button type="button" class="carrossel-anterior" aria-label="Slide anterior">←</button>
+                        <div class="carrossel-pontos" aria-label="Selecionar slide">
+                            <button type="button" class="carrossel-ponto ativo" aria-label="Mostrar slide 1" aria-current="true"></button>
+                            <button type="button" class="carrossel-ponto" aria-label="Mostrar slide 2" aria-current="false"></button>
+                            <button type="button" class="carrossel-ponto" aria-label="Mostrar slide 3" aria-current="false"></button>
+                        </div>
+                        <button type="button" class="carrossel-proximo" aria-label="Próximo slide">→</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-panel revelar">
+                <button type="button" class="stat-card stat-card--todo" data-status="TODO" aria-label="Ver tarefas a fazer" aria-pressed="false">
+                    <span class="stat-label">A fazer</span>
+                    <strong id="resumoTodo">0</strong>
+                </button>
+                <button type="button" class="stat-card stat-card--doing" data-status="DOING" aria-label="Ver tarefas em andamento" aria-pressed="false">
+                    <span class="stat-label">Em andamento</span>
+                    <strong id="resumoDoing">0</strong>
+                </button>
+                <button type="button" class="stat-card stat-card--done" data-status="DONE" aria-label="Ver tarefas concluídas" aria-pressed="false">
+                    <span class="stat-label">Concluído</span>
+                    <strong id="resumoDone">0</strong>
+                </button>
+            </div>
         </section>
 
-        <section id="cadastrar" class="secao ativa">
+        <section id="cadastrar" class="secao">
             <div class="secao-header">
                 <h2>Nova Tarefa</h2>
                 <span class="chip">Cadastro</span>
