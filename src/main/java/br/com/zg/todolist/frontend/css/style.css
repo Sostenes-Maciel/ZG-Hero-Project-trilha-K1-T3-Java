@@ -321,7 +321,7 @@ body.alto-contraste {
     transition-delay: 0.08s;
 }
 
-.secao-inicio .dashboard-panel {
+.secao#tarefas .dashboard-panel {
     max-width: none;
 }
 
@@ -1007,6 +1007,7 @@ body.alto-contraste .acoes-tarefa .btn-remover {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-top: 20px;
     margin-bottom: 18px;
     padding: 0 14px;
     border: 1px solid var(--borda-cor);
@@ -1293,6 +1294,11 @@ body.alto-contraste ::placeholder {
         width: 100%;
     }
 
+    .menu.menu-aberto,
+    .menu.menu-fechando {
+        z-index: 40;
+    }
+
     .menu-header {
         margin-bottom: 0;
     }
@@ -1311,6 +1317,7 @@ body.alto-contraste ::placeholder {
         max-height: 0;
         overflow: hidden;
         visibility: hidden;
+        pointer-events: none;
         padding: 0 12px;
         border: 1px solid transparent;
         border-radius: 16px;
@@ -1318,19 +1325,36 @@ body.alto-contraste ::placeholder {
         box-shadow: var(--sombra-padrao);
         opacity: 0;
         transform: translateY(-8px);
+        transition:
+            max-height 0.28s ease,
+            opacity 0.2s ease,
+            transform 0.2s ease,
+            padding 0.2s ease,
+            visibility 0s linear 0.28s;
     }
 
     .menu.menu-aberto nav {
+        max-height: 360px;
         visibility: visible;
+        pointer-events: auto;
         padding: 12px;
         border-color: var(--borda-cor);
-        animation: menuDropdownAbrir 0.26s ease both;
+        opacity: 1;
+        transform: translateY(0);
+        transition:
+            max-height 0.28s ease,
+            opacity 0.2s ease,
+            transform 0.2s ease,
+            padding 0.2s ease,
+            visibility 0s;
     }
 
     .menu.menu-fechando nav {
+        max-height: 0;
         visibility: visible;
         pointer-events: none;
-        animation: menuDropdownFechar 0.26s ease both;
+        opacity: 0;
+        transform: translateY(-8px);
     }
 
     .dashboard-panel {
@@ -1344,40 +1368,6 @@ body.alto-contraste ::placeholder {
     .inicio-apresentacao,
     .carrossel {
         min-height: auto;
-    }
-}
-
-@keyframes menuDropdownAbrir {
-    from {
-        max-height: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        max-height: 360px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes menuDropdownFechar {
-    from {
-        max-height: 360px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        max-height: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        opacity: 0;
-        transform: translateY(-8px);
     }
 }
 
