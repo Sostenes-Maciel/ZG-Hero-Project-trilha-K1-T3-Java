@@ -125,6 +125,25 @@ body.alto-contraste {
     animation: fadeUp 0.35s ease;
 }
 
+body:not(.alto-contraste) .secao:not(#inicio) {
+    background: linear-gradient(145deg, #234d35, #386b4c);
+    color: #fff;
+}
+
+body:not(.alto-contraste) .secao:not(#inicio) > .secao-header h2 {
+    color: #fff;
+}
+
+body:not(.alto-contraste) .secao:not(#inicio) > .secao-header .chip {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+}
+
+body:not(.alto-contraste) .secao:not(#inicio) > .subtitulo-cadastro {
+    color: rgba(255, 255, 255, 0.84);
+}
+
 .secao.ativa {
     display: block;
 }
