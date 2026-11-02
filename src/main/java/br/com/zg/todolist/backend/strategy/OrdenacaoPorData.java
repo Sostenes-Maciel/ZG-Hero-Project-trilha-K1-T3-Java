@@ -1,4 +1,4 @@
-package br.com.zg.todolist.backend.model.strategy;
+package br.com.zg.todolist.backend.strategy;
 
 import br.com.zg.todolist.backend.model.Tarefa;
 import java.util.Comparator;

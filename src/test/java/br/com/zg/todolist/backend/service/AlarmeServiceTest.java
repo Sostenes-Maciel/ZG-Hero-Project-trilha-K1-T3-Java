@@ -1,4 +1,4 @@
-package br.com.zg.todolist.backend.model.service;
+package br.com.zg.todolist.backend.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package br.com.zg.todolist.backend.model.factory;
+package br.com.zg.todolist.backend.factory;
 
 import br.com.zg.todolist.backend.model.Categoria;
 

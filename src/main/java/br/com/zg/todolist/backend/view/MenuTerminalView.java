@@ -5,7 +5,7 @@ import br.com.zg.todolist.backend.controller.TarefaController;
 import br.com.zg.todolist.backend.model.Categoria;
 import br.com.zg.todolist.backend.model.Status;
 import br.com.zg.todolist.backend.model.Tarefa;
-import br.com.zg.todolist.backend.model.factory.TarefaFactory;
+import br.com.zg.todolist.backend.factory.TarefaFactory;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

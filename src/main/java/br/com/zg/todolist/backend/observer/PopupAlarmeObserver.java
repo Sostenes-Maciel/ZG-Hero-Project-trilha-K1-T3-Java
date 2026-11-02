@@ -1,4 +1,4 @@
-package br.com.zg.todolist.backend.model.observer;
+package br.com.zg.todolist.backend.observer;
 
 import br.com.zg.todolist.backend.model.Tarefa;
 import javax.swing.JOptionPane;

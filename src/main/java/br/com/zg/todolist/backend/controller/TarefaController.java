@@ -1,7 +1,7 @@
 package br.com.zg.todolist.backend.controller;
 
 import br.com.zg.todolist.backend.model.Tarefa;
-import br.com.zg.todolist.backend.model.service.GerenciadorTarefasService;
+import br.com.zg.todolist.backend.service.GerenciadorTarefasService;
 import java.util.List;
 import java.util.function.Predicate;
 

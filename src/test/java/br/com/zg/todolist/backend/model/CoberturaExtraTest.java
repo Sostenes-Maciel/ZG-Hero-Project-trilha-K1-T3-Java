@@ -14,12 +14,12 @@ import org.junit.jupiter.api.Test;
 
 import br.com.zg.todolist.backend.controller.CategoriaController;
 import br.com.zg.todolist.backend.controller.TarefaController;
-import br.com.zg.todolist.backend.model.factory.CategoriaFactory;
-import br.com.zg.todolist.backend.model.factory.TarefaFactory;
-import br.com.zg.todolist.backend.model.observer.ConsoleAlarmeObserver;
-import br.com.zg.todolist.backend.model.service.AlarmeService;
-import br.com.zg.todolist.backend.model.service.GerenciadorTarefasService;
-import br.com.zg.todolist.backend.model.strategy.OrdenacaoPorData;
+import br.com.zg.todolist.backend.factory.CategoriaFactory;
+import br.com.zg.todolist.backend.factory.TarefaFactory;
+import br.com.zg.todolist.backend.observer.ConsoleAlarmeObserver;
+import br.com.zg.todolist.backend.service.AlarmeService;
+import br.com.zg.todolist.backend.service.GerenciadorTarefasService;
+import br.com.zg.todolist.backend.strategy.OrdenacaoPorData;
 
 class CoberturaExtraTest {
 

@@ -3,10 +3,10 @@ package br.com.zg.todolistspec
 import br.com.zg.todolist.backend.model.Tarefa
 import br.com.zg.todolist.backend.controller.TarefaController
 import br.com.zg.todolist.backend.controller.CategoriaController
-import br.com.zg.todolist.backend.model.service.GerenciadorTarefasService
-import br.com.zg.todolist.backend.model.service.IAlarmeService
+import br.com.zg.todolist.backend.service.GerenciadorTarefasService
+import br.com.zg.todolist.backend.service.IAlarmeService
 import br.com.zg.todolist.backend.view.MenuTerminalView
-import br.com.zg.todolist.backend.model.observer.AlarmeObserver
+import br.com.zg.todolist.backend.observer.AlarmeObserver
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

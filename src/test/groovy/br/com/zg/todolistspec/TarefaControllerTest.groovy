@@ -1,10 +1,10 @@
-package br.com.zg.todolist.backend.controller
+package br.com.zg.todolistspec
 
-
-import br.com.zg.todolist.backend.model.service.GerenciadorTarefasService
-import br.com.zg.todolist.backend.model.service.IAlarmeService
-import br.com.zg.todolist.backend.model.factory.TarefaFactory
-import br.com.zg.todolist.backend.model.factory.CategoriaFactory
+import br.com.zg.todolist.backend.controller.TarefaController
+import br.com.zg.todolist.backend.service.GerenciadorTarefasService
+import br.com.zg.todolist.backend.service.IAlarmeService
+import br.com.zg.todolist.backend.factory.TarefaFactory
+import br.com.zg.todolist.backend.factory.CategoriaFactory
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import java.time.LocalDate
