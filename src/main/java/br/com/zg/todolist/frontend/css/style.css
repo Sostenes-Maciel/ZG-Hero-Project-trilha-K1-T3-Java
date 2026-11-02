@@ -203,6 +203,158 @@ body:not(.alto-contraste) .secao:not(#inicio) > .subtitulo-cadastro {
     color: #1b3d2a;
 }
 
+.checklist-preview {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px 16px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 16px;
+    background: rgba(10, 34, 21, 0.3);
+}
+
+.checklist-preview-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.checklist-concluido {
+    color: #d9ffca;
+    opacity: 0;
+    animation: checklistConclusao 8s ease-in-out infinite;
+}
+
+.checklist-linha {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 25px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.78rem;
+}
+
+.checklist-marcador {
+    position: relative;
+    display: grid;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.64);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    animation: checklistMarcar 8s ease-in-out infinite;
+}
+
+.checklist-marcador::after {
+    width: 8px;
+    height: 4px;
+    border-bottom: 2px solid #1b3d2a;
+    border-left: 2px solid #1b3d2a;
+    content: "";
+    opacity: 0;
+    transform: translateY(-1px) rotate(-45deg) scale(0.5);
+    animation: checklistTicar 8s ease-in-out infinite;
+}
+
+.checklist-linha-2 .checklist-marcador,
+.checklist-linha-2 .checklist-marcador::after,
+.checklist-linha-2 .checklist-texto {
+    animation-delay: 1.2s;
+}
+
+.checklist-linha-3 .checklist-marcador,
+.checklist-linha-3 .checklist-marcador::after,
+.checklist-linha-3 .checklist-texto {
+    animation-delay: 2.4s;
+}
+
+.checklist-texto {
+    position: relative;
+    animation: checklistTexto 8s ease-in-out infinite;
+}
+
+.checklist-texto::after {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.75);
+    content: "";
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: checklistRiscar 8s ease-in-out infinite;
+}
+
+.checklist-linha-2 .checklist-texto::after {
+    animation-delay: 1.2s;
+}
+
+.checklist-linha-3 .checklist-texto::after {
+    animation-delay: 2.4s;
+}
+
+.checklist-progresso {
+    height: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.checklist-progresso span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: #d9ffca;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: checklistProgresso 8s ease-in-out infinite;
+}
+
+@keyframes checklistTicar {
+    0%, 12% { opacity: 0; transform: translateY(-1px) rotate(-45deg) scale(0.5); }
+    18%, 83% { opacity: 1; transform: translateY(-1px) rotate(-45deg) scale(1); }
+    90%, 100% { opacity: 0; transform: translateY(-1px) rotate(-45deg) scale(0.5); }
+}
+
+@keyframes checklistMarcar {
+    0%, 12% { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.64); }
+    18%, 83% { background: #d9ffca; border-color: #d9ffca; }
+    90%, 100% { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.64); }
+}
+
+@keyframes checklistRiscar {
+    0%, 12% { transform: scaleX(0); }
+    18%, 83% { transform: scaleX(1); }
+    90%, 100% { transform: scaleX(0); }
+}
+
+@keyframes checklistTexto {
+    0%, 12% { opacity: 1; }
+    18%, 83% { opacity: 0.7; }
+    90%, 100% { opacity: 1; }
+}
+
+@keyframes checklistProgresso {
+    0%, 10% { transform: scaleX(0); }
+    48%, 83% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+}
+
+@keyframes checklistConclusao {
+    0%, 68% { opacity: 0; transform: translateY(3px); }
+    76%, 83% { opacity: 1; transform: translateY(0); }
+    90%, 100% { opacity: 0; transform: translateY(3px); }
+}
+
 .alto-contraste .inicio-apresentacao {
     background: var(--bg-elemento);
     color: var(--texto-principal);
@@ -219,6 +371,39 @@ body:not(.alto-contraste) .secao:not(#inicio) > .subtitulo-cadastro {
 .alto-contraste .inicio-apresentacao .btn-principal:hover {
     background: #fff;
     color: #121212;
+}
+
+.alto-contraste .checklist-preview {
+    border-color: var(--borda-cor);
+    background: var(--bg-surface);
+}
+
+.alto-contraste .checklist-preview-cabecalho,
+.alto-contraste .checklist-linha,
+.alto-contraste .checklist-concluido {
+    color: var(--texto-principal);
+}
+
+.alto-contraste .checklist-marcador {
+    border-color: var(--texto-secundario);
+}
+
+.alto-contraste .checklist-marcador::after {
+    border-color: #121212;
+}
+
+.alto-contraste .checklist-marcador {
+    animation-name: checklistMarcarAltoContraste;
+}
+
+.alto-contraste .checklist-progresso span {
+    background: var(--texto-principal);
+}
+
+@keyframes checklistMarcarAltoContraste {
+    0%, 12% { background: transparent; border-color: var(--texto-secundario); }
+    18%, 83% { background: var(--texto-principal); border-color: var(--texto-principal); }
+    90%, 100% { background: transparent; border-color: var(--texto-secundario); }
 }
 
 .carrossel {
@@ -1579,5 +1764,51 @@ body.alto-contraste ::placeholder {
     .revelar {
         opacity: 1;
         transform: none;
+    }
+
+    .checklist-marcador,
+    .checklist-marcador::after,
+    .checklist-texto,
+    .checklist-texto::after,
+    .checklist-progresso span,
+    .checklist-concluido {
+        animation: none;
+    }
+
+    .checklist-marcador {
+        border-color: #d9ffca;
+        background: #d9ffca;
+    }
+
+    .checklist-marcador::after {
+        opacity: 1;
+        transform: translateY(-1px) rotate(-45deg) scale(1);
+    }
+
+    .checklist-texto {
+        opacity: 0.7;
+    }
+
+    .checklist-texto::after {
+        transform: scaleX(1);
+    }
+
+    .checklist-progresso span,
+    .checklist-concluido {
+        opacity: 1;
+        transform: none;
+    }
+
+    .checklist-progresso span {
+        transform: scaleX(1);
+    }
+
+    .alto-contraste .checklist-marcador {
+        border-color: var(--texto-principal);
+        background: var(--texto-principal);
+    }
+
+    .alto-contraste .checklist-marcador::after {
+        border-color: var(--bg-elemento);
     }
 }
