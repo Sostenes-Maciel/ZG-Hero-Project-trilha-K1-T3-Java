@@ -319,21 +319,24 @@ body:not(.alto-contraste) .secao:not(#inicio) > .subtitulo-cadastro {
 .carrossel-anterior,
 .carrossel-proximo {
     display: grid;
-    width: 34px;
-    height: 34px;
+    width: 42px;
+    height: 42px;
     place-items: center;
-    border: 1px solid var(--borda-cor);
+    border: 1px solid rgba(255, 255, 255, 0.72);
     border-radius: 50%;
-    background: transparent;
-    color: var(--texto-principal);
-    font-size: 1rem;
-    transition: background 0.2s ease, transform 0.2s ease;
+    background: rgba(15, 30, 22, 0.78);
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 800;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .carrossel-anterior:hover,
 .carrossel-proximo:hover {
-    transform: translateY(-2px);
-    background: var(--btn-sec-bg-hover);
+    transform: scale(1.08);
+    background: #173327;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.45);
 }
 
 .carrossel-pontos {
