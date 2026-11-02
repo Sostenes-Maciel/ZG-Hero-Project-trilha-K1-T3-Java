@@ -144,6 +144,33 @@ body:not(.alto-contraste) .secao:not(#inicio) > .subtitulo-cadastro {
     color: rgba(255, 255, 255, 0.84);
 }
 
+body:not(.alto-contraste) #filtros .filtro,
+body:not(.alto-contraste) #filtros .acoes-filtros > button {
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    background: #f7faf7;
+    color: #1b3126;
+    box-shadow: 0 4px 12px rgba(10, 34, 21, 0.2);
+}
+
+body:not(.alto-contraste) #filtros .filtro label {
+    color: #1b3126;
+}
+
+body:not(.alto-contraste) #filtros .acoes-filtros > #botaoFiltrar {
+    border-color: #e0ffcf;
+    background: #e0ffcf;
+    color: #1b3d2a;
+}
+
+body:not(.alto-contraste) #filtros .acoes-filtros > button:hover {
+    background: #fff;
+    box-shadow: 0 7px 16px rgba(10, 34, 21, 0.28);
+}
+
+body:not(.alto-contraste) #filtros .acoes-filtros > #botaoFiltrar:hover {
+    background: #fff;
+}
+
 .secao.ativa {
     display: block;
 }

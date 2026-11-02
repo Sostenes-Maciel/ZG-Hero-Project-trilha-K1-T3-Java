@@ -355,6 +355,7 @@ export function iniciarCancelamentoEdicao() {
         formTarefa.reset();
         botaoFormulario.textContent = "Adicionar tarefa";
         botaoCancelarEdicao.hidden = true;
+        document.querySelector('.menu-item[data-secao="tarefas"]')?.click();
     });
 }
 
