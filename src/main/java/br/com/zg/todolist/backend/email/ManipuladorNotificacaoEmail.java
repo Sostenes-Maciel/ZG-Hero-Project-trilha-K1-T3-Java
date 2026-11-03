@@ -9,10 +9,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ManipuladorNotificacaoEmail implements HttpHandler {
-    private static final int TAMANHO_MAXIMO_REQUISICAO = 16_384;
+    private static final int TAMANHO_MAXIMO_REQUISICAO = 131_072;
     private static final String CAMINHO_ENDPOINT = "/api/notificacoes/email";
 
     private final EnviadorEmail enviadorEmail;
@@ -135,17 +137,60 @@ public class ManipuladorNotificacaoEmail implements HttpHandler {
             throw new IllegalArgumentException("Tipo de notificação inválido.");
         }
 
+        if (evento == EventoNotificacao.RELATORIO_SEMANAL) {
+            return new NotificacaoEmail(evento, null, null, null, interpretarTarefas(corpo));
+        }
+
         String tituloTarefa = textoObrigatorio(corpo, "tituloTarefa", 200);
         String status = textoOpcional(corpo, "status", 30);
         String dataTermino = textoOpcional(corpo, "dataTermino", 10);
-        if (dataTermino != null) {
-            try {
-                LocalDate.parse(dataTermino);
-            } catch (DateTimeParseException excecao) {
-                throw new IllegalArgumentException("A data de término deve usar o formato AAAA-MM-DD.");
-            }
+        validarData(dataTermino);
+        return new NotificacaoEmail(evento, tituloTarefa, status, dataTermino, null);
+    }
+
+    private List<AtividadeNotificacaoEmail> interpretarTarefas(JsonNode corpo) {
+        JsonNode tarefas = corpo.get("tarefas");
+        if (tarefas == null || !tarefas.isArray() || tarefas.isEmpty() || tarefas.size() > 500) {
+            throw new IllegalArgumentException("O relatório deve conter de 1 a 500 tarefas.");
         }
-        return new NotificacaoEmail(evento, tituloTarefa, status, dataTermino);
+
+        List<AtividadeNotificacaoEmail> atividades = new ArrayList<>();
+        for (JsonNode tarefa : tarefas) {
+            if (!tarefa.isObject()) {
+                throw new IllegalArgumentException("Cada tarefa do relatório deve ser um objeto.");
+            }
+            String titulo = textoObrigatorio(tarefa, "titulo", 200);
+            String descricao = textoOpcional(tarefa, "descricao", 2000);
+            String status = textoObrigatorio(tarefa, "status", 30);
+            String dataTermino = textoObrigatorio(tarefa, "dataTermino", 10);
+            int prioridade = inteiroObrigatorio(tarefa);
+            String categoria = textoObrigatorio(tarefa, "categoria", 100);
+            String alarme = textoOpcional(tarefa, "alarme", 5);
+            validarData(dataTermino);
+            atividades.add(new AtividadeNotificacaoEmail(
+                    titulo, descricao, status, dataTermino, prioridade, categoria, alarme));
+        }
+        return atividades;
+    }
+
+    private int inteiroObrigatorio(JsonNode corpo) {
+        JsonNode valor = corpo.get("prioridade");
+        if (valor == null || !valor.isIntegralNumber()
+                || valor.intValue() < 1 || valor.intValue() > 5) {
+            throw new IllegalArgumentException("O campo '" + "prioridade" + "' tem formato ou valor inválido.");
+        }
+        return valor.intValue();
+    }
+
+    private void validarData(String dataTermino) {
+        if (dataTermino == null) {
+            return;
+        }
+        try {
+            LocalDate.parse(dataTermino);
+        } catch (DateTimeParseException excecao) {
+            throw new IllegalArgumentException("A data de término deve usar o formato AAAA-MM-DD.");
+        }
     }
 
     private String textoObrigatorio(JsonNode corpo, String campo, int tamanhoMaximo) {

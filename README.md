@@ -66,7 +66,7 @@ O projeto foi atualizado com a implementação de um sistema de alarmes para as 
 
 ## Atualização: Frontend desenvolvido para a trilha de JavaScript.
 
-A interface foi criada para permitir o gerenciamento das tarefas de forma simples e organizada. Como a comunicação com o backend ainda não foi implementada, os dados são armazenados localmente no navegador.
+A interface foi criada para permitir o gerenciamento das tarefas de forma simples e organizada. As tarefas continuam armazenadas localmente no navegador; há uma API de backend independente exclusivamente para o envio de notificações por e-mail.
 
 ## Tecnologias utilizadas
 
@@ -98,21 +98,72 @@ A interface foi criada para permitir o gerenciamento das tarefas de forma simple
 * Mensagens de confirmação para as ações
 * Formatação da data para o padrão brasileiro
 * Modo de alto contraste com preferência salva no LocalStorage
+* Notificações por e-mail ao criar uma tarefa ou concluí-la
 
 ## Estrutura
 
 ```text
-Frontend/
+src/main/java/br/com/zg/todolist/frontend/
 ├── index.html
-├── css/
-│   └── style.css
-├── js/
-│   ├── app.js
-│   ├── tarefas.js
-│   ├── filtros.js
-│   └── ui.js
-└── README.md
+├── css/style.css
+├── images/
+└── js/
+    ├── app.js
+    ├── tarefas.js
+    ├── alarmes.js
+    ├── notificacoesEmail.js
+    ├── filtros.js
+    └── ui.js
 ```
+
+## Atualização -  Notificações por e-mail com Resend
+
+A versão atual integra o TODO List ao **Resend**, serviço de envio de e-mails. O destinatário é configurado no backend. A criação e as alterações das tarefas continuam salvas no navegador mesmo se o envio falhar.
+
+### Configuração do serviço
+
+1. Crie uma conta no [Resend](https://resend.com), gere uma chave de API e configure um endereço remetente permitido pelo serviço (em geral, um domínio verificado).
+2. Na raiz do projeto, configure as variáveis de ambiente no terminal que iniciará a API:
+
+   ```bash
+   export RESEND_API_KEY='sua-chave-do-resend'
+   export TODO_EMAIL_FROM='TODO List <notificacoes@seu-dominio-verificado.com>'
+   export TODO_EMAIL_TO='seu-email@exemplo.com'
+   export TODO_EMAIL_API_TOKEN="$(openssl rand -hex 32)"
+   export TODO_EMAIL_ALLOWED_ORIGIN='http://localhost:5500'
+   ```
+
+   Guarde o valor gerado em `TODO_EMAIL_API_TOKEN` para informá-lo na interface. Não compartilhe nem publique a chave do Resend ou o token.
+
+3. Inicie o backend:
+
+   ```bash
+   ./gradlew executarApiNotificacoesEmail
+   ```
+
+   Por padrão, a API escuta em `127.0.0.1:8081`. O remetente e o destinatário são definidos no servidor; a chave do Resend não é enviada ao navegador.
+
+4. Em outro terminal, sirva o frontend:
+
+   ```bash
+   python3 -m http.server 5500 --directory src/main/java/br/com/zg/todolist/frontend
+   ```
+
+   Acesse `http://localhost:5500`, abra **Configurar e-mail** no menu e informe o token `TODO_EMAIL_API_TOKEN`.
+
+O token informado na página é mantido somente na memória enquanto ela estiver aberta; após atualizar ou fechar a página, será necessário informá-lo novamente. Como o projeto ainda não tem autenticação de usuários, essa configuração serve para estudo local e não deve ser publicada: um token Bearer utilizado pelo navegador pode ser extraído por quem acessa a aplicação. Para disponibilização pública, implemente autenticação de usuário e controle de acesso no backend. CORS não substitui autenticação. Em ambiente externo, a API também deve ser servida por HTTPS.
+
+A API recebe `POST /api/notificacoes/email` e envia estes e-mails:
+
+- **Tarefa criada:** imediatamente após cadastrar uma tarefa.
+- **Tarefa concluída:** quando o status muda para `DONE`, inclusive em alterações em lote.
+- **Prazo próximo:** um dia antes da data de término de uma tarefa ainda não concluída; é enviado uma vez por tarefa e data.
+- **Tarefa atrasada:** na primeira verificação após o prazo de uma tarefa ainda não concluída; é enviado uma vez por tarefa e data.
+- **Relatório semanal:** na primeira verificação de segunda-feira com tarefas cadastradas; lista as tarefas e seus parâmetros (descrição, status, prazo, prioridade, categoria e alarme), uma vez por semana.
+
+As verificações de prazo e o relatório semanal acontecem quando o token é configurado, quando as tarefas são salvas e a cada hora enquanto a página está aberta. O relatório só é enviado na segunda-feira; se a página permanecer fechada durante todo esse dia, ele não será enviado naquela semana. O histórico de alertas já enviados é guardado no `localStorage` do navegador. Como as tarefas e o agendamento ainda são locais, nenhum alerta é garantido com a página fechada; ao abrir a página, os atrasos pendentes podem ser enviados. As notificações de prazo e atraso se aplicam a tarefas com status diferente de `DONE`.
+
+Para notificações individuais, o corpo usa `evento`, `tituloTarefa`, `status` e `dataTermino` (formato `AAAA-MM-DD`). O relatório usa `evento: "RELATORIO_SEMANAL"` e uma lista `tarefas` com os parâmetros das atividades.
 
 ## Organização do JavaScript
 

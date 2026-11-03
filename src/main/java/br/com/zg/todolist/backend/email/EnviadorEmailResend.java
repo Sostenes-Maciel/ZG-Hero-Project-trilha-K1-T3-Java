@@ -53,6 +53,26 @@ public class EnviadorEmailResend implements EnviadorEmail {
     }
 
     private String criarConteudo(NotificacaoEmail notificacao) {
+        if (notificacao.evento() == EventoNotificacao.RELATORIO_SEMANAL) {
+            StringBuilder relatorio = new StringBuilder("Resumo semanal das atividades do TODO List:\n");
+            for (AtividadeNotificacaoEmail tarefa : notificacao.tarefas()) {
+                relatorio.append("\n- ")
+                        .append(tarefa.titulo())
+                        .append("\n  Descrição: ")
+                        .append(tarefa.descricao() == null || tarefa.descricao().isBlank()
+                                ? "Não informada" : tarefa.descricao())
+                        .append("\n  Status: ").append(tarefa.status())
+                        .append("\n  Data de término: ").append(tarefa.dataTermino())
+                        .append("\n  Prioridade: ").append(tarefa.prioridade())
+                        .append("\n  Categoria: ").append(tarefa.categoria())
+                        .append("\n  Alarme: ")
+                        .append(tarefa.alarme() == null || tarefa.alarme().isBlank()
+                                ? "Não configurado" : tarefa.alarme())
+                        .append('\n');
+            }
+            return relatorio.toString();
+        }
+
         StringBuilder conteudo = new StringBuilder()
                 .append("Notificação do TODO List: ")
                 .append(notificacao.evento().getDescricao())

@@ -29,12 +29,17 @@ export function iniciarConfiguracaoNotificacoesEmail() {
         campoTokenApiEmail.value = "";
         modalConfiguracaoEmail.close();
         mostrarMensagem("Token de notificações carregado até esta página ser fechada.", "sucesso");
+        window.dispatchEvent(new Event("email:token-configurado"));
     });
 
     botaoCancelarConfiguracaoEmail?.addEventListener("click", () => modalConfiguracaoEmail.close());
     modalConfiguracaoEmail.addEventListener("click", (evento) => {
         if (evento.target === modalConfiguracaoEmail) modalConfiguracaoEmail.close();
     });
+}
+
+export function temTokenApiConfigurado() {
+    return Boolean(tokenApiConfigurado);
 }
 
 export async function enviarNotificacaoEmail(dadosNotificacao) {

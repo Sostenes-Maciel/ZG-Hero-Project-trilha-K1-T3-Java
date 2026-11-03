@@ -93,6 +93,32 @@ class ManipuladorNotificacaoEmailTest {
         assertNull(notificacaoEnviada.get());
     }
 
+    @Test
+    void aceitaRelatorioSemanalComParametrosDasTarefas() throws Exception {
+        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+                """
+                {"evento":"RELATORIO_SEMANAL","tarefas":[{"titulo":"Projeto ZG-HERO","descricao":"Finalizar tela","status":"DOING","dataTermino":"2026-11-07","prioridade":4,"categoria":"Estudo","alarme":"09:30"}]}
+                """);
+
+        assertEquals(202, resposta.statusCode());
+        assertEquals(EventoNotificacao.RELATORIO_SEMANAL, notificacaoEnviada.get().evento());
+        assertEquals(1, notificacaoEnviada.get().tarefas().size());
+        assertEquals("Projeto ZG-HERO", notificacaoEnviada.get().tarefas().getFirst().titulo());
+        assertEquals("Finalizar tela", notificacaoEnviada.get().tarefas().getFirst().descricao());
+        assertEquals(4, notificacaoEnviada.get().tarefas().getFirst().prioridade());
+    }
+
+    @Test
+    void rejeitaRelatorioSemTarefas() throws Exception {
+        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+                """
+                {"evento":"RELATORIO_SEMANAL","tarefas":[]}
+                """);
+
+        assertEquals(400, resposta.statusCode());
+        assertNull(notificacaoEnviada.get());
+    }
+
     private HttpResponse<String> enviar(String autorizacao, String origem, String corpo) throws Exception {
         HttpRequest requisicao = HttpRequest.newBuilder(enderecoEndpoint)
                 .header("Authorization", autorizacao)

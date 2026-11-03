@@ -1,6 +1,9 @@
 import { mostrarMensagem } from "./ui.js";
 import { sincronizarAlarmes } from "./alarmes.js";
-import { enviarNotificacaoEmail } from "./notificacoesEmail.js";
+import {
+    enviarNotificacaoEmail,
+    temTokenApiConfigurado
+} from "./notificacoesEmail.js";
 import {
     prioridadeValida,
     dataFormatoValido,
@@ -27,6 +30,11 @@ let tarefaEmEdicao = null;
 let statusDashboard = null;
 let tarefasSelecionadas = new Set();
 let tarefaPendenteRemocao = null;
+let verificacaoNotificacoesEmAndamento = false;
+let intervaloVerificacaoNotificacoes = null;
+const notificacoesEmailPendentes = new Set();
+
+window.addEventListener("email:token-configurado", iniciarMonitoramentoNotificacoesEmail);
 
 window.addEventListener("tarefas:filtrar-status", (evento) => {
     statusDashboard = evento.detail.status;
@@ -48,6 +56,7 @@ window.addEventListener("storage", (evento) => {
     limparSelecao();
     atualizarAlarmes(tarefas);
     listarTarefas();
+    verificarNotificacoesEmail();
 });
 
 function carregarTarefas() {
@@ -57,6 +66,102 @@ function carregarTarefas() {
 
 export function salvarTarefas() {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
+    verificarNotificacoesEmail();
+}
+
+function iniciarMonitoramentoNotificacoesEmail() {
+    if (intervaloVerificacaoNotificacoes === null) {
+        intervaloVerificacaoNotificacoes = window.setInterval(verificarNotificacoesEmail, 60 * 60 * 1000);
+    }
+    verificarNotificacoesEmail();
+}
+
+async function verificarNotificacoesEmail() {
+    if (!temTokenApiConfigurado() || verificacaoNotificacoesEmAndamento) return;
+
+    verificacaoNotificacoesEmAndamento = true;
+    try {
+        tarefas = carregarTarefas();
+        const notificacoesEnviadas = JSON.parse(
+            localStorage.getItem("notificacoesEmailEnviadas") || "{}"
+        );
+
+        for (const tarefa of tarefas) {
+            if (tarefa.status === "DONE") continue;
+            const diasAtePrazo = calcularDiasAtePrazo(tarefa.dataTermino);
+            if (diasAtePrazo === 1) {
+                await enviarAlertaAgendado(
+                    `PRAZO_PROXIMO:${tarefa.id}:${tarefa.dataTermino}`,
+                    {
+                        evento: "PRAZO_PROXIMO",
+                        tituloTarefa: tarefa.nome,
+                        status: tarefa.status,
+                        dataTermino: tarefa.dataTermino
+                    },
+                    notificacoesEnviadas
+                );
+            } else if (diasAtePrazo < 0) {
+                await enviarAlertaAgendado(
+                    `TAREFA_ATRASADA:${tarefa.id}:${tarefa.dataTermino}`,
+                    {
+                        evento: "TAREFA_ATRASADA",
+                        tituloTarefa: tarefa.nome,
+                        status: tarefa.status,
+                        dataTermino: tarefa.dataTermino
+                    },
+                    notificacoesEnviadas
+                );
+            }
+        }
+
+        if (tarefas.length > 0 && new Date().getDay() === 1) {
+            const inicioSemana = obterInicioSemana(new Date());
+            const tarefasRelatorio = tarefas.map((tarefa) => ({
+                titulo: tarefa.nome,
+                descricao: tarefa.descricao || "",
+                status: descricaoStatus(tarefa.status),
+                dataTermino: tarefa.dataTermino,
+                prioridade: Number(tarefa.prioridade),
+                categoria: tarefa.categoria || "Sem categoria",
+                alarme: tarefa.alarme || ""
+            }));
+            await enviarAlertaAgendado(
+                `RELATORIO_SEMANAL:${inicioSemana}`,
+                { evento: "RELATORIO_SEMANAL", tarefas: tarefasRelatorio },
+                notificacoesEnviadas
+            );
+        }
+    } catch (erro) {
+        console.error("Não foi possível verificar as notificações por e-mail.", erro);
+        mostrarMensagem(`Não foi possível verificar as notificações por e-mail: ${erro.message}`, "erro");
+    } finally {
+        verificacaoNotificacoesEmAndamento = false;
+    }
+}
+
+async function enviarAlertaAgendado(chave, dadosNotificacao, notificacoesEnviadas) {
+    if (notificacoesEnviadas[chave] || notificacoesEmailPendentes.has(chave)) return;
+
+    notificacoesEmailPendentes.add(chave);
+    try {
+        await enviarNotificacaoEmail(dadosNotificacao);
+        notificacoesEnviadas[chave] = new Date().toISOString();
+        localStorage.setItem("notificacoesEmailEnviadas", JSON.stringify(notificacoesEnviadas));
+    } catch (erro) {
+        console.error(`Não foi possível enviar o alerta ${dadosNotificacao.evento}.`, erro);
+        mostrarMensagem(`Tarefa salva, mas o e-mail não foi enviado: ${erro.message}`, "erro");
+    } finally {
+        notificacoesEmailPendentes.delete(chave);
+    }
+}
+
+function obterInicioSemana(data) {
+    const segundaFeira = new Date(data.getFullYear(), data.getMonth(), data.getDate());
+    segundaFeira.setDate(segundaFeira.getDate() - ((segundaFeira.getDay() + 6) % 7));
+    const ano = segundaFeira.getFullYear();
+    const mes = String(segundaFeira.getMonth() + 1).padStart(2, "0");
+    const dia = String(segundaFeira.getDate()).padStart(2, "0");
+    return `${ano}-${mes}-${dia}`;
 }
 
 export function iniciarAlarmes() {

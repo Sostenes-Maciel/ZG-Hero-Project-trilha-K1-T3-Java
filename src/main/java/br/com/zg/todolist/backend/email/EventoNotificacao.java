@@ -4,7 +4,8 @@ public enum EventoNotificacao {
     TAREFA_CRIADA("Tarefa criada"),
     TAREFA_CONCLUIDA("Tarefa concluída"),
     PRAZO_PROXIMO("Prazo próximo"),
-    TAREFA_ATRASADA("Tarefa atrasada");
+    TAREFA_ATRASADA("Tarefa atrasada"),
+    RELATORIO_SEMANAL("Relatório semanal de tarefas");
 
     private final String descricao;
 
