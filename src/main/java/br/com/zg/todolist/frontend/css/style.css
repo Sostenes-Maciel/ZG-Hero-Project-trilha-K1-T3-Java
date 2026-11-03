@@ -1589,6 +1589,22 @@ input[type="checkbox"] {
     margin-top: 22px;
 }
 
+.campo-configuracao-email {
+    display: block;
+    margin: 18px 0 8px;
+    font-weight: 700;
+}
+
+#tokenApiEmail {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid var(--borda-cor);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    color: var(--texto-principal);
+    font: inherit;
+}
+
 .modal-confirmacao .botoes-confirmacao button {
     width: auto;
     padding: 10px 14px;

@@ -18,6 +18,7 @@ import {
     configurarAltoContraste
 } from "./ui.js";
 import { configurarAgendadorAlarme } from "./alarmes.js";
+import { iniciarConfiguracaoNotificacoesEmail } from "./notificacoesEmail.js";
 
 
 definirTarefas(
@@ -32,6 +33,7 @@ definirTarefas(
 configurarMenu();
 
 configurarAltoContraste();
+iniciarConfiguracaoNotificacoesEmail();
 
 const agendadorBackendAlarme = window.todoList?.agendadorAlarme;
 if (agendadorBackendAlarme) {

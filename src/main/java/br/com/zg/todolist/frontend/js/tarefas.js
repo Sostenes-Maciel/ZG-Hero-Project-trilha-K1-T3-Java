@@ -1,5 +1,6 @@
 import { mostrarMensagem } from "./ui.js";
 import { sincronizarAlarmes } from "./alarmes.js";
+import { enviarNotificacaoEmail } from "./notificacoesEmail.js";
 import {
     prioridadeValida,
     dataFormatoValido,
@@ -293,8 +294,12 @@ function validarFormulario(dados) {
 
 function atualizarTarefaExistente(dados) {
     const tarefa = tarefas.find((item) => item.id === tarefaEmEdicao);
+    const statusAnterior = tarefa?.status;
     if (tarefa) {
         Object.assign(tarefa, dados);
+        if (statusAnterior !== "DONE" && tarefa.status === "DONE") {
+            notificarTarefaPorEmail("TAREFA_CONCLUIDA", tarefa);
+        }
     }
 
     tarefaEmEdicao = null;
@@ -307,6 +312,19 @@ function adicionarNovaTarefa(dados) {
     const novaTarefa = { id: Date.now(), ...dados };
     tarefas.push(novaTarefa);
     mostrarMensagem("Tarefa adicionada com sucesso!", "sucesso");
+    notificarTarefaPorEmail("TAREFA_CRIADA", novaTarefa);
+}
+
+function notificarTarefaPorEmail(evento, tarefa) {
+    enviarNotificacaoEmail({
+        evento,
+        tituloTarefa: tarefa.nome,
+        status: tarefa.status,
+        dataTermino: tarefa.dataTermino
+    }).catch((erro) => {
+        console.error("Não foi possível enviar a notificação por e-mail.", erro);
+        mostrarMensagem(`Tarefa salva, mas o e-mail não foi enviado: ${erro.message}`, "erro");
+    });
 }
 
 export function iniciarCadastro() {
@@ -446,13 +464,18 @@ export function iniciarStatusMultiplo() {
             return;
         }
 
+        const tarefasConcluidas = [];
         tarefasSelecionadas.forEach((id) => {
             const tarefa = tarefas.find((item) => item.id === id);
             if (tarefa) {
+                if (tarefa.status !== "DONE" && novoStatus === "DONE") {
+                    tarefasConcluidas.push(tarefa);
+                }
                 tarefa.status = novoStatus;
             }
         });
 
+        tarefasConcluidas.forEach((tarefa) => notificarTarefaPorEmail("TAREFA_CONCLUIDA", tarefa));
         limparSelecao();
         salvarTarefas();
         listarTarefas();
