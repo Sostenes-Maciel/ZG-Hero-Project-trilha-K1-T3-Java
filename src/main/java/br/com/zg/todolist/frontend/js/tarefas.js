@@ -89,11 +89,34 @@ async function verificarNotificacoesEmail() {
         for (const tarefa of tarefas) {
             if (tarefa.status === "DONE") continue;
             const diasAtePrazo = calcularDiasAtePrazo(tarefa.dataTermino);
+            if (diasAtePrazo === 3 && tarefa.status === "TODO") {
+                await enviarAlertaAgendado(
+                    `TAREFA_A_FAZER_EM_TRES_DIAS:${tarefa.id}:${tarefa.dataTermino}`,
+                    {
+                        evento: "TAREFA_A_FAZER_EM_TRES_DIAS",
+                        tituloTarefa: tarefa.nome,
+                        status: tarefa.status,
+                        dataTermino: tarefa.dataTermino
+                    },
+                    notificacoesEnviadas
+                );
+            }
             if (diasAtePrazo === 1) {
                 await enviarAlertaAgendado(
                     `PRAZO_PROXIMO:${tarefa.id}:${tarefa.dataTermino}`,
                     {
                         evento: "PRAZO_PROXIMO",
+                        tituloTarefa: tarefa.nome,
+                        status: tarefa.status,
+                        dataTermino: tarefa.dataTermino
+                    },
+                    notificacoesEnviadas
+                );
+            } else if (diasAtePrazo === 0) {
+                await enviarAlertaAgendado(
+                    `PRAZO_HOJE:${tarefa.id}:${tarefa.dataTermino}`,
+                    {
+                        evento: "PRAZO_HOJE",
                         tituloTarefa: tarefa.nome,
                         status: tarefa.status,
                         dataTermino: tarefa.dataTermino
@@ -404,6 +427,8 @@ function atualizarTarefaExistente(dados) {
         Object.assign(tarefa, dados);
         if (statusAnterior !== "DONE" && tarefa.status === "DONE") {
             notificarTarefaPorEmail("TAREFA_CONCLUIDA", tarefa);
+        } else {
+            notificarTarefaPorEmail("TAREFA_EDITADA", tarefa);
         }
     }
 

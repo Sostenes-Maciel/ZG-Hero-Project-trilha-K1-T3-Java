@@ -61,6 +61,25 @@ class ManipuladorNotificacaoEmailTest {
     }
 
     @Test
+    void aceitaNovosEventosDeNotificacao() throws Exception {
+        for (EventoNotificacao evento : new EventoNotificacao[]{
+                EventoNotificacao.TAREFA_EDITADA,
+                EventoNotificacao.TAREFA_A_FAZER_EM_TRES_DIAS,
+                EventoNotificacao.PRAZO_HOJE
+        }) {
+            HttpResponse<String> resposta = enviar(
+                    "Bearer " + TOKEN_API,
+                    ORIGEM_PERMITIDA,
+                    """
+                    {"evento":"%s","tituloTarefa":"Tarefa de teste","status":"TODO","dataTermino":"2026-11-06"}
+                    """.formatted(evento.name()));
+
+            assertEquals(202, resposta.statusCode());
+            assertEquals(evento, notificacaoEnviada.get().evento());
+        }
+    }
+
+    @Test
     void rejeitaTokenInvalidoSemEnviarEmail() throws Exception {
         HttpResponse<String> resposta = enviar("Bearer token incorreto", ORIGEM_PERMITIDA,
                 """
