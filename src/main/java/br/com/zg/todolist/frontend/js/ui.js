@@ -241,12 +241,19 @@ function aplicarAltoContrasteSalvo() {
 
     if (contrasteSalvo) {
         document.body.classList.add("alto-contraste");
-        atualizarTextoBotaoContraste(true);
     }
+
+    atualizarTextoBotaoContraste(contrasteSalvo);
 }
 
 function atualizarTextoBotaoContraste(estaAtivo) {
     const rotulo = estaAtivo ? "Desativar alto contraste" : "Ativar alto contraste";
+    const icone = botaoContraste.querySelector(".icone-contraste");
+
+    if (icone) {
+        icone.textContent = estaAtivo ? "☀" : "☾";
+    }
+
     botaoContraste.setAttribute("aria-label", rotulo);
     botaoContraste.title = rotulo;
     botaoContraste.setAttribute("aria-pressed", String(estaAtivo));
