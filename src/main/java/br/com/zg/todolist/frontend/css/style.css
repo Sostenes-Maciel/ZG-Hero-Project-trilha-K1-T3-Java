@@ -637,13 +637,18 @@ body:not(.alto-contraste) #filtros .acoes-filtros > #botaoFiltrar:hover {
     gap: 20px;
 }
 
-.eyebrow {
-    margin: 0 0 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 0.7rem;
-    color: var(--texto-destaque);
-    font-weight: 700;
+.topo-marca {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-aplicacao {
+    display: block;
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    flex: 0 0 auto;
 }
 
 .topo h1 {
