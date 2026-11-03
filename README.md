@@ -266,9 +266,6 @@ O backend já possui o ponto de extensão `AlarmeObserver`. A aplicação de con
 
 O contrato HTTP, a persistência dos alarmes e o vínculo do destinatário Telegram ainda serão definidos no desafio de integração. Para disparos confiáveis com a página fechada, o backend deverá persistir o instante do alarme e executar o agendamento no servidor; o temporizador local não oferece essa garantia.
 
-## 👨‍💻 Autor
-**Sóstenes Marques Maciel**
-
 ## Atualização -  Notificações por e-mail com Resend
 
 A versão atual integra o TODO List ao **Resend**, serviço de envio de e-mails. O destinatário é configurado no backend. A criação e as alterações das tarefas continuam salvas no navegador mesmo se o envio falhar.
@@ -304,6 +301,13 @@ A versão atual integra o TODO List ao **Resend**, serviço de envio de e-mails.
 
    Acesse `http://localhost:5500`, abra **Configurar e-mail** no menu e informe o token `TODO_EMAIL_API_TOKEN`.
 
+### Como foi implementada
+
+- O backend Java expõe `POST /api/notificacoes/email`, valida o token Bearer, a origem e os dados recebidos, e encaminha os e-mails ao Resend.
+- A chave privada do Resend e os endereços de remetente e destinatário ficam configurados no backend por variáveis de ambiente.
+- No frontend, `notificacoesEmail.js` faz as chamadas à API; `tarefas.js` dispara avisos ao criar, editar, concluir e nos prazos configurados.
+- As tarefas e o registro de alertas enviados ficam no `localStorage`; por isso, os lembretes agendados dependem de a página estar aberta ou ser acessada.
+
 O token informado na página é mantido somente na memória enquanto ela estiver aberta; após atualizar ou fechar a página, será necessário informá-lo novamente. Como o projeto ainda não tem autenticação de usuários, essa configuração serve para estudo local e não deve ser publicada: um token Bearer utilizado pelo navegador pode ser extraído por quem acessa a aplicação. Para disponibilização pública, implemente autenticação de usuário e controle de acesso no backend. CORS não substitui autenticação. Em ambiente externo, a API também deve ser servida por HTTPS.
 
 A API recebe `POST /api/notificacoes/email` e envia estes e-mails:
@@ -320,3 +324,6 @@ A API recebe `POST /api/notificacoes/email` e envia estes e-mails:
 As verificações de prazo e o relatório semanal acontecem quando o token é configurado, quando as tarefas são salvas e a cada hora enquanto a página está aberta. O relatório só é enviado na segunda-feira; se a página permanecer fechada durante todo esse dia, ele não será enviado naquela semana. O histórico de alertas já enviados é guardado no `localStorage` do navegador. Como as tarefas e o agendamento ainda são locais, nenhum alerta é garantido com a página fechada; ao abrir a página, os atrasos pendentes podem ser enviados. As notificações de prazo e atraso se aplicam a tarefas com status diferente de `DONE`.
 
 Para notificações individuais, o corpo usa `evento`, `tituloTarefa`, `status` e `dataTermino` (formato `AAAA-MM-DD`). O relatório usa `evento: "RELATORIO_SEMANAL"` e uma lista `tarefas` com os parâmetros das atividades.
+
+## 👨‍💻 Autor
+**Sóstenes Marques Maciel**
