@@ -46,7 +46,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void enviaLembreteDePrazoAoTelegram() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
                 """
                 {"evento":"PRAZO_PROXIMO","tituloTarefa":"Entregar certificado","dataTermino":"2026-11-04"}
                 """);
@@ -59,7 +59,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void enviaNovaTarefaAoTelegram() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
                 """
                 {"evento":"TAREFA_CRIADA","tituloTarefa":"Projeto ZG-HERO","dataTermino":"2026-11-05"}
                 """);
@@ -71,7 +71,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void enviaConclusaoAoTelegram() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
                 """
                 {"evento":"TAREFA_CONCLUIDA","tituloTarefa":"Certificado","dataTermino":"2026-11-04"}
                 """);
@@ -83,7 +83,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void enviaAtrasadaAoTelegram() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
                 """
                 {"evento":"TAREFA_ATRASADA","tituloTarefa":"Projeto introdutório","dataTermino":"2026-11-03"}
                 """);
@@ -95,7 +95,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void rejeitaEventoNaoSuportado() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
                 """
                 {"evento":"ERRO_IMPOSSIVEL","tituloTarefa":"Tarefa","dataTermino":"2026-11-04"}
                 """);
@@ -106,7 +106,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void rejeitaTokenInvalido() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer token-incorreto", ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer token-incorreto",
                 """
                 {"evento":"PRAZO_PROXIMO","tituloTarefa":"Tarefa","dataTermino":"2026-11-04"}
                 """);
@@ -117,7 +117,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void rejeitaDataFormatadaInvalida() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
                 """
                 {"evento":"PRAZO_PROXIMO","tituloTarefa":"Tarefa","dataTermino":"2026/11/04"}
                 """);
@@ -126,10 +126,10 @@ class ManipuladorNotificacaoTelegramTest {
         assertNull(notificacaoRecebida.get());
     }
 
-    private HttpResponse<String> enviar(String autorizacao, String origem, String corpo) throws Exception {
+    private HttpResponse<String> enviar(String autorizacao, String corpo) throws Exception {
         HttpRequest requisicao = HttpRequest.newBuilder(enderecoEndpoint)
                 .header("Authorization", autorizacao)
-                .header("Origin", origem)
+                .header("Origin", ManipuladorNotificacaoTelegramTest.ORIGEM_PERMITIDA)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(corpo))
                 .build();

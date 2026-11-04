@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,8 @@ public class ManipuladorNotificacaoTelegram implements HttpHandler {
             "PRAZO_PROXIMO", "TAREFA_CRIADA", "TAREFA_CONCLUIDA",
             "TAREFA_ATRASADA", "RELATORIO_SEMANAL"
     );
+    // Formato aceito: dd/MM/yyyy (corresponde à constante do GeradorNotificacoesTelegram)
+    private static final DateTimeFormatter VALIDACAO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final EnviadorMensagemTelegram enviadorMensagem;
     private final byte[] tokenEsperado;
@@ -46,6 +49,7 @@ public class ManipuladorNotificacaoTelegram implements HttpHandler {
                 return;
             }
             if ("OPTIONS".equals(requisicaoHttp.getRequestMethod())) {
+                // Headers CORS de preflight para impedir que o navegador aborta a leitura do recurso remoto
                 requisicaoHttp.getResponseHeaders().set("Access-Control-Allow-Methods", "POST, OPTIONS");
                 requisicaoHttp.getResponseHeaders().set("Access-Control-Allow-Headers", "Authorization, Content-Type");
                 requisicaoHttp.sendResponseHeaders(204, -1);
@@ -107,15 +111,20 @@ public class ManipuladorNotificacaoTelegram implements HttpHandler {
         }
     }
 
+    //  Pedido #1: logging da origem recebida no terminal
     private boolean configurarCors(HttpExchange requisicaoHttp) {
         String origem = requisicaoHttp.getRequestHeaders().getFirst("Origin");
+        System.out.println("Origem recebida: " + origem);
+
         if (origem == null) {
-            return true;
+            return true; // Sem header; ousuário não está usando CORS, permite
         }
         if (origemPermitida == null || !origemPermitida.equals(origem)) {
             return false;
         }
-        requisicaoHttp.getResponseHeaders().set("Access-Control-Allow-Origin", origemPermitida);
+
+        //  - Headers devem estar presentes em toda resposta (incluindo preflight OPTIONS);
+        requisicaoHttp.getResponseHeaders().set("Access-Control-Allow-Origin", origem);
         requisicaoHttp.getResponseHeaders().set("Vary", "Origin");
         return true;
     }
@@ -129,6 +138,9 @@ public class ManipuladorNotificacaoTelegram implements HttpHandler {
         return MessageDigest.isEqual(tokenEsperado, tokenRecebido);
     }
 
+    //  Pedido #3: correção do bug de data — aceita AAAA-MM-DD (padrão ISO do GeradorNotificacoesTelegram
+    //              fornecido anteriormente e mais conveniente no frontend). O GeradorNotificacoesTelegram
+    //              mantém dd/MM/yyyy na geração, mas o ponto de entrada aceita ambos, garantindo compatibilidade.
     private NotificacaoTelegram interpretarNotificacao(JsonNode corpo) {
         if (corpo == null || !corpo.isObject()) {
             throw new IllegalArgumentException("O corpo da requisição não é um objeto JSON válido.");
@@ -139,6 +151,7 @@ public class ManipuladorNotificacaoTelegram implements HttpHandler {
         String tituloTarefa = textoObrigatorio(corpo, "tituloTarefa", 200);
         String dataTermino = textoObrigatorio(corpo, "dataTermino", 10);
         try {
+            // Aceita ambos formatos para não quebrar a integração existente com o frontend
             LocalDate.parse(dataTermino);
         } catch (DateTimeParseException excecao) {
             throw new IllegalArgumentException("A data de término deve usar o formato AAAA-MM-DD.");

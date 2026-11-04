@@ -13,7 +13,7 @@ public class InicializadorApiEmail {
     }
 
     public static void main(String[] args) throws IOException {
-        String tokenApi = obrigatorio("TODO_EMAIL_API_TOKEN");
+        String tokenApi = obrigatorio();
         String enderecoServidor = System.getenv().getOrDefault("TODO_EMAIL_HOST", "127.0.0.1");
         int porta = Integer.parseInt(System.getenv().getOrDefault("TODO_EMAIL_PORT", "8081"));
         String origemPermitida = System.getenv().getOrDefault("TODO_EMAIL_ALLOWED_ORIGIN", "http://localhost:5500");
@@ -83,10 +83,10 @@ public class InicializadorApiEmail {
         return valor == null || valor.isBlank();
     }
 
-    private static String obrigatorio(String nome) {
-        String valor = System.getenv(nome);
+    private static String obrigatorio() {
+        String valor = System.getenv("TODO_EMAIL_API_TOKEN");
         if (valor == null || valor.isBlank()) {
-            throw new IllegalStateException("Configure a variável de ambiente " + nome + ".");
+            throw new IllegalStateException("Configure a variável de ambiente " + "TODO_EMAIL_API_TOKEN" + ".");
         }
         return valor;
     }
