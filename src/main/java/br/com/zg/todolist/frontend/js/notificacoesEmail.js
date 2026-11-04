@@ -1,6 +1,7 @@
 import { mostrarMensagem } from "./ui.js";
 
 const ENDPOINT_NOTIFICACOES_EMAIL = "http://127.0.0.1:8081/api/notificacoes/email";
+const ENDPOINT_NOTIFICACOES_TELEGRAM = "http://127.0.0.1:8081/api/notificacoes/telegram";
 const botaoConfigurarEmail = document.getElementById("botaoConfigurarEmail");
 const modalConfiguracaoEmail = document.getElementById("modalConfiguracaoEmail");
 const formularioConfiguracaoEmail = document.getElementById("formularioConfiguracaoEmail");
@@ -43,11 +44,19 @@ export function temTokenApiConfigurado() {
 }
 
 export async function enviarNotificacaoEmail(dadosNotificacao) {
+    await enviarNotificacao(ENDPOINT_NOTIFICACOES_EMAIL, dadosNotificacao);
+}
+
+export async function enviarNotificacaoTelegram(dadosNotificacao) {
+    await enviarNotificacao(ENDPOINT_NOTIFICACOES_TELEGRAM, dadosNotificacao);
+}
+
+async function enviarNotificacao(endpoint, dadosNotificacao) {
     if (!tokenApiConfigurado) {
         throw new Error("Configure o token da API no menu antes de enviar notificações.");
     }
 
-    const resposta = await fetch(ENDPOINT_NOTIFICACOES_EMAIL, {
+    const resposta = await fetch(endpoint, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${tokenApiConfigurado}`,
@@ -58,6 +67,6 @@ export async function enviarNotificacaoEmail(dadosNotificacao) {
 
     if (!resposta.ok) {
         const corpoResposta = await resposta.json().catch(() => ({}));
-        throw new Error(corpoResposta.erro || `A API de e-mail respondeu com HTTP ${resposta.status}.`);
+        throw new Error(corpoResposta.erro || `A API de notificações respondeu com HTTP ${resposta.status}.`);
     }
 }

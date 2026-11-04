@@ -2,6 +2,7 @@ import { mostrarMensagem } from "./ui.js";
 import { sincronizarAlarmes } from "./alarmes.js";
 import {
     enviarNotificacaoEmail,
+    enviarNotificacaoTelegram,
     temTokenApiConfigurado
 } from "./notificacoesEmail.js";
 import {
@@ -112,6 +113,7 @@ async function verificarNotificacoesEmail() {
                     },
                     notificacoesEnviadas
                 );
+                await enviarAlertaTelegram(tarefa, notificacoesEnviadas);
             } else if (diasAtePrazo === 0) {
                 await enviarAlertaAgendado(
                     `PRAZO_HOJE:${tarefa.id}:${tarefa.dataTermino}`,
@@ -173,6 +175,27 @@ async function enviarAlertaAgendado(chave, dadosNotificacao, notificacoesEnviada
     } catch (erro) {
         console.error(`Não foi possível enviar o alerta ${dadosNotificacao.evento}.`, erro);
         mostrarMensagem(`Tarefa salva, mas o e-mail não foi enviado: ${erro.message}`, "erro");
+    } finally {
+        notificacoesEmailPendentes.delete(chave);
+    }
+}
+
+async function enviarAlertaTelegram(tarefa, notificacoesEnviadas) {
+    const chave = `TELEGRAM_PRAZO_PROXIMO:${tarefa.id}:${tarefa.dataTermino}`;
+    if (notificacoesEnviadas[chave] || notificacoesEmailPendentes.has(chave)) return;
+
+    notificacoesEmailPendentes.add(chave);
+    try {
+        await enviarNotificacaoTelegram({
+            evento: "PRAZO_PROXIMO",
+            tituloTarefa: tarefa.nome,
+            dataTermino: tarefa.dataTermino
+        });
+        notificacoesEnviadas[chave] = new Date().toISOString();
+        localStorage.setItem("notificacoesEmailEnviadas", JSON.stringify(notificacoesEnviadas));
+    } catch (erro) {
+        console.error("Não foi possível enviar o lembrete ao Telegram.", erro);
+        mostrarMensagem(`O lembrete da tarefa foi salvo, mas não chegou ao Telegram: ${erro.message}`, "erro");
     } finally {
         notificacoesEmailPendentes.delete(chave);
     }
@@ -446,11 +469,13 @@ function adicionarNovaTarefa(dados) {
 }
 
 function notificarTarefaPorEmail(evento, tarefa) {
+    // Garante formato ISO 8601 (AAAA-MM-DD) para bater com a validação do manipulador
+    const dataSeria = tarefa.dataTermino;
     enviarNotificacaoEmail({
         evento,
         tituloTarefa: tarefa.nome,
         status: tarefa.status,
-        dataTermino: tarefa.dataTermino
+        dataTermino: dataSeria
     }).catch((erro) => {
         console.error("Não foi possível enviar a notificação por e-mail.", erro);
         mostrarMensagem(`Tarefa salva, mas o e-mail não foi enviado: ${erro.message}`, "erro");

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import br.com.zg.todolist.backend.model.Categoria;
 import br.com.zg.todolist.backend.model.Status;
 import br.com.zg.todolist.backend.model.Tarefa;
+import br.com.zg.todolist.backend.telegram.FakeTelegramEnviador;
 
 class GerenciadorTarefasServiceTest {
 
@@ -77,6 +78,61 @@ class GerenciadorTarefasServiceTest {
                 () -> assertThrows(IndexOutOfBoundsException.class, () -> service.removerTarefa(-1)),
                 () -> assertThrows(IndexOutOfBoundsException.class, () -> service.removerTarefa(1))
         );
+    }
+
+    @Test
+    void enviaNotificacaoNovaTarefaAoTelegramQuandoCriada() {
+        FakeTelegramEnviador enviador = new FakeTelegramEnviador();
+        GerenciadorTarefasService service = new GerenciadorTarefasService(new AlarmeService(), enviador);
+
+        Tarefa novaTarefa = criarTarefa("Entregar certificado", 3, LocalDate.now(), Status.TODO);
+        service.adicionarTarefa(novaTarefa);
+
+        assertEquals(1, enviador.getMensagensRecebidas().size());
+        assertEquals("TAREFA_CRIADA", enviador.getMensagensRecebidas().getFirst().evento());
+        assertEquals("Entregar certificado", enviador.getMensagensRecebidas().getFirst().tituloTarefa());
+    }
+
+    @Test
+    void enviaNotificacaoConcluidaQuandoStatusVirouParaDone() {
+        FakeTelegramEnviador enviador = new FakeTelegramEnviador();
+        GerenciadorTarefasService service = new GerenciadorTarefasService(new AlarmeService(), enviador);
+
+        Tarefa tarefaPendente = criarTarefa("Projeto ZG-HERO", 5, LocalDate.now(), Status.TODO);
+        service.adicionarTarefa(tarefaPendente);
+
+        Tarefa tarefaFinalizada = criarTarefa("Projeto ZG-HERO", 5, LocalDate.now(), Status.DONE);
+        service.atualizarTarefa(0, tarefaFinalizada);
+
+        assertEquals(2, enviador.getMensagensRecebidas().size());
+        assertEquals("TAREFA_CONCLUIDA", enviador.getMensagensRecebidas().getLast().evento());
+    }
+
+    @Test
+    void naoEnviaNotificacaoConcluidaQuandoStatusJaEraDone() {
+        FakeTelegramEnviador enviador = new FakeTelegramEnviador();
+        GerenciadorTarefasService service = new GerenciadorTarefasService(new AlarmeService(), enviador);
+
+        Tarefa tarefaJaConcluida = criarTarefa("Certificado", 1, LocalDate.now(), Status.DONE);
+        service.adicionarTarefa(tarefaJaConcluida);
+
+        Tarefa tarefaAtualizada = criarTarefa("Certificado", 1, LocalDate.now(), Status.DONE);
+        service.atualizarTarefa(0, tarefaAtualizada);
+
+        long concluidas = enviador.getMensagensRecebidas().stream()
+                .filter(m -> m.evento().equals("TAREFA_CONCLUIDA"))
+                .count();
+        assertEquals(0, concluidas);
+    }
+
+    @Test
+    void naoEnviaNotificacaoQuenotEnviadorEInstanciado() {
+        GerenciadorTarefasService service = new GerenciadorTarefasService(new AlarmeService());
+
+        Tarefa novaTarefa = criarTarefa("Teste", 3, LocalDate.now(), Status.TODO);
+        service.adicionarTarefa(novaTarefa);
+
+        assertTrue(true);
     }
 
     private Tarefa criarTarefa(String nome, int prioridade, LocalDate dataTermino, Status status) {
