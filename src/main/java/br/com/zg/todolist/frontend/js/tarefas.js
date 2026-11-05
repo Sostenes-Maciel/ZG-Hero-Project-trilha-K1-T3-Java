@@ -2,8 +2,7 @@ import { mostrarMensagem } from "./ui.js";
 import { sincronizarAlarmes } from "./alarmes.js";
 import {
     enviarNotificacaoEmail,
-    enviarNotificacaoTelegram,
-    temTokenApiConfigurado
+    enviarNotificacaoTelegram
 } from "./notificacoesEmail.js";
 import {
     prioridadeValida,
@@ -34,8 +33,6 @@ let tarefaPendenteRemocao = null;
 let verificacaoNotificacoesEmAndamento = false;
 let intervaloVerificacaoNotificacoes = null;
 const notificacoesEmailPendentes = new Set();
-
-window.addEventListener("email:token-configurado", iniciarMonitoramentoNotificacoesEmail);
 
 window.addEventListener("tarefas:filtrar-status", (evento) => {
     statusDashboard = evento.detail.status;
@@ -78,7 +75,7 @@ function iniciarMonitoramentoNotificacoesEmail() {
 }
 
 async function verificarNotificacoesEmail() {
-    if (!temTokenApiConfigurado() || verificacaoNotificacoesEmAndamento) return;
+    if (verificacaoNotificacoesEmAndamento) return;
 
     verificacaoNotificacoesEmAndamento = true;
     try {
@@ -452,6 +449,7 @@ function atualizarTarefaExistente(dados) {
             notificarTarefaPorEmail("TAREFA_CONCLUIDA", tarefa);
         } else {
             notificarTarefaPorEmail("TAREFA_EDITADA", tarefa);
+            notificarTarefaPorTelegram("TAREFA_EDITADA", tarefa);
         }
     }
 
@@ -465,7 +463,9 @@ function adicionarNovaTarefa(dados) {
     const novaTarefa = { id: Date.now(), ...dados };
     tarefas.push(novaTarefa);
     mostrarMensagem("Tarefa adicionada com sucesso!", "sucesso");
+
     notificarTarefaPorEmail("TAREFA_CRIADA", novaTarefa);
+    notificarTarefaPorTelegram("TAREFA_CRIADA", novaTarefa);
 }
 
 function notificarTarefaPorEmail(evento, tarefa) {
@@ -479,6 +479,19 @@ function notificarTarefaPorEmail(evento, tarefa) {
     }).catch((erro) => {
         console.error("Não foi possível enviar a notificação por e-mail.", erro);
         mostrarMensagem(`Tarefa salva, mas o e-mail não foi enviado: ${erro.message}`, "erro");
+    });
+}
+function notificarTarefaPorTelegram(evento, tarefa) {
+    enviarNotificacaoTelegram({
+        evento,
+        tituloTarefa: tarefa.nome,
+        dataTermino: tarefa.dataTermino
+    }).catch((erro) => {
+        console.error("Não foi possível enviar a notificação pelo Telegram.", erro);
+        mostrarMensagem(
+            `Tarefa salva, mas a notificação pelo Telegram não foi enviada: ${erro.message}`,
+            "erro"
+        );
     });
 }
 
@@ -654,4 +667,6 @@ export function iniciarSelecionarTodas() {
         });
         atualizarAcoesMultiplas(tarefasFiltradasVisiveis());
     });
+
+    iniciarMonitoramentoNotificacoesEmail();
 }

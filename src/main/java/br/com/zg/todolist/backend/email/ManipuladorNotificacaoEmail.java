@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -18,16 +17,14 @@ public class ManipuladorNotificacaoEmail implements HttpHandler {
     private static final String CAMINHO_ENDPOINT = "/api/notificacoes/email";
 
     private final EnviadorEmail enviadorEmail;
-    private final byte[] tokenEsperado;
     private final String origemPermitida;
     private final ObjectMapper conversorJson = new ObjectMapper();
 
-    public ManipuladorNotificacaoEmail(EnviadorEmail enviadorEmail, String tokenApi, String origemPermitida) {
-        if (tokenApi == null || tokenApi.length() < 32) {
-            throw new IllegalArgumentException("O token da API de e-mail deve ter pelo menos 32 caracteres.");
-        }
+    public ManipuladorNotificacaoEmail(
+            EnviadorEmail enviadorEmail,
+            String origemPermitida
+    ) {
         this.enviadorEmail = enviadorEmail;
-        this.tokenEsperado = tokenApi.getBytes(StandardCharsets.UTF_8);
         this.origemPermitida = origemPermitida;
     }
 
@@ -55,10 +52,7 @@ public class ManipuladorNotificacaoEmail implements HttpHandler {
                 responder(requisicaoHttp, 405, Map.of("erro", "Método não permitido."));
                 return;
             }
-            if (!autenticado(requisicaoHttp)) {
-                responder(requisicaoHttp, 401, Map.of("erro", "Token de API inválido ou ausente."));
-                return;
-            }
+
             String tipoConteudo = requisicaoHttp.getRequestHeaders().getFirst("Content-Type");
             if (tipoConteudo == null || !tipoConteudo.matches("(?i)application/json(?:\\s*;.*)?")) {
                 responder(requisicaoHttp, 415, Map.of("erro", "Envie o conteúdo como application/json."));
@@ -107,21 +101,14 @@ public class ManipuladorNotificacaoEmail implements HttpHandler {
         if (origem == null) {
             return true;
         }
-        if (origemPermitida == null || !origemPermitida.equals(origem)) {
-            return false;
-        }
-        requisicaoHttp.getResponseHeaders().set("Access-Control-Allow-Origin", origemPermitida);
-        requisicaoHttp.getResponseHeaders().set("Vary", "Origin");
-        return true;
-    }
 
-    private boolean autenticado(HttpExchange requisicaoHttp) {
-        String autorizacao = requisicaoHttp.getRequestHeaders().getFirst("Authorization");
-        if (autorizacao == null || !autorizacao.startsWith("Bearer ")) {
-            return false;
+        if (origemPermitida != null && (origemPermitida.equals(origem) || origemPermitida.equals("*"))) {
+            requisicaoHttp.getResponseHeaders().set("Access-Control-Allow-Origin", origem);
+            requisicaoHttp.getResponseHeaders().set("Vary", "Origin");
+            return true;
         }
-        byte[] tokenRecebido = autorizacao.substring("Bearer ".length()).getBytes(StandardCharsets.UTF_8);
-        return MessageDigest.isEqual(tokenEsperado, tokenRecebido);
+
+        return false;
     }
 
     private NotificacaoEmail interpretarNotificacao(JsonNode corpo) {

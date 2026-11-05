@@ -29,7 +29,38 @@ test {
     useJUnitPlatform()
 }
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { stream ->
+        localProperties.load(stream)
+    }
+}
+
+tasks.register('executarApiNotificacoesTelegram', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'br.com.zg.todolist.backend.telegram.InicializadorApiTelegram'
+
+    if (localPropertiesFile.exists()) {
+        environment 'TELEGRAM_BOT_TOKEN', localProperties.getProperty('TELEGRAM_BOT_TOKEN')
+        environment 'TELEGRAM_CHAT_ID', localProperties.getProperty('TELEGRAM_CHAT_ID')
+
+    }
+}
+
+// API DE EMAIL
 tasks.register('executarApiNotificacoesEmail', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'br.com.zg.todolist.backend.email.InicializadorApiEmail'
+
+    if (localPropertiesFile.exists()) {
+        environment([
+                'TODO_EMAIL_API_TOKEN': localProperties.getProperty('TODO_EMAIL_API_TOKEN'),
+                'RESEND_API_KEY': localProperties.getProperty('RESEND_API_KEY'),
+                'TODO_EMAIL_FROM': localProperties.getProperty('TODO_EMAIL_FROM'),
+                'TODO_EMAIL_TO': localProperties.getProperty('TODO_EMAIL_TO')
+        ])
+    }
+
+    environment('TODO_EMAIL_ALLOWED_ORIGIN', '*')
 }

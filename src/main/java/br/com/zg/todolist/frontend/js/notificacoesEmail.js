@@ -1,72 +1,74 @@
-import { mostrarMensagem } from "./ui.js";
+const ENDPOINT_NOTIFICACOES_EMAIL =
+    "http://127.0.0.1:8081/api/notificacoes/email";
 
-const ENDPOINT_NOTIFICACOES_EMAIL = "http://127.0.0.1:8081/api/notificacoes/email";
-const ENDPOINT_NOTIFICACOES_TELEGRAM = "http://127.0.0.1:8081/api/notificacoes/telegram";
-const botaoConfigurarEmail = document.getElementById("botaoConfigurarEmail");
-const modalConfiguracaoEmail = document.getElementById("modalConfiguracaoEmail");
-const formularioConfiguracaoEmail = document.getElementById("formularioConfiguracaoEmail");
-const campoTokenApiEmail = document.getElementById("tokenApiEmail");
-const botaoCancelarConfiguracaoEmail = document.getElementById("botaoCancelarConfiguracaoEmail");
-let tokenApiConfigurado = "";
+const ENDPOINT_NOTIFICACOES_TELEGRAM =
+    "http://127.0.0.1:8082/api/notificacoes/telegram";
 
+// Mantida para compatibilidade com o app.js.
+// Não é mais necessário cadastrar token pelo navegador.
 export function iniciarConfiguracaoNotificacoesEmail() {
-    if (!botaoConfigurarEmail || !modalConfiguracaoEmail || !formularioConfiguracaoEmail) return;
+    const botaoConfigurarEmail =
+        document.getElementById("botaoConfigurarEmail");
 
-    botaoConfigurarEmail.addEventListener("click", () => {
-        campoTokenApiEmail.value = "";
-        modalConfiguracaoEmail.showModal();
-    });
+    const modalConfiguracaoEmail =
+        document.getElementById("modalConfiguracaoEmail");
 
-    formularioConfiguracaoEmail.addEventListener("submit", (evento) => {
-        evento.preventDefault();
-        const tokenApi = campoTokenApiEmail.value.trim();
-
-        if (tokenApi.length < 32) {
-            mostrarMensagem("O token deve ter pelo menos 32 caracteres.", "erro");
-            return;
-        }
-
-        tokenApiConfigurado = tokenApi;
-        campoTokenApiEmail.value = "";
-        modalConfiguracaoEmail.close();
-        mostrarMensagem("Token de notificações carregado até esta página ser fechada.", "sucesso");
-        window.dispatchEvent(new Event("email:token-configurado"));
-    });
-
-    botaoCancelarConfiguracaoEmail?.addEventListener("click", () => modalConfiguracaoEmail.close());
-    modalConfiguracaoEmail.addEventListener("click", (evento) => {
-        if (evento.target === modalConfiguracaoEmail) modalConfiguracaoEmail.close();
-    });
-}
-
-export function temTokenApiConfigurado() {
-    return Boolean(tokenApiConfigurado);
-}
-
-export async function enviarNotificacaoEmail(dadosNotificacao) {
-    await enviarNotificacao(ENDPOINT_NOTIFICACOES_EMAIL, dadosNotificacao);
-}
-
-export async function enviarNotificacaoTelegram(dadosNotificacao) {
-    await enviarNotificacao(ENDPOINT_NOTIFICACOES_TELEGRAM, dadosNotificacao);
-}
-
-async function enviarNotificacao(endpoint, dadosNotificacao) {
-    if (!tokenApiConfigurado) {
-        throw new Error("Configure o token da API no menu antes de enviar notificações.");
+    if (botaoConfigurarEmail) {
+        botaoConfigurarEmail.hidden = true;
     }
+
+    if (modalConfiguracaoEmail) {
+        modalConfiguracaoEmail.hidden = true;
+
+        if (
+            typeof modalConfiguracaoEmail.close === "function" &&
+            modalConfiguracaoEmail.open
+        ) {
+            modalConfiguracaoEmail.close();
+        }
+    }
+}
+
+// Compatibilidade com chamadas antigas.
+export function temTokenApiConfigurado() {
+    return true;
+}
+
+// Envio de e-mail.
+export async function enviarNotificacaoEmail(dadosNotificacao) {
+    await enviarNotificacao(
+        ENDPOINT_NOTIFICACOES_EMAIL,
+        dadosNotificacao
+    );
+}
+
+// Envio pelo Telegram.
+export async function enviarNotificacaoTelegram(dadosNotificacao) {
+    await enviarNotificacao(
+        ENDPOINT_NOTIFICACOES_TELEGRAM,
+        dadosNotificacao
+    );
+}
+
+// Comunicação com as APIs Java.
+async function enviarNotificacao(endpoint, dadosNotificacao) {
 
     const resposta = await fetch(endpoint, {
         method: "POST",
+
         headers: {
-            "Authorization": `Bearer ${tokenApiConfigurado}`,
             "Content-Type": "application/json"
         },
+
         body: JSON.stringify(dadosNotificacao)
     });
 
     if (!resposta.ok) {
         const corpoResposta = await resposta.json().catch(() => ({}));
-        throw new Error(corpoResposta.erro || `A API de notificações respondeu com HTTP ${resposta.status}.`);
+
+        throw new Error(
+            corpoResposta.erro ||
+            `A API respondeu com HTTP ${resposta.status}.`
+        );
     }
 }

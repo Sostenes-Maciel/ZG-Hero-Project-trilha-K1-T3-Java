@@ -17,14 +17,17 @@ public class InicializadorApiTelegram {
         String identificadorConversaTelegram = obrigatorio("TELEGRAM_CHAT_ID");
         String enderecoServidor = System.getenv().getOrDefault("TODO_TELEGRAM_HOST", "127.0.0.1");
         int porta = Integer.parseInt(System.getenv().getOrDefault("TODO_TELEGRAM_PORT", "8082"));
-        String origemPermitida = System.getenv().getOrDefault("TODO_TELEGRAM_ALLOWED_ORIGIN", "http://localhost:5500");
+        String origemPermitida = System.getenv().getOrDefault("TODO_TELEGRAM_ALLOWED_ORIGIN", "*");
 
         HttpServer servidor = HttpServer.create(new InetSocketAddress(enderecoServidor, porta), 0);
         servidor.createContext("/api/notificacoes/telegram",
                 new ManipuladorNotificacaoTelegram(
-                        new EnviadorTelegramBot(tokenBotTelegram, identificadorConversaTelegram),
-                        obrigatorio("TODO_EMAIL_API_TOKEN"),
-                        origemPermitida));
+                        new EnviadorTelegramBot(
+                                tokenBotTelegram, identificadorConversaTelegram
+                        ),
+                        origemPermitida
+                )
+        );
 
         ExecutorService executorServico = Executors.newFixedThreadPool(4);
         servidor.setExecutor(executorServico);

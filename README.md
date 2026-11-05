@@ -258,14 +258,6 @@ Isolamento Total da View (MenuTerminalView): Foram removidas todas as chamadas d
 
 Resolução de Ambiguidade e Injeção nos Testes: Os testes em Groovy (MenuTerminalTest e TarefaControllerTest) foram refatorados para respeitar a nova injeção de dependências dos Controllers, corrigindo erros de sobrecarga de métodos (assertDoesNotThrow) e garantindo cobertura 100% verde com Mocks isolados.
 
-## Preparação para integração de alarmes com Telegram
-
-O agendamento do frontend está isolado em `src/main/java/br/com/zg/todolist/frontend/js/alarmes.js`. Hoje, o adaptador local usa `setTimeout` e um alerta do navegador; ele é apenas um fallback e depende de a página permanecer aberta. Antes da inicialização, `app.js` aceita um adaptador assíncrono em `window.todoList.agendadorAlarme(tarefas)`. Quando o contrato HTTP for definido, esse ponto poderá enviar a sincronização ao backend sem acoplar a interface a endpoints ou credenciais.
-
-O backend já possui o ponto de extensão `AlarmeObserver`. A aplicação de console registra `ConsoleAlarmeObserver`; uma futura integração pode adicionar um observer de Telegram ao serviço, sem colocar lógica ou credenciais do bot no frontend. O token do Telegram deve permanecer em configuração segura do backend, nunca em JavaScript enviado ao navegador.
-
-O contrato HTTP, a persistência dos alarmes e o vínculo do destinatário Telegram ainda serão definidos no desafio de integração. Para disparos confiáveis com a página fechada, o backend deverá persistir o instante do alarme e executar o agendamento no servidor; o temporizador local não oferece essa garantia.
-
 ## Atualização -  Notificações por e-mail com Resend
 
 A versão atual integra o TODO List ao **Resend**, serviço de envio de e-mails. O destinatário é configurado no backend. A criação e as alterações das tarefas continuam salvas no navegador mesmo se o envio falhar.
@@ -325,5 +317,28 @@ As verificações de prazo e o relatório semanal acontecem quando o token é co
 
 Para notificações individuais, o corpo usa `evento`, `tituloTarefa`, `status` e `dataTermino` (formato `AAAA-MM-DD`). O relatório usa `evento: "RELATORIO_SEMANAL"` e uma lista `tarefas` com os parâmetros das atividades.
 
+## Atualização - Notificações via Telegram
+
+A nova versão do TODO List conta com integração ao **Telegram**, permitindo receber notificações automáticas sobre eventos das tarefas:
+
+- **Tarefa criada:** avisa quando uma nova tarefa é cadastrada.
+- **Tarefa editada:** informa quando uma tarefa existente é atualizada.
+- **Prazo próximo:** envia um lembrete quando uma tarefa está com vencimento previsto para o dia seguinte.
+
+### Detalhes da implementação:
+
+Desenvolvimento de uma API Java independente para receber e processar as solicitações de notificação.
+
+Integração com a Telegram Bot API, utilizando um bot para realizar o envio das mensagens.
+
+Criação de um manipulador HTTP para receber requisições POST, validar os dados recebidos e encaminhar as notificações.
+
+Implementação de classes para gerar e formatar mensagens de acordo com cada evento.
+
+Integração do frontend com a API de notificações por meio de requisições HTTP.
+
+Configuração das credenciais do bot por variáveis de ambiente (TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID).
+
+Tratamento de erros durante a comunicação e o envio das mensagens.
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**

@@ -70,6 +70,7 @@ public class EnviadorTelegramBot implements EnviadorMensagemTelegram {
         return switch (notificacao.evento()) {
             case "PRAZO_PROXIMO" -> enviaLembreteProximo(notificacao);
             case "TAREFA_CRIADA" -> enviaNovaTarefa(notificacao);
+            case "TAREFA_EDITADA" -> enviaEditada(notificacao);
             case "TAREFA_CONCLUIDA" -> enviaConcluida(notificacao);
             case "TAREFA_ATRASADA" -> enviaAtrasada(notificacao);
             case "RELATORIO_SEMANAL" -> "📊 Relatório Semanal\n\n" + notificacao.descricao();
@@ -105,5 +106,9 @@ public class EnviadorTelegramBot implements EnviadorMensagemTelegram {
             return dataTermino;
         }
         return LocalDate.parse(dataTermino).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+    private String enviaEditada(NotificacaoTelegram notificacao) {
+        return "📝 Tarefa editada!\n\n"
+                + "\"" + notificacao.tituloTarefa() + "\" foi atualizada com sucesso.";
     }
 }
