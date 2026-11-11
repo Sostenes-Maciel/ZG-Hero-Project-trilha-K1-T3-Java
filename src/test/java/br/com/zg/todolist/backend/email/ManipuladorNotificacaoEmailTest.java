@@ -17,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ManipuladorNotificacaoEmailTest {
-    private static final String TOKEN_API = "0123456789abcdef0123456789abcdef";
     private static final String ORIGEM_PERMITIDA = "http://localhost:5500";
 
     private final AtomicReference<NotificacaoEmail> notificacaoEnviada = new AtomicReference<>();
@@ -30,7 +29,7 @@ class ManipuladorNotificacaoEmailTest {
     void iniciarServidor() throws Exception {
         servidor = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         servidor.createContext("/api/notificacoes/email",
-                new ManipuladorNotificacaoEmail(notificacaoEnviada::set, TOKEN_API, ORIGEM_PERMITIDA));
+                new ManipuladorNotificacaoEmail(notificacaoEnviada::set, ORIGEM_PERMITIDA));
         executorServico = Executors.newSingleThreadExecutor();
         servidor.setExecutor(executorServico);
         servidor.start();
@@ -47,7 +46,7 @@ class ManipuladorNotificacaoEmailTest {
     @Test
     void enviaNotificacaoComTokenValido() throws Exception {
         HttpResponse<String> resposta = enviar(
-                "Bearer " + TOKEN_API,
+                "Bearer token-de-teste",
                 ORIGEM_PERMITIDA,
                 """
                 {"evento":"PRAZO_PROXIMO","tituloTarefa":"Projeto ZG-HERO","status":"DOING","dataTermino":"2026-11-07"}
@@ -68,7 +67,7 @@ class ManipuladorNotificacaoEmailTest {
                 EventoNotificacao.PRAZO_HOJE
         }) {
             HttpResponse<String> resposta = enviar(
-                    "Bearer " + TOKEN_API,
+                    "Bearer token-de-teste",
                     ORIGEM_PERMITIDA,
                     """
                     {"evento":"%s","tituloTarefa":"Tarefa de teste","status":"TODO","dataTermino":"2026-11-06"}
@@ -80,19 +79,19 @@ class ManipuladorNotificacaoEmailTest {
     }
 
     @Test
-    void rejeitaTokenInvalidoSemEnviarEmail() throws Exception {
+    void aceitaRequisicaoSemValidacaoDeTokenNoManipulador() throws Exception {
         HttpResponse<String> resposta = enviar("Bearer token incorreto", ORIGEM_PERMITIDA,
                 """
                 {"evento":"TAREFA_CRIADA","tituloTarefa":"Tarefa"}
                 """);
 
-        assertEquals(401, resposta.statusCode());
-        assertNull(notificacaoEnviada.get());
+        assertEquals(202, resposta.statusCode());
+        assertEquals(EventoNotificacao.TAREFA_CRIADA, notificacaoEnviada.get().evento());
     }
 
     @Test
     void rejeitaOrigemNaoPermitida() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, "http://site-nao-autorizado.example",
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste", "http://site-nao-autorizado.example",
                 """
                 {"evento":"TAREFA_CRIADA","tituloTarefa":"Tarefa"}
                 """);
@@ -103,7 +102,7 @@ class ManipuladorNotificacaoEmailTest {
 
     @Test
     void rejeitaDataInvalida() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste", ORIGEM_PERMITIDA,
                 """
                 {"evento":"PRAZO_PROXIMO","tituloTarefa":"Tarefa","dataTermino":"amanhã"}
                 """);
@@ -114,7 +113,7 @@ class ManipuladorNotificacaoEmailTest {
 
     @Test
     void aceitaRelatorioSemanalComParametrosDasTarefas() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste", ORIGEM_PERMITIDA,
                 """
                 {"evento":"RELATORIO_SEMANAL","tarefas":[{"titulo":"Projeto ZG-HERO","descricao":"Finalizar tela","status":"DOING","dataTermino":"2026-11-07","prioridade":4,"categoria":"Estudo","alarme":"09:30"}]}
                 """);
@@ -129,7 +128,7 @@ class ManipuladorNotificacaoEmailTest {
 
     @Test
     void rejeitaRelatorioSemTarefas() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API, ORIGEM_PERMITIDA,
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste", ORIGEM_PERMITIDA,
                 """
                 {"evento":"RELATORIO_SEMANAL","tarefas":[]}
                 """);

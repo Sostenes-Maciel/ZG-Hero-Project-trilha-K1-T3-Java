@@ -17,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ManipuladorNotificacaoTelegramTest {
-    private static final String TOKEN_API = "0123456789abcdef0123456789abcdef";
     private static final String ORIGEM_PERMITIDA = "http://localhost:5500";
 
     private final AtomicReference<NotificacaoTelegram> notificacaoRecebida = new AtomicReference<>();
@@ -30,7 +29,7 @@ class ManipuladorNotificacaoTelegramTest {
     void iniciarServidor() throws Exception {
         servidor = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         servidor.createContext("/api/notificacoes/telegram",
-                new ManipuladorNotificacaoTelegram(notificacaoRecebida::set, TOKEN_API, ORIGEM_PERMITIDA));
+                new ManipuladorNotificacaoTelegram(notificacaoRecebida::set, ORIGEM_PERMITIDA));
         executorServico = Executors.newSingleThreadExecutor();
         servidor.setExecutor(executorServico);
         servidor.start();
@@ -46,7 +45,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void enviaLembreteDePrazoAoTelegram() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste",
                 """
                 {"evento":"PRAZO_PROXIMO","tituloTarefa":"Entregar certificado","dataTermino":"2026-11-04"}
                 """);
@@ -59,7 +58,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void enviaNovaTarefaAoTelegram() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste",
                 """
                 {"evento":"TAREFA_CRIADA","tituloTarefa":"Projeto ZG-HERO","dataTermino":"2026-11-05"}
                 """);
@@ -71,7 +70,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void enviaConclusaoAoTelegram() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste",
                 """
                 {"evento":"TAREFA_CONCLUIDA","tituloTarefa":"Certificado","dataTermino":"2026-11-04"}
                 """);
@@ -83,7 +82,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void enviaAtrasadaAoTelegram() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste",
                 """
                 {"evento":"TAREFA_ATRASADA","tituloTarefa":"Projeto introdutório","dataTermino":"2026-11-03"}
                 """);
@@ -95,7 +94,7 @@ class ManipuladorNotificacaoTelegramTest {
 
     @Test
     void rejeitaEventoNaoSuportado() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste",
                 """
                 {"evento":"ERRO_IMPOSSIVEL","tituloTarefa":"Tarefa","dataTermino":"2026-11-04"}
                 """);
@@ -105,19 +104,19 @@ class ManipuladorNotificacaoTelegramTest {
     }
 
     @Test
-    void rejeitaTokenInvalido() throws Exception {
+    void aceitaRequisicaoSemValidacaoDeTokenNoManipulador() throws Exception {
         HttpResponse<String> resposta = enviar("Bearer token-incorreto",
                 """
                 {"evento":"PRAZO_PROXIMO","tituloTarefa":"Tarefa","dataTermino":"2026-11-04"}
                 """);
 
-        assertEquals(401, resposta.statusCode());
-        assertNull(notificacaoRecebida.get());
+        assertEquals(202, resposta.statusCode());
+        assertEquals("Tarefa", notificacaoRecebida.get().tituloTarefa());
     }
 
     @Test
     void rejeitaDataFormatadaInvalida() throws Exception {
-        HttpResponse<String> resposta = enviar("Bearer " + TOKEN_API,
+        HttpResponse<String> resposta = enviar("Bearer token-de-teste",
                 """
                 {"evento":"PRAZO_PROXIMO","tituloTarefa":"Tarefa","dataTermino":"2026/11/04"}
                 """);
