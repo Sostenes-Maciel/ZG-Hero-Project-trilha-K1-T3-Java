@@ -11,18 +11,19 @@
 - **O que será feito:** Identificar as classes reais responsáveis por filtros, status e notificações antes de criar as specs. Confirmar construtores, métodos e exceções disponíveis para evitar inventar APIs.
 - **Arquivos criados/alterados:** Nenhum arquivo de produção; o resultado orientará as specs em `src/test/groovy/novasuite`.
 - **Como validar:** Revisar os contratos encontrados e executar os testes existentes antes de adicionar a nova suíte.
-- [X] Concluída
+- [X] **Concluída**
 
 ## Tarefa 2: Testes de filtros combinados
 - **O que será feito:** Cobrir Categoria, Prioridade, Status e Data isoladamente e em combinações. Toda a combinação deverá aplicar lógica `AND`; não serão criados cenários `OR`.
 - **Arquivo previsto:** `src/test/groovy/novasuite/FiltroTarefasSpec.groovy`.
 - **Como validar:** Executar `./gradlew test --tests "*FiltroTarefasSpec*"`.
-- [X] Concluída
+- [X] **Concluída**
 
 ## Tarefa 3: Testes de transição individual de status
 - **O que será feito:** Verificar transições válidas, inclusive a conclusão de uma tarefa atrasada quando os dados obrigatórios forem válidos, além da rejeição de dados inválidos conforme as validações normais do modelo.
 - **Arquivo previsto:** `src/test/groovy/novasuite/MudancaStatusSpec.groovy`.
 - **Como validar:** Executar `./gradlew test --tests "*MudancaStatusSpec*"`.
+- [X] **Concluída**
 
 ## Tarefa 4: Testes de alteração de status em lote
 - [x] **CANCELADA:** Funcionalidade exclusiva do front-end JavaScript; não existe contrato correspondente no backend Java/Groovy. Não será criada uma spec backend para processamento em lote.
@@ -31,8 +32,10 @@
 - **O que será feito:** Verificar os contratos existentes dos handlers e services para os eventos de e-mail via Resend e Telegram. Usar Mocks/Stubs de `EnviadorEmail` e `EnviadorMensagemTelegram`, validando payload, evento e parâmetros sem chamadas externas. Cobrir, conforme os contratos atuais, criação, edição, conclusão e prazo próximo.
 - **Arquivo previsto:** `src/test/groovy/novasuite/NotificacaoSpec.groovy`.
 - **Como validar:** Executar `./gradlew test --tests "*NotificacaoSpec*"`.
+- [X] **Concluída**
 
 ## Tarefa 6: Validar a suíte completa
 - **O que será feito:** Executar todos os testes e confirmar que a nova suíte não altera configurações nem interfere nos testes existentes.
 - **Arquivos criados/alterados:** Nenhum arquivo de produção.
 - **Como validar:** Executar `./gradlew test`; o resultado esperado é sucesso completo. Qualquer falha preexistente deverá ser registrada, não mascarada.
+- [X] **Concluída**
