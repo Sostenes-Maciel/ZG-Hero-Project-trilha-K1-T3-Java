@@ -17,6 +17,7 @@
 - **O que será feito:** Cobrir Categoria, Prioridade, Status e Data isoladamente e em combinações. Toda a combinação deverá aplicar lógica `AND`; não serão criados cenários `OR`.
 - **Arquivo previsto:** `src/test/groovy/novasuite/FiltroTarefasSpec.groovy`.
 - **Como validar:** Executar `./gradlew test --tests "*FiltroTarefasSpec*"`.
+- [X] Concluída
 
 ## Tarefa 3: Testes de transição individual de status
 - **O que será feito:** Verificar transições válidas, inclusive a conclusão de uma tarefa atrasada quando os dados obrigatórios forem válidos, além da rejeição de dados inválidos conforme as validações normais do modelo.
