@@ -17,10 +17,10 @@ A aplicação ToDo List possui funcionalidades core no backend que atualmente ca
     - O foco é validar o comportamento dos controllers, handlers e services do backend. O comportamento de leitura/gravação no `LocalStorage` pertence ao frontend e não faz parte desta suíte em Java/Groovy.
 
 ## Critérios de Aceite
-- [ ] **Dado** que múltiplos filtros são aplicados, **Quando** a busca é executada, **Então** o sistema deve retornar apenas as tarefas que satisfazem todos os filtros simultaneamente.
-- [ ] **Dado** uma requisição para concluir uma tarefa atrasada, **Quando** a alteração de status for acionada, **Então** o sistema deve permitir a mudança para `DONE` normalmente, se os dados obrigatórios forem válidos.
-- [ ] **Dado** a criação ou conclusão de uma tarefa, **Quando** a ação ocorrer, **Então** o teste deve verificar via Mocks se os serviços `EnviadorEmail` e `EnviadorMensagemTelegram` foram invocados com os parâmetros corretos.
-- [ ] Todos os novos testes devem rodar e passar com sucesso (`./gradlew test`).
+- [X] **Dado** que múltiplos filtros são aplicados, **Quando** a busca é executada, **Então** o sistema deve retornar apenas as tarefas que satisfazem todos os filtros simultaneamente.
+- [X] **Dado** uma requisição para concluir uma tarefa atrasada, **Quando** a alteração de status for acionada, **Então** o sistema deve permitir a mudança para `DONE` normalmente, se os dados obrigatórios forem válidos.
+- [X] **Dado** a criação ou conclusão de uma tarefa, **Quando** a ação ocorrer, **Então** o teste deve verificar via Mocks se os serviços `EnviadorEmail` e `EnviadorMensagemTelegram` foram invocados com os parâmetros corretos.
+- [X] Todos os novos testes devem rodar e passar com sucesso (`./gradlew test`).
 
 ## Impacto no que já existe
 As funcionalidades de produção a serem testadas já estão implementadas em `src/main`, incluindo os filtros, as transições de status e as integrações de notificações por e-mail e Telegram. Nesta etapa, não serão feitas novas alterações nas regras de negócio nem nas integrações existentes. Serão criadas apenas novas classes de teste (`*Spec.groovy`) em um diretório separado, como `src/test/groovy/novasuite`, mantendo o isolamento da suíte. Correções em produção somente serão realizadas se os testes revelarem um bug real e impeditivo, que deverá ser documentado separadamente.
