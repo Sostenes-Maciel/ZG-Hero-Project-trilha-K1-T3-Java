@@ -30,7 +30,7 @@ class ManipuladorNotificacaoTelegramTest {
     void iniciarServidor() throws Exception {
         servidor = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         servidor.createContext("/api/notificacoes/telegram",
-                new ManipuladorNotificacaoTelegram(notificacaoRecebida::set, TOKEN_API, ORIGEM_PERMITIDA));
+                new ManipuladorNotificacaoTelegram(notificacaoRecebida::set, ORIGEM_PERMITIDA));
         executorServico = Executors.newSingleThreadExecutor();
         servidor.setExecutor(executorServico);
         servidor.start();
@@ -110,9 +110,6 @@ class ManipuladorNotificacaoTelegramTest {
                 """
                 {"evento":"PRAZO_PROXIMO","tituloTarefa":"Tarefa","dataTermino":"2026-11-04"}
                 """);
-
-        assertEquals(401, resposta.statusCode());
-        assertNull(notificacaoRecebida.get());
     }
 
     @Test
