@@ -8,7 +8,7 @@
 - Se um teste revelar um bug real e impeditivo, interromper a implementação daquele caso, registrar o problema e criar uma tarefa separada para eventual correção em produção.
 
 ## Tarefa 1: Mapear pontos de teste e contratos existentes
-- **O que será feito:** Identificar as classes reais responsáveis por filtros, status, processamento em lote e notificações antes de criar as specs. Confirmar construtores, métodos e exceções disponíveis para evitar inventar APIs.
+- **O que será feito:** Identificar as classes reais responsáveis por filtros, status e notificações antes de criar as specs. Confirmar construtores, métodos e exceções disponíveis para evitar inventar APIs.
 - **Arquivos criados/alterados:** Nenhum arquivo de produção; o resultado orientará as specs em `src/test/groovy/novasuite`.
 - **Como validar:** Revisar os contratos encontrados e executar os testes existentes antes de adicionar a nova suíte.
 - [X] Concluída
@@ -25,9 +25,7 @@
 - **Como validar:** Executar `./gradlew test --tests "*MudancaStatusSpec*"`.
 
 ## Tarefa 4: Testes de alteração de status em lote
-- **O que será feito:** Testar o comportamento individual das tarefas em uma operação em lote. O cenário de falha parcial só será implementado se o código existente expuser essa validação; deverá comprovar que tarefas válidas permanecem atualizadas e não há rollback das anteriores.
-- **Arquivo previsto:** `src/test/groovy/novasuite/MudancaStatusLoteSpec.groovy`.
-- **Como validar:** Executar `./gradlew test --tests "*MudancaStatusLoteSpec*"`.
+- [x] **CANCELADA:** Funcionalidade exclusiva do front-end JavaScript; não existe contrato correspondente no backend Java/Groovy. Não será criada uma spec backend para processamento em lote.
 
 ## Tarefa 5: Testes isolados dos gatilhos de notificação
 - **O que será feito:** Verificar os contratos existentes dos handlers e services para os eventos de e-mail via Resend e Telegram. Usar Mocks/Stubs de `EnviadorEmail` e `EnviadorMensagemTelegram`, validando payload, evento e parâmetros sem chamadas externas. Cobrir, conforme os contratos atuais, criação, edição, conclusão e prazo próximo.

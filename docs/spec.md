@@ -1,7 +1,7 @@
 # Especificação: Suíte de Testes Unitários
 
 ## Contexto e Objetivo
-A aplicação ToDo List possui funcionalidades core no backend que atualmente carecem de testes automatizados. O objetivo desta feature é criar uma suíte de testes unitários em Groovy utilizando o framework Spock, a fim de garantir o comportamento correto dos filtros combinados, das transições de status (individuais e em lote) e dos gatilhos de notificações (e-mail via Resend e mensagens via Telegram).
+A aplicação ToDo List possui funcionalidades core no backend que atualmente carecem de testes automatizados. O objetivo desta feature é criar uma suíte de testes unitários em Groovy utilizando o framework Spock, a fim de garantir o comportamento correto dos filtros combinados, das transições individuais de status e dos gatilhos de notificações (e-mail via Resend e mensagens via Telegram).
 
 ## Regras de Negócio
 1. **Filtros (Categoria, Prioridade, Status, Data):**
@@ -10,7 +10,6 @@ A aplicação ToDo List possui funcionalidades core no backend que atualmente ca
 2. **Mudança de Status:**
     - Para ter o status alterado, a tarefa deve respeitar as validações normais do modelo (ex: título preenchido, data válida e demais campos obrigatórios).
     - Não há bloqueios restritivos para concluir uma tarefa que esteja com a data de vencimento atrasada.
-    - Em alterações de status em lote, as tarefas são processadas e atualizadas individualmente. Falhas de validação em uma tarefa específica não acionam transação ou rollback para as demais que foram processadas com sucesso.
 3. **Alarmes e Notificações:**
     - O acionamento dos gatilhos para `EnviadorEmail` e `EnviadorMensagemTelegram` deve ser garantido pelos testes, mas a execução deve ser isolada através de Mocks/Stubs.
     - Nenhuma mensagem real (e-mail ou Telegram) deve ser enviada durante a execução da suíte de testes.
@@ -20,7 +19,6 @@ A aplicação ToDo List possui funcionalidades core no backend que atualmente ca
 ## Critérios de Aceite
 - [ ] **Dado** que múltiplos filtros são aplicados, **Quando** a busca é executada, **Então** o sistema deve retornar apenas as tarefas que satisfazem todos os filtros simultaneamente.
 - [ ] **Dado** uma requisição para concluir uma tarefa atrasada, **Quando** a alteração de status for acionada, **Então** o sistema deve permitir a mudança para `DONE` normalmente, se os dados obrigatórios forem válidos.
-- [ ] **Dado** uma requisição de alteração de status em lote onde uma tarefa falha na validação, **Quando** processada, **Então** as demais tarefas válidas devem ser atualizadas sem sofrer rollback.
 - [ ] **Dado** a criação ou conclusão de uma tarefa, **Quando** a ação ocorrer, **Então** o teste deve verificar via Mocks se os serviços `EnviadorEmail` e `EnviadorMensagemTelegram` foram invocados com os parâmetros corretos.
 - [ ] Todos os novos testes devem rodar e passar com sucesso (`./gradlew test`).
 
