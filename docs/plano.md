@@ -11,9 +11,10 @@
 - **O que será feito:** Identificar as classes reais responsáveis por filtros, status, processamento em lote e notificações antes de criar as specs. Confirmar construtores, métodos e exceções disponíveis para evitar inventar APIs.
 - **Arquivos criados/alterados:** Nenhum arquivo de produção; o resultado orientará as specs em `src/test/groovy/novasuite`.
 - **Como validar:** Revisar os contratos encontrados e executar os testes existentes antes de adicionar a nova suíte.
+- [X] Concluída
 
 ## Tarefa 2: Testes de filtros combinados
-- **O que será feito:** Cobrir Categoria, Prioridade, Status e Data isoladamente e em combinações. Toda combinação deverá aplicar lógica `AND`; não serão criados cenários `OR`.
+- **O que será feito:** Cobrir Categoria, Prioridade, Status e Data isoladamente e em combinações. Toda a combinação deverá aplicar lógica `AND`; não serão criados cenários `OR`.
 - **Arquivo previsto:** `src/test/groovy/novasuite/FiltroTarefasSpec.groovy`.
 - **Como validar:** Executar `./gradlew test --tests "*FiltroTarefasSpec*"`.
 
