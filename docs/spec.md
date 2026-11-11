@@ -25,7 +25,7 @@ A aplicação ToDo List possui funcionalidades core no backend que atualmente ca
 - [ ] Todos os novos testes devem rodar e passar com sucesso (`./gradlew test`).
 
 ## Impacto no que já existe
-Nenhum código de produção (`src/main`) sofrerá alterações de regra de negócio. Serão criadas apenas as novas classes de teste (`*Spec.groovy`) em um diretório à parte (ex: `src/test/groovy/novasuite`), garantindo o total isolamento da nova feature.
+As funcionalidades de produção a serem testadas já estão implementadas em `src/main`, incluindo os filtros, as transições de status e as integrações de notificações por e-mail e Telegram. Nesta etapa, não serão feitas novas alterações nas regras de negócio nem nas integrações existentes. Serão criadas apenas novas classes de teste (`*Spec.groovy`) em um diretório separado, como `src/test/groovy/novasuite`, mantendo o isolamento da suíte. Correções em produção somente serão realizadas se os testes revelarem um bug real e impeditivo, que deverá ser documentado separadamente.
 
 ## Fora do Escopo
 - Criação de novas rotas ou funcionalidades no ToDo List.
