@@ -25,3 +25,15 @@ A implementação foi corretamente barrada para evitar a criação de uma API ou
 3. Nenhum teste backend foi criado para esse comportamento fora do escopo real.
 
 As demais tarefas foram implementadas conforme os contratos existentes e validadas com `./gradlew test`.
+
+## Comparação de Modelos (Requisito Opcional)
+Para validar a flexibilidade do processo, a etapa de Code Review do teste da Issue #3 (CategoriaFactorySpec.groovy) foi executada com um modelo diferente (Gemini 1.5) e comparada com a execução do agente principal (GitHub Copilot).
+
+- **Qualidade da Análise:** O Gemini trouxe apontamentos mais detalhados e cirúrgicos, identificando uma asserção "chumbada" (hardcoded) no primeiro teste (`categoriaOriginal.nome == "Estudos"`) que poderia causar falhas futuras na manutenção, algo que costuma passar despercebido em gerações primárias de código.
+
+- **Aderência à Skill:** O modelo conseguiu ler e seguir perfeitamente o checklist definido no `SKILL.md`, entregando o relatório estruturado com severidade, localização e sugestões, exatamente como exigido no formato de saída.
+
+- **Performance/Tokens:** A resposta foi gerada rapidamente (tempo de resposta de ~2 segundos, consumindo aproximadamente ~600 tokens de contexto entre leitura do código e da skill), demonstrando que a skill escrita em formato Markdown é universal e facilmente interpretada por diferentes motores de IA.
+  
+#### GitHub Copilot (Agente Principal): Realizou uma análise mais superficial focada na sintaxe e estrutura básica. Não conseguiu identificar riscos lógicos para a manutenção futura do código.
+#### Gemini 1.5 (Modelo Alternativo): Entregou uma revisão mais profunda e cirúrgica. Destacou-se por identificar uma falha de manutenção (a asserção hardcoded categoriaOriginal.nome == "Estudos"), problema que passou totalmente despercebido pelo Copilot.
