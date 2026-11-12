@@ -48,4 +48,4 @@
 - **Dependências:** Contrato existente de `CategoriaFactory.getCategoria(String)` e `Categoria`.
 - **Como validar:** Executar `./gradlew test --tests "*CategoriaFactorySpec*"` e depois `./gradlew test`.
 - **Critério de conclusão:** Todos os cenários da spec passam sem alteração em `src/main`.
-- [ ] Pendente
+- [X] Concluída
