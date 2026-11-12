@@ -29,3 +29,26 @@ As funcionalidades de produção a serem testadas já estão implementadas em `s
 - Criação de novas rotas ou funcionalidades no ToDo List.
 - Testes da camada visual, LocalStorage ou End-to-End (E2E) no front-end JS.
 - Refatoração do código de produção (salvo correções mínimas caso os testes revelem bugs impeditivos).
+
+## Ampliação de Cobertura — Issue #3
+
+### Contexto e Objetivo
+Ampliar a cobertura da funcionalidade legada `CategoriaFactory`, validando a normalização do nome e o reaproveitamento de instâncias implementado pelo padrão Flyweight.
+
+### Escopo
+- Testar nomes de categoria com diferenças de maiúsculas/minúsculas e espaços externos.
+- Testar a rejeição de nomes nulos ou compostos apenas por espaços.
+- Criar a cobertura em `src/test/groovy/novasuite/CategoriaFactorySpec.groovy`.
+
+### Regras de Negócio
+1. Nomes equivalentes após `trim` e conversão para maiúsculas devem retornar a mesma instância de `Categoria`.
+2. A categoria armazenada deve preservar o nome normalizado sem espaços externos.
+3. Nome nulo, vazio ou composto apenas por espaços deve lançar `IllegalArgumentException`.
+
+### Critérios de Aceite
+- [ ] Dado o mesmo nome em caixa diferente e com espaços externos, quando as categorias forem solicitadas, então a fábrica deve retornar a mesma instância.
+- [ ] Dado um nome válido com espaços externos, quando a categoria for criada, então seu nome deve estar sem esses espaços.
+- [ ] Dado um nome nulo, vazio ou somente com espaços, quando a categoria for solicitada, então deve ocorrer `IllegalArgumentException`.
+
+### Impacto no que já existe
+Somente uma nova especificação Spock será adicionada. Nenhum código de produção, contrato ou comportamento será alterado.

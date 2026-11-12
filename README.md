@@ -340,5 +340,16 @@ Integração do frontend com a API de notificações por meio de requisições H
 Configuração das credenciais do bot por variáveis de ambiente (TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID).
 
 Tratamento de erros durante a comunicação e o envio das mensagens.
+
+## Suíte de Testes
+
+O projeto conta com uma suíte de testes unitários estruturada com **Spock Framework** e **Groovy**, integrada ao backend Java. Os testes cobrem filtros combinados, transições individuais de status e gatilhos de notificações isolados com mocks.
+
+Para executar toda a suíte no terminal, use:
+
+```bash
+./gradlew test
+```
+
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**

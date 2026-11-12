@@ -39,3 +39,13 @@
 - **Arquivos criados/alterados:** Nenhum arquivo de produção.
 - **Como validar:** Executar `./gradlew test`; o resultado esperado é sucesso completo. Qualquer falha preexistente deverá ser registrada, não mascarada.
 - [X] **Concluída**
+
+## Ampliação de Cobertura — Issue #3
+
+### Tarefa 7: Testar normalização e cache de CategoriaFactory
+- **O que será feito:** Cobrir a normalização de nomes, o reaproveitamento de instâncias equivalentes e a rejeição de entradas inválidas da `CategoriaFactory`.
+- **Arquivos previstos:** `src/test/groovy/novasuite/CategoriaFactorySpec.groovy`.
+- **Dependências:** Contrato existente de `CategoriaFactory.getCategoria(String)` e `Categoria`.
+- **Como validar:** Executar `./gradlew test --tests "*CategoriaFactorySpec*"` e depois `./gradlew test`.
+- **Critério de conclusão:** Todos os cenários da spec passam sem alteração em `src/main`.
+- [X] Concluída

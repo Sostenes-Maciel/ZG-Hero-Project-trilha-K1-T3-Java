@@ -92,12 +92,6 @@ class NotificacaoSpec extends Specification {
     }
 
     def "Dado uma notificação de criação, quando o endpoint de e-mail é acionado, então o mock recebe o evento correto"() {
-        given:
-        NotificacaoEmail enviada
-        enviadorEmail.enviar(_ as NotificacaoEmail) >> { NotificacaoEmail notificacao ->
-            enviada = notificacao
-        }
-
         when:
         def resposta = enviarEmail("""
             {"evento":"TAREFA_CRIADA","tituloTarefa":"ZG-HERO","status":"TODO","dataTermino":"2026-11-12"}
@@ -105,19 +99,15 @@ class NotificacaoSpec extends Specification {
 
         then:
         resposta.statusCode() == 202
-        enviada.evento() == EventoNotificacao.TAREFA_CRIADA
-        enviada.tituloTarefa() == "ZG-HERO"
-        enviada.status() == "TODO"
-        enviada.dataTermino() == "2026-11-12"
+        1 * enviadorEmail.enviar({
+            it.evento() == EventoNotificacao.TAREFA_CRIADA &&
+                    it.tituloTarefa() == "ZG-HERO" &&
+                    it.status() == "TODO" &&
+                    it.dataTermino() == "2026-11-12"
+        })
     }
 
     def "Dado uma notificação de conclusão, quando o endpoint de e-mail é acionado, então o mock recebe o evento correto"() {
-        given:
-        NotificacaoEmail enviada
-        enviadorEmail.enviar(_ as NotificacaoEmail) >> { NotificacaoEmail notificacao ->
-            enviada = notificacao
-        }
-
         when:
         def resposta = enviarEmail("""
             {"evento":"TAREFA_CONCLUIDA","tituloTarefa":"ZG-HERO","status":"DONE","dataTermino":"2026-11-12"}
@@ -125,9 +115,11 @@ class NotificacaoSpec extends Specification {
 
         then:
         resposta.statusCode() == 202
-        enviada.evento() == EventoNotificacao.TAREFA_CONCLUIDA
-        enviada.tituloTarefa() == "ZG-HERO"
-        enviada.status() == "DONE"
+        1 * enviadorEmail.enviar({
+            it.evento() == EventoNotificacao.TAREFA_CONCLUIDA &&
+                    it.tituloTarefa() == "ZG-HERO" &&
+                    it.status() == "DONE"
+        })
     }
 
     private static Tarefa criarTarefa(String nome, Status status) {
