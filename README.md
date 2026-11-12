@@ -351,5 +351,12 @@ Para executar toda a suíte no terminal, use:
 ./gradlew test
 ```
 
+### Requisitos Opcionais
+
+- **Skill de Code Review:** criação da diretriz customizada em `skills/code-review/SKILL.md` e aplicação prática na revisão da suíte de testes.
+- **Ampliação de Cobertura & Reuso de Skill:** implementação de testes unitários para o código legado da `CategoriaFactory`, utilizando exclusivamente a skill de especificação como guia e vinculando a entrega a uma Issue.
+- **Integração MCP do GitHub:** uso de ferramentas de contexto do repositório para contornar limitações técnicas e manter a rastreabilidade de Issues e Pull Requests.
+- **Comparação de Modelos:** avaliação comparativa de Code Review entre o agente principal e um modelo alternativo, documentada em `RELATORIO.md`.
+
 ## 👨‍💻 Autor
 **Sóstenes Marques Maciel**
